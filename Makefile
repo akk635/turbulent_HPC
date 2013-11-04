@@ -1,6 +1,6 @@
 # comment the following two lines for mac-cluster
-include ${PETSC_DIR}/${PETSC_ARCH}/conf/variables
-include ${PETSC_DIR}/${PETSC_ARCH}/conf/rules
+#include ${PETSC_DIR}/${PETSC_ARCH}/conf/variables
+#include ${PETSC_DIR}/${PETSC_ARCH}/conf/rules
 # uncomment the following two lines for mac-cluster
 #include ${PETSC_DIR}/conf/variables
 #include ${PETSC_DIR}/conf/rules
@@ -14,6 +14,11 @@ CC = mpic++
 CFLAGS = -Wall -Werror -O3
 SRCDIR = ../src
 BUILDDIR = build
+PETSC_DIR = /usr/local/petsc
+# uncomment the following two lines for mac-cluster
+include ${PETSC_DIR}/conf/variables
+include ${PETSC_DIR}/conf/rules
+
 INCLUDE = -I. -Istencils -I${PETSC_DIR}/${PETSC_ARCH}/include -I${PETSC_DIR}/include
 
 NSMAIN = main.o

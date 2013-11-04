@@ -73,21 +73,19 @@ class Vec23D {
 	        tmp -= other;
 	        return tmp;
 	    }
-	    friend std::ostream& operator<< <>(std::ostream &dest,
-	                                      const Vec23D<T>& vec);
-	    friend std::istream& operator>> <>(std::istream &src,
-	                                      Vec23D<T>& vec);
+	    friend std::ostream& operator<< <>(std::ostream &dest, const Vec23D<T>& vec);
+	    friend std::istream& operator>> <> (std::istream &src, Vec23D<T>& vec);
 };
 
 template <typename T>
-std::ostream& operator<<(std::ostream &dest,
+std::ostream& operator<< (std::ostream &dest,
                                 const Vec23D<T>& vec) {
     dest << vec.x << " " << vec.y << " " <<vec.z<<"\n";
     return dest;
 }
 
 template <typename T>
-std::istream& operator>>(std::istream &src,
+std::istream& operator>>  (std::istream &src,
                                   Vec23D<T>& vec) {
     src >> vec.x >> vec.y >> vec.z;
     return src;

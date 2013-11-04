@@ -3,7 +3,7 @@
 
 #include "Definitions.h"
 #include <vector>
-#include "myVector.h"
+//#include "myVector.h"
 
 /** Storage of a scalar field
  *
@@ -16,16 +16,16 @@ class Field
 {
     private:
         // TODO WORKSHEET 1: put private member variable and function definitions here
-		std::vector <DataType> domain;
+		// 1-d data structure
 		int _x, _y, _z, entities;
 
     protected:
         // TODO WORKSHEET 1: put protected member variable and function definitions here
-
     public:
         /** empty constructor for the field. This constructor is only provided for Worksheet 1
          *  to get the initial code compiled. It can be removed for future worksheets.
          */
+		DataType* domain;
         Field(){}
 
         /** Constructor for the field
@@ -44,7 +44,7 @@ class Field
         	_y = Ny + 3;
         	_z = Nz + 3;
         	entities = components;
-        	domain = new DataType[_x*_y*_z];
+        	domain = new DataType[ _x * _y * _z * entities ];
         }
 
         /** Destructor
@@ -98,7 +98,7 @@ class Field
         int index2array ( int i, int j, int k = 0 ) const {
 
           // TODO WORKSHEET 1
-          return ((k*_x*_y) + (j*_x) + i) ;
+          return ( ((k*_x*_y) + (j*_x) + i ) * entities ) ;
         }
 
 };
@@ -113,13 +113,13 @@ class ScalarField: public Field<FLOAT>
     private:
         /** initializes the data of the scalar field by zeros. */
 		int _x, _y, _z;
-		std::vector<FLOAT> scalarfield;
+		FLOAT *scalarfield;
 		void initialize(){
           // TODO WORKSHEET 1
 			for( int i = 0; i < _x; i++){
 				for( int j = 0; j < _y; j++){
 					for( int k = 0; k < _z; k++){
-						scalarfield[i][j][k] = 0;
+						scalarfield[ index2array( i, j, k) ] = 0;
 					}
 				}
 			}
@@ -138,7 +138,9 @@ class ScalarField: public Field<FLOAT>
           // TODO WORKSHEET 1
         	_x = Nx + 3;
         	_y = Ny + 3;
-        	scalarfield = new Field<FLOAT> (_x, _y, _z = 0, 1);
+        	Field<FLOAT> field( _x, _y, _z = 0, 1);
+        	scalarfield = field.domain;
+        	initialize();
         }
 
         /** 3D scalar field constructor.
@@ -154,7 +156,9 @@ class ScalarField: public Field<FLOAT>
         	_x = Nx + 3;
         	_y = Ny + 3;
         	_z = Nz + 3;
-        	scalarfield = new Field<FLOAT> (_x, _y, _z, 1);
+        	Field<FLOAT> field(_x, _y, _z, 1);
+        	scalarfield = field.domain;
+        	initialize();
         }
 
         /** Acces to element in scalar field
@@ -168,12 +172,7 @@ class ScalarField: public Field<FLOAT>
         FLOAT & getScalar ( int i, int j, int k = 0 ){
           // TODO WORKSHEET 1
         	if ((i < _x) && (j < _y) && (k < _z)){
-        		if (k != 0 ){
-        			return scalarfield[i][j][k];
-        		}
-        		else {
-        			return scalarfield[i][j];
-        		}
+        			return scalarfield[ index2array( i, j, k) ];
         	}
           static FLOAT invalidInitialValueForWorksheet1CodeFrame = -1;
           return invalidInitialValueForWorksheet1CodeFrame;
@@ -196,15 +195,24 @@ class ScalarField: public Field<FLOAT>
  *
  * Stores a vector field of floats. Derived from Field.
  */
-class VectorField: public Field< Vec23D<FLOAT> >
+class VectorField: public Field<FLOAT >
 {
     private:
-		int _x, _y, _z;
-		std::vector<Vec23D<FLOAT> > vectorfield;
+		int _x, _y, _z, entities;
+		 FLOAT *vectorfield;
          /** initializes the data of the scalar field by zeros. */
          void initialize(){
            // TODO WORKSHEET 1
         	 // Already done by the default constructor of the class Vec23D
+        	 for ( int i=0; i < _x; i++){
+        		 for ( int j=0; j < _y; j++){
+        			 for (int k=0; k < _z; k++){
+        				 for (int e = 0; e < entities; e++){
+        					 *(vectorfield + (index2array( i, j, k) * entities) + e) = 0;
+        				 }
+        			 }
+        		 }
+        	 }
          }
 
     public:
@@ -221,7 +229,10 @@ class VectorField: public Field< Vec23D<FLOAT> >
           // TODO WORKSHEET 1
         	_x = Nx + 3;
         	_y = Ny + 3;
-        	vectorfield = new Field<Vec23D<FLOAT> > (_x, _y, _z = 0, 2);
+        	entities = 2;
+        	Field<FLOAT> field(_x, _y, _z = 0, entities);
+        	vectorfield = field.domain;
+        	initialize();
         }
 
         /** 3D Vector field constructor.
@@ -237,7 +248,10 @@ class VectorField: public Field< Vec23D<FLOAT> >
         	_x = Nx + 3;
         	_y = Ny + 3;
         	_z = Nz + 3;
-        	vectorfield = new Field<Vec23D<FLOAT> > (_x, _y, _z = 0, 3);
+        	entities = 3;
+        	Field<FLOAT > field(_x, _y, _z, entities);
+        	vectorfield = field.domain;
+        	initialize();
         }
 
         /** Non constant acces to an element in the vector field
@@ -249,15 +263,10 @@ class VectorField: public Field< Vec23D<FLOAT> >
          * @param j y index
          * @param k z index
          */
-        Vec23D<FLOAT> getVector ( int i, int j, int k = 0 ){
+        FLOAT* getVector ( int i, int j, int k = 0 ){
           // TODO WORKSHEET 1
         	if ((i < _x) && (j < _y) && (k < _z)){
-        		if (k != 0 ){
-        			return vectorfield[i][j][k];
-        		}
-        		else {
-        			return vectorfield[i][j];
-        		}
+        			return &vectorfield[ index2array( i, j, k) ];
         	}
           return NULL;
         }
@@ -283,7 +292,7 @@ class IntScalarField : public Field<int> {
 
     private:
 		int _x, _y, _z;
-		std::vector<int> flagfield;
+		int *flagfield;
         /** Initialize the array with zeros
          *
          * Had to be redeclared here because the object of the parent class
@@ -294,7 +303,7 @@ class IntScalarField : public Field<int> {
         	for (int i=0; i < _x; i++){
         		for (int j=0; j < _y; j++){
         			for (int k=0; k < _z; k++){
-        				flagfield[i][j][k] = 0;
+        				flagfield[ index2array( i, j, k) ] = 0;
         			}
         		}
         	}
@@ -311,7 +320,9 @@ class IntScalarField : public Field<int> {
           // TODO WORKSHEET 1
         	_x = Nx + 3;
         	_y = Ny + 3;
-        	flagfield = new Field<int> (_x, _y, _z = 0, 1);
+        	Field<int> field(_x, _y, _z = 0, 1);
+        	flagfield = field.domain;
+        	initialize ();
         }
 
         /** 3D constructor
@@ -325,7 +336,9 @@ class IntScalarField : public Field<int> {
         	_x = Nx + 3;
         	_y = Ny + 3;
         	_z = Nz + 3;
-        	flagfield = new Field<int> (_x, _y, _z, 1);
+        	Field<int> field(_x, _y, _z, 1);
+        	flagfield = field.domain;
+        	initialize ();
         }
 
         /** Access field values
@@ -339,12 +352,7 @@ class IntScalarField : public Field<int> {
         int & getValue ( int i, int j, int k = 0 ){
           // TODO WORKSHEET 1
         	if ((i < _x) && (j < _y) && (k < _z)){
-        		if (k != 0 ){
-        			return flagfield[i][j][k];
-        		}
-        		else {
-        			return flagfield[i][j];
-        		}
+        		return flagfield[ index2array( i, j, k) ];
         	}
           static int invalidInitialValueForWorksheet1CodeFrame = -1;
           return invalidInitialValueForWorksheet1CodeFrame;
