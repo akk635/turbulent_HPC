@@ -25,6 +25,7 @@ class GlobalBoundaryFactory{
         BoundaryStencil<FlowField> * _channelInput[2];    //! For the velocity input
         const Parameters & _parameters;         //! Reference to the parameters
 
+
     public:
 
         /** Constructor. Will initialize all the references to the boundaries and create the

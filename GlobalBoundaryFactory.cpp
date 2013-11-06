@@ -66,9 +66,21 @@ GlobalBoundaryFactory::GlobalBoundaryFactory(Parameters & parameters):
       parameters.walls.typeTop    = PERIODIC;
       parameters.walls.typeFront  = PERIODIC;
       parameters.walls.typeBack   = PERIODIC;
-    } else {
+    } else if (scenario == "taylor-green"){
+          for (int i = 0; i < 6; i++){
+            _velocityStencils[i] = _periodic[0];
+            _FGHStencils[i] = _periodic[1];
+          }
+          parameters.walls.typeLeft   = PERIODIC;
+          parameters.walls.typeRight  = PERIODIC;
+          parameters.walls.typeBottom = PERIODIC;
+          parameters.walls.typeTop    = PERIODIC;
+          parameters.walls.typeFront  = PERIODIC;
+          parameters.walls.typeBack   = PERIODIC;
+        } else {
         handleError(1, "Scenario not recognized");
     }
+
 }
 
 GlobalBoundaryFactory::~GlobalBoundaryFactory(){

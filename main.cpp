@@ -51,6 +51,7 @@ int main (int argc, char *argv[]) {
 
 
     // TODO WORKSHEET 1: plot initial state
+    simulation->plotVTK(0);
 
     // TODO WORKSHEET 2: loop over time and
     //                   - solve one time step

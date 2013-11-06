@@ -8,6 +8,8 @@
 // TODO WORKSHEET 2: include all stencils, iterators etc. here
 #include "Iterators.h"
 #include "Definitions.h"
+#include "stencils/InitTaylorGreenFlowFieldStencil.h"
+#include "stencils/VTKStencil.h"
 // TODO WORKSHEET 3: include PetscParallelManager
 
 
@@ -64,6 +66,14 @@ class Simulation {
     /** plots the flow field.  */
     void plotVTK(int timeStep){
       // TODO WORKSHEET 1
+    	InitTaylorGreenFlowFieldStencil taylorGreenStencil(_parameters);
+    	FieldIterator<FlowField> InitTaylorGreenFlowFieldIterator( _flowField, _parameters, taylorGreenStencil,
+                										0, 0);
+    	InitTaylorGreenFlowFieldIterator.iterate();
+    	VTKStencil _vtk(_parameters);
+    	_vtk.write( _flowField, timeStep );
+    	FieldIterator<FlowField> VtkIterator(_flowField, _parameters, _vtk, 0, 0);
+    	VtkIterator.iterate();
     }
 
   protected:

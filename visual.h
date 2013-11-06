@@ -8,7 +8,7 @@
 #ifndef VISUAL_H_
 #define VISUAL_H_
 
-#include Definitions.h
+#include "Definitions.h"
 /**
  * Method for writing header information in vtk format.
  *
@@ -54,9 +54,6 @@ void write_vtkFile(const char *szProblem,
  */
 void write_vtkHeader( FILE *fp, int imax, int jmax,
                       double dx, double dy);
-// Overloading into 3d
-void write_vtkHeader( FILE *fp, int imax, int jmax, int kmax,
-                      FLOAT dx, FLOAT dy, FLOAT dz);
 
 /**
  * Method for writing grid coordinate information in vtk format.
@@ -72,7 +69,10 @@ void write_vtkHeader( FILE *fp, int imax, int jmax, int kmax,
 void write_vtkPointCoordinates( FILE *fp, int imax, int jmax,
                                 double dx, double dy);
 
-void write_vtkPointCoordinates( FILE *fp, int imax, int jmax, int kmax,
-                      	FLOAT dx, FLOAT dy, FLOAT dz);
+// WIth the header and the points in the same thing
+void write_vtkHeader( FILE *fp, int localsizeX, int localsizeY,
+				int localsizeZ, int originX, int originY,
+				int originZ, FLOAT dx, FLOAT dy,
+        		FLOAT dz);
 
 #endif /* VISUAL_H_ */

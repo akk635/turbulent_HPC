@@ -19,12 +19,12 @@ class VTKStencil : public FieldStencil<FlowField> {
 		int _dim;
 		FILE *fpV = NULL;
 		FILE *fpP = NULL;
+		int _timeStep;
     public:
 		int lastCorner[3];
-		int firstCorner[3];
+		const int *firstCorner;
 		FLOAT pressure;
-		FLOAT *velocity  = new FLOAT [3];
-		IntScalarField _flags;
+		FLOAT * velocity;
         /** Constructor
          *
          */
@@ -32,8 +32,8 @@ class VTKStencil : public FieldStencil<FlowField> {
           // TODO WORKSHEET 1
         	firstCorner = parameters.parallel.firstCorner;
         	_dim = parameters.geometry.dim;
-
-        	int *localSize = parameters.parallel.localSize;
+        	velocity = new FLOAT [_dim];
+        	const int *localSize = parameters.parallel.localSize;
         	for ( int i = 0; i < 3; i++ ){
         		lastCorner[i] = firstCorner[i] + localSize[i];
         	}
@@ -42,21 +42,22 @@ class VTKStencil : public FieldStencil<FlowField> {
         	/*for ( int i=0; i<3; i++){
         		vtkVelocity += (firstCorner[i]+'_');
         	}*/
+
         	vtkVelocity += "_velocity.vtk";
         	fpV = fopen( vtkVelocity.c_str(), "w");
-        	write_vtkHeader( fpV, localSize[0], localSize[1],
+        	/*write_vtkHeader( fpV, localSize[0], localSize[1],
         					localSize[2], firstCorner[0], firstCorner[1],
         					firstCorner[2], parameters.geometry.dx, parameters.geometry.dy,
-        	        		parameters.geometry.dz);
+        	        		parameters.geometry.dz);*/
 
         	std::string vtkPressure;
         	vtkPressure = parameters.vtk.prefix;
         	vtkPressure += "_pressure.vtk";
         	fpP = fopen( vtkPressure.c_str(), "w");
-        	write_vtkHeader( fpP, localSize[0], localSize[1],
+        	/*write_vtkHeader( fpP, localSize[0], localSize[1],
         					localSize[2], firstCorner[0], firstCorner[1],
         					firstCorner[2], parameters.geometry.dx, parameters.geometry.dy,
-        	        		parameters.geometry.dz);
+        	        		parameters.geometry.dz);*/
 
 
         	fprintf(fpV,"POINT_DATA %i \n",  localSize[0] * localSize[1] * localSize[2] );
@@ -103,10 +104,14 @@ class VTKStencil : public FieldStencil<FlowField> {
         void apply ( FlowField & flowField, int i, int j, int k ){
           // TODO WORKSHEET 1
         	// Writing the vtk file from the local values
-        	if( _flags.getValue(i, j, k) ){
+        	if( flowField.getFlags().getValue(i,j,k) ){
         		flowField.getPressureAndVelocity( pressure, velocity, i, j, k);
         		fprintf( fpP, "%f %f %f \n", velocity[0], velocity[1], velocity[2] );
         		fprintf( fpP, "%f \n", pressure);
+        	}
+        	else {
+        		fprintf( fpP, "%f %f %f \n", 0.0,0.0,0.0 );
+        		fprintf( fpP, "%f \n", 0.0);
         	}
 
         }
@@ -119,6 +124,7 @@ class VTKStencil : public FieldStencil<FlowField> {
         void write ( FlowField & flowField, int timeStep ){
           // TODO WORKSHEET 1
         	// the apply method itself writes the files into apply
+        	_timeStep = timeStep;
         }
 
 };
