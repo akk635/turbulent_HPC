@@ -119,6 +119,6 @@ class GlobalBoundaryIterator : public Iterator<FlowField> {
 
 // TODO WORKSHEET 3: Include ParallelBoundaryIterator, analogously to GlobalBoundaryIterator, for parallel boundaries
 
-#include "Iterators.cpph"
+#include "Iterators.cpp"
 
 #endif
