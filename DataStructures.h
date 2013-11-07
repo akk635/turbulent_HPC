@@ -60,7 +60,7 @@ class Field
          *
          * @return The size in the x direction
          */
-        int getNx () const {
+     int getNx () const {
           // TODO WORKSHEET 1
           return _x;
         }
@@ -253,6 +253,7 @@ class VectorField: public Field<FLOAT >
         	vectorfield = field.domain;
         	initialize();
         }
+
 
         /** Non constant acces to an element in the vector field
          *

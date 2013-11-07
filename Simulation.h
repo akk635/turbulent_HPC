@@ -70,8 +70,11 @@ class Simulation {
     	FieldIterator<FlowField> InitTaylorGreenFlowFieldIterator( _flowField, _parameters, taylorGreenStencil,
                 										0, 0);
     	InitTaylorGreenFlowFieldIterator.iterate();
+    	std::cout<<"I am here"<<std::endl;
+    	// std::cout<<*(_flowField.getVelocity().getVector(1,1,1))<<std::endl;
+    	std::cout<<"wtf"<<std::endl;
     	VTKStencil _vtk(_parameters);
-    	_vtk.write( _flowField, timeStep );
+    	_vtk.write ( _flowField, timeStep );
     	FieldIterator<FlowField> VtkIterator(_flowField, _parameters, _vtk, 0, 0);
     	VtkIterator.iterate();
     }

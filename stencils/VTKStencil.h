@@ -20,23 +20,32 @@ class VTKStencil : public FieldStencil<FlowField> {
 		FILE *fpV = NULL;
 		FILE *fpP = NULL;
 		int _timeStep;
+
     public:
 		int lastCorner[3];
 		const int *firstCorner;
 		FLOAT pressure;
 		FLOAT * velocity;
+		const int *localSize;
         /** Constructor
          *
          */
         VTKStencil ( const Parameters & parameters ): FieldStencil<FlowField>(parameters) {
           // TODO WORKSHEET 1
-        	firstCorner = parameters.parallel.firstCorner;
+
         	_dim = parameters.geometry.dim;
+        	firstCorner = new int[3];
+        	firstCorner = parameters.parallel.firstCorner;
+
         	velocity = new FLOAT [_dim];
-        	const int *localSize = parameters.parallel.localSize;
+
+        	localSize = new int [_dim];
+        	localSize = parameters.parallel.localSize;
+
         	for ( int i = 0; i < 3; i++ ){
         		lastCorner[i] = firstCorner[i] + localSize[i];
         	}
+
         	std::string vtkVelocity;
         	vtkVelocity = parameters.vtk.prefix;
         	/*for ( int i=0; i<3; i++){
@@ -54,7 +63,10 @@ class VTKStencil : public FieldStencil<FlowField> {
         	vtkPressure = parameters.vtk.prefix;
         	vtkPressure += "_pressure.vtk";
         	fpP = fopen( vtkPressure.c_str(), "w");
-        	/*write_vtkHeader( fpP, localSize[0], localSize[1],
+        	if (fpP == NULL){
+        		std::cout<<"file didnt open";
+        	}
+        	std::cout<<"ok";        	/*write_vtkHeader( fpP, localSize[0], localSize[1],
         					localSize[2], firstCorner[0], firstCorner[1],
         					firstCorner[2], parameters.geometry.dx, parameters.geometry.dy,
         	        		parameters.geometry.dz);*/
@@ -81,6 +93,8 @@ class VTKStencil : public FieldStencil<FlowField> {
         // default destructor
         ~VTKStencil() {
         	delete[] velocity;
+        	delete[] firstCorner;
+        	delete[] localSize;
         	fclose( fpV );
         	fclose( fpP );
         }
