@@ -69,7 +69,7 @@ void write_vtkFile(const char *szProblem,
 void write_vtkHeader( FILE *fp, int localsizeX, int localsizeY,
 				int localsizeZ, int originX, int originY,
 				int originZ, FLOAT dx, FLOAT dy,
-        		FLOAT dz){
+        		FLOAT dz) {
 	  if( fp == NULL )
 	  {
 	    std::string szBuff;
@@ -82,18 +82,18 @@ void write_vtkHeader( FILE *fp, int localsizeX, int localsizeY,
 	  fprintf(fp,"\n");
 	  fprintf(fp,"DATASET STRUCTURED_GRID\n");
 	  fprintf(fp,"DIMENSIONS  %i %i %i \n", ( localsizeX+1 ), ( localsizeY + 1 ), ( localsizeZ + 1) );
-	  fprintf(fp,"POINTS %i float\n", ( localsizeX+1 ), ( localsizeY + 1 ), ( localsizeZ + 1) );
+	  fprintf(fp,"POINTS %i float\n", ( localsizeX+1 ) * ( localsizeY + 1 )* ( localsizeZ + 1) );
 	  fprintf(fp,"\n");
-	  for (int i=0; i < ( localsizeX+1 ); i++){
+	  for (int k=0; k < ( localsizeZ+1 ); k++){
 		  for (int j=0; j < ( localsizeY+1 ); j++){
-			  for (int k=0; k < ( localsizeZ+1 ); k++){
+			  for (int i=0; i < ( localsizeX+1 ); i++){
 			      fprintf(fp, "%f %f %f \n", originX+(i*dx), originY+(j*dy), originZ+(k*dz));
 			  }
 		  }
 	  }
 }
 
-void write_vtkHeader( FILE *fp, int imax, int jmax,
+void write_vtkHeader ( FILE *fp, int imax, int jmax,
                       double dx, double dy) {
   if( fp == NULL )
   {

@@ -113,13 +113,14 @@ class ScalarField: public Field<FLOAT>
     private:
         /** initializes the data of the scalar field by zeros. */
 		int _x, _y, _z;
-		FLOAT *scalarfield;
+		// FLOAT *scalarfield;
+		Field<FLOAT> *field;
 		void initialize(){
           // TODO WORKSHEET 1
 			for( int i = 0; i < _x; i++){
 				for( int j = 0; j < _y; j++){
 					for( int k = 0; k < _z; k++){
-						scalarfield[ index2array( i, j, k) ] = 0;
+						domain[ index2array( i, j, k) ] = 0;
 					}
 				}
 			}
@@ -138,8 +139,8 @@ class ScalarField: public Field<FLOAT>
           // TODO WORKSHEET 1
         	_x = Nx;
         	_y = Ny;
-        	Field<FLOAT> field( _x, _y, _z = 0, 1);
-        	scalarfield = field.domain;
+        	field = new Field<FLOAT> ( _x, _y, _z = 1, 1);
+        	domain = field->domain;
         	initialize();
         }
 
@@ -157,8 +158,12 @@ class ScalarField: public Field<FLOAT>
         	_y = Ny;
         	_z = Nz;
         	Field<FLOAT> field(_x, _y, _z, 1);
-        	scalarfield = field.domain;
+        	domain = field.domain;
         	initialize();
+        }
+
+        ~ScalarField(){
+        	delete field;
         }
 
         /** Acces to element in scalar field
@@ -172,7 +177,7 @@ class ScalarField: public Field<FLOAT>
         FLOAT & getScalar ( int i, int j, int k = 0 ){
           // TODO WORKSHEET 1
         	if ((i < _x) && (j < _y) && (k < _z)){
-        			return scalarfield[ index2array( i, j, k) ];
+        			return domain[ index2array( i, j, k) ];
         	}
           static FLOAT invalidInitialValueForWorksheet1CodeFrame = -1;
           return invalidInitialValueForWorksheet1CodeFrame;
@@ -199,7 +204,8 @@ class VectorField: public Field<FLOAT >
 {
     private:
 		int _x, _y, _z, entities;
-		 FLOAT *vectorfield;
+		 // FLOAT *vectorfield;
+		 Field<FLOAT> *field;
          /** initializes the data of the scalar field by zeros. */
          void initialize(){
            // TODO WORKSHEET 1
@@ -208,7 +214,7 @@ class VectorField: public Field<FLOAT >
         		 for ( int j=0; j < _y; j++){
         			 for (int k=0; k < _z; k++){
         				 for (int e = 0; e < entities; e++){
-        					 *(vectorfield + (index2array( i, j, k) * entities) + e) = 0;
+        					 *(domain + (index2array( i, j, k) * entities) + e) = 0;
         				 }
         			 }
         		 }
@@ -230,8 +236,8 @@ class VectorField: public Field<FLOAT >
         	_x = Nx;
         	_y = Ny;
         	entities = 2;
-        	Field<FLOAT> field(_x, _y, _z = 0, entities);
-        	vectorfield = field.domain;
+        	field = new Field<FLOAT> (_x, _y, _z = 1, entities);
+        	domain = field->domain;
         	initialize();
         }
 
@@ -249,9 +255,13 @@ class VectorField: public Field<FLOAT >
         	_y = Ny;
         	_z = Nz;
         	entities = 3;
-        	Field<FLOAT > field(_x, _y, _z, entities);
-        	vectorfield = field.domain;
+        	field = new Field<FLOAT> (_x, _y, _z, entities);
+        	domain = field->domain;
         	initialize();
+        }
+
+        ~VectorField() {
+        	delete field;
         }
 
 
@@ -267,7 +277,7 @@ class VectorField: public Field<FLOAT >
         FLOAT* getVector ( int i, int j, int k = 0 ){
           // TODO WORKSHEET 1
         	if ((i < _x) && (j < _y) && (k < _z)){
-        			return &vectorfield[ index2array( i, j, k) ];
+        			return &(domain[ index2array( i, j, k) ]);
         	}
           return NULL;
         }
@@ -293,7 +303,8 @@ class IntScalarField : public Field<int> {
 
     private:
 		int _x, _y, _z;
-		int *flagfield;
+		// int *flagfield;
+		Field<int> *field;
         /** Initialize the array with zeros
          *
          * Had to be redeclared here because the object of the parent class
@@ -304,7 +315,7 @@ class IntScalarField : public Field<int> {
         	for (int i=0; i < _x; i++){
         		for (int j=0; j < _y; j++){
         			for (int k=0; k < _z; k++){
-        				flagfield[ index2array( i, j, k) ] = 0;
+        				domain[ index2array( i, j, k) ] = 0;
         			}
         		}
         	}
@@ -321,8 +332,8 @@ class IntScalarField : public Field<int> {
           // TODO WORKSHEET 1
         	_x = Nx;
         	_y = Ny;
-        	Field<int> field(_x, _y, _z = 0, 1);
-        	flagfield = field.domain;
+        	field = new Field<int> (_x, _y, _z = 1, 1);
+        	domain = field->domain;
         	initialize ();
         }
 
@@ -337,9 +348,13 @@ class IntScalarField : public Field<int> {
         	_x = Nx + 3;
         	_y = Ny + 3;
         	_z = Nz + 3;
-        	Field<int> field(_x, _y, _z, 1);
-        	flagfield = field.domain;
+        	field = new Field<int> (_x, _y, _z, 1);
+        	domain = field->domain;
         	initialize ();
+        }
+
+        ~IntScalarField(){
+        	delete field;
         }
 
         /** Access field values
@@ -353,7 +368,7 @@ class IntScalarField : public Field<int> {
         int & getValue ( int i, int j, int k = 0 ){
           // TODO WORKSHEET 1
         	if ((i < _x) && (j < _y) && (k < _z)){
-        		return flagfield[ index2array( i, j, k) ];
+        		return domain[ index2array( i, j, k) ];
         	}
           static int invalidInitialValueForWorksheet1CodeFrame = -1;
           return invalidInitialValueForWorksheet1CodeFrame;

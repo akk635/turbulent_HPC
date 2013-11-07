@@ -11,7 +11,7 @@
 #CC = mpiCC
 # compiler on Ubuntu
 CC = mpic++
-CFLAGS = -Wall -Werror -O3
+CFLAGS = -Wall  -O3
 SRCDIR = ../src
 BUILDDIR = build
 PETSC_DIR = /usr/local/petsc
@@ -30,7 +30,8 @@ stencils/FGHStencil.o solvers/SORSolver.o solvers/PetscSolver.o \
 stencils/RHSStencil.o stencils/VelocityStencil.o \
 GlobalBoundaryFactory.o \
 parallelManagers/PetscParallelConfiguration.o \
-stencils/BFStepInitStencil.o stencils/NeumannBoundaryStencils.o stencils/BFInputStencils.o
+stencils/BFStepInitStencil.o stencils/NeumannBoundaryStencils.o stencils/BFInputStencils.o \
+visual.o helper.o
 
 all: ns
 

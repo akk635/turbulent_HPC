@@ -17,16 +17,20 @@ class VTKStencil : public FieldStencil<FlowField> {
 
 	private:
 		int _dim;
+		// std::ofstream fpV;
+		// std::ofstream fpP;
 		FILE *fpV = NULL;
 		FILE *fpP = NULL;
 		int _timeStep;
-
-    public:
 		int lastCorner[3];
 		const int *firstCorner;
 		FLOAT pressure;
 		FLOAT * velocity;
 		const int *localSize;
+    	std::string vtkVelocity;
+    	std::string vtkPressure;
+
+    public:
         /** Constructor
          *
          */
@@ -34,11 +38,10 @@ class VTKStencil : public FieldStencil<FlowField> {
           // TODO WORKSHEET 1
 
         	_dim = parameters.geometry.dim;
-        	firstCorner = new int[3];
+        	firstCorner = new int [_dim];
         	firstCorner = parameters.parallel.firstCorner;
-
+        	// Memory for writing the velocity values
         	velocity = new FLOAT [_dim];
-
         	localSize = new int [_dim];
         	localSize = parameters.parallel.localSize;
 
@@ -46,48 +49,9 @@ class VTKStencil : public FieldStencil<FlowField> {
         		lastCorner[i] = firstCorner[i] + localSize[i];
         	}
 
-        	std::string vtkVelocity;
         	vtkVelocity = parameters.vtk.prefix;
-        	/*for ( int i=0; i<3; i++){
-        		vtkVelocity += (firstCorner[i]+'_');
-        	}*/
-
-        	vtkVelocity += "_velocity.vtk";
-        	fpV = fopen( vtkVelocity.c_str(), "w");
-        	/*write_vtkHeader( fpV, localSize[0], localSize[1],
-        					localSize[2], firstCorner[0], firstCorner[1],
-        					firstCorner[2], parameters.geometry.dx, parameters.geometry.dy,
-        	        		parameters.geometry.dz);*/
-
-        	std::string vtkPressure;
         	vtkPressure = parameters.vtk.prefix;
-        	vtkPressure += "_pressure.vtk";
-        	fpP = fopen( vtkPressure.c_str(), "w");
-        	if (fpP == NULL){
-        		std::cout<<"file didnt open";
-        	}
-        	std::cout<<"ok";        	/*write_vtkHeader( fpP, localSize[0], localSize[1],
-        					localSize[2], firstCorner[0], firstCorner[1],
-        					firstCorner[2], parameters.geometry.dx, parameters.geometry.dy,
-        	        		parameters.geometry.dz);*/
 
-
-        	fprintf(fpV,"POINT_DATA %i \n",  localSize[0] * localSize[1] * localSize[2] );
-        	fprintf(fpV, "VECTORS velocity float \n");
-        	fprintf(fpP,"POINT_DATA %i \n",  localSize[0] * localSize[1] * localSize[2] );
-        	fprintf(fpP, "SCALARS pressure float 1 \n");
-
-        	// For the case of 3D
-/*        	if( localSize[2] != 0 ){
-        		_dim = 3;
-        		pressure = new FLOAT[ localSize[0] * localSize[1] * localSize[2] ];
-        		velocity = new FLOAT[ localSize[0] * localSize[1] * localSize[2] * 3 ];
-           	} else {
-           		_dim = 2;
-        		pressure = new FLOAT[ localSize[0] * localSize[1] ];
-        		velocity = new FLOAT[ localSize[0] * localSize[1] * 3 ];
-           	}
-           	*/
         }
 
         // default destructor
@@ -139,6 +103,33 @@ class VTKStencil : public FieldStencil<FlowField> {
           // TODO WORKSHEET 1
         	// the apply method itself writes the files into apply
         	_timeStep = timeStep;
+
+        	vtkVelocity += "_velocity.vtk";
+        	fpV = fopen( vtkVelocity.c_str(), "w");
+        	write_vtkHeader( fpV, localSize[0], localSize[1],
+        					localSize[2], firstCorner[0], firstCorner[1],
+        					firstCorner[2], _parameters.geometry.dx, _parameters.geometry.dy,
+        	        		_parameters.geometry.dz);
+
+        	vtkPressure += "_pressure.vtk";
+        	fpP = fopen( vtkPressure.c_str(), "w");
+        	if (fpP == NULL){
+        		std::cout<<"file didnt open";
+        	}
+        	std::cout<<"ok";
+
+        	write_vtkHeader( fpP, localSize[0], localSize[1],
+        					localSize[2], firstCorner[0], firstCorner[1],
+        					firstCorner[2], _parameters.geometry.dx, _parameters.geometry.dy,
+        	        		_parameters.geometry.dz );
+
+
+        	fprintf(fpV , "POINT_DATA %i \n",  (localSize[0]+1) * (localSize[1]+1) * (localSize[2]+1) );
+        	fprintf(fpV, "VECTORS velocity float \n");
+        	fprintf(fpP,"POINT_DATA %i \n",  localSize[0] * localSize[1] * localSize[2] );
+        	fprintf(fpP, "SCALARS pressure float 1 \n");
+        	fprintf(fpP, "LOOKUP_TABLE default \n");
+
         }
 
 };
