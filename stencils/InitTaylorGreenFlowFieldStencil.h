@@ -48,9 +48,9 @@ class InitTaylorGreenFlowFieldStencil: public FieldStencil<FlowField> {
 		// ??For initialising the 3d velocity fields
 		void apply ( FlowField & flowField, int i, int j, int k ) {
 			velocity = flowField.getVelocity().getVector(i, j, k);
-			velocity[0] = cos (2 * M_PI * i / Size[0]) * sin ( 2 * M_PI * j / Size[1] ) * sin ( 2 * M_PI * k / Size[2] );
-			velocity[1] = sin (2 * M_PI * i / Size[0]) * cos ( 2 * M_PI * j / Size[1] ) * sin ( 2 * M_PI * k / Size[2] );
-			velocity[2] = sin (2 * M_PI * i / Size[0]) * sin ( 2 * M_PI * j / Size[1] ) * cos ( 2 * M_PI * k / Size[2] );
+			velocity[0] = cos (2 * M_PI * (i-1) / Size[0]) * sin ( 2 * M_PI * (j-1) / Size[1] ) * sin ( 2 * M_PI * (k-1) / Size[2] );
+			velocity[1] = sin (2 * M_PI * (i-1) / Size[0]) * cos ( 2 * M_PI * (j-1) / Size[1] ) * sin ( 2 * M_PI * (k-1) / Size[2] );
+			velocity[2] = sin (2 * M_PI * (i-1) / Size[0]) * sin ( 2 * M_PI * (j-1) / Size[1] ) * cos ( 2 * M_PI * (k-1) / Size[2] );
 		}
 };
 
