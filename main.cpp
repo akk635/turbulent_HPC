@@ -11,6 +11,7 @@ int main (int argc, char *argv[]) {
     // ---------------------------------------------------
     int rank;   // This processor's identifier
     int nproc;  // Number of processors in the group
+    // MPI_Init ( &argc, &argv );
     PetscInitialize(&argc, &argv, PETSC_NULL, PETSC_NULL);
     MPI_Comm_size(PETSC_COMM_WORLD, &nproc);
     MPI_Comm_rank(PETSC_COMM_WORLD, &rank);
@@ -48,7 +49,7 @@ int main (int argc, char *argv[]) {
     std::cout<<flowField->getFlags().getValue(22,22,22)<<std::endl;
     std::cout<<*(flowField->getVelocity().getVector(1,1,1))<<std::endl;
     std::cout<<*(flowField->getFGH().getVector(2,3,5))<<std::endl;
-    std::cout<<flowField->getPressure().getScalar(4,7,8)<<std::endl;
+    std::cout<<flowField->getPressure().getScalar(22,7,8)<<std::endl;
     if(flowField == NULL){ handleError(1, "flowField==NULL!"); }
     simulation = new Simulation(parameters,*flowField);
     if(simulation == NULL){ handleError(1, "simulation==NULL!"); }

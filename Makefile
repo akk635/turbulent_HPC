@@ -31,7 +31,7 @@ stencils/RHSStencil.o stencils/VelocityStencil.o \
 GlobalBoundaryFactory.o \
 parallelManagers/PetscParallelConfiguration.o \
 stencils/BFStepInitStencil.o stencils/NeumannBoundaryStencils.o stencils/BFInputStencils.o \
-visual.o helper.o
+visual.o
 
 all: ns
 

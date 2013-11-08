@@ -66,17 +66,20 @@ class Simulation {
     /** plots the flow field.  */
     void plotVTK(int timeStep){
       // TODO WORKSHEET 1
-/*    	InitTaylorGreenFlowFieldStencil taylorGreenStencil(_parameters);
+    	InitTaylorGreenFlowFieldStencil taylorGreenStencil(_parameters);
     	FieldIterator<FlowField> InitTaylorGreenFlowFieldIterator( _flowField, _parameters, taylorGreenStencil,
-                										0, 0);
+    																0, 0);
     	InitTaylorGreenFlowFieldIterator.iterate();
     	std::cout<<"I am here"<<std::endl;
     	std::cout<<*(_flowField.getVelocity().getVector(1,1,1))<<std::endl;
-    	std::cout<<"wtf"<<std::endl;
+
     	VTKStencil _vtk(_parameters);
     	_vtk.write ( _flowField, timeStep );
+    	std::cout<<"works5"<<std::endl;
     	FieldIterator<FlowField> VtkIterator(_flowField, _parameters, _vtk, 0, 0);
-    	VtkIterator.iterate();*/
+    	std::cout<<"works6"<<std::endl;
+    	VtkIterator.iterate();
+    	std::cout<<"works7"<<std::endl;
     }
 
   protected:
