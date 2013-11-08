@@ -45,11 +45,6 @@ int main (int argc, char *argv[]) {
     // initialise simulation
     std::cout << "Start DNS simulation in " << parameters.geometry.dim << "D" << std::endl;
     flowField = new FlowField(parameters);
-    std::cout<<flowField->getCellsX()<<std::endl;
-    std::cout<<flowField->getFlags().getValue(22,22,22)<<std::endl;
-    std::cout<<*(flowField->getVelocity().getVector(1,1,1))<<std::endl;
-    std::cout<<*(flowField->getFGH().getVector(2,3,5))<<std::endl;
-    std::cout<<flowField->getPressure().getScalar(22,7,8)<<std::endl;
     if(flowField == NULL){ handleError(1, "flowField==NULL!"); }
     simulation = new Simulation(parameters,*flowField);
     if(simulation == NULL){ handleError(1, "simulation==NULL!"); }

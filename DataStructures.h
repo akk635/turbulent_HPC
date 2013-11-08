@@ -354,9 +354,9 @@ class IntScalarField : public Field<int> {
          */
         IntScalarField ( int Nx, int Ny, int Nz ){
           // TODO WORKSHEET 1
-        	_x = Nx + 3;
-        	_y = Ny + 3;
-        	_z = Nz + 3;
+        	_x = Nx;
+        	_y = Ny;
+        	_z = Nz;
         	entities = 1;
         	field = new Field<int> (_x, _y, _z, 1);
         	flagfield = field->domain;

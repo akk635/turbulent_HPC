@@ -20,8 +20,6 @@ class VTKStencil : public FieldStencil<FlowField> {
 		std::ofstream fpV;
 		std::ofstream fpP;
 		const int *firstCorner;
-		FLOAT pressure;
-		FLOAT * velocity;
 		const int *localSize;
     	std::string vtkVelocity;
     	std::string vtkPressure;
@@ -35,24 +33,17 @@ class VTKStencil : public FieldStencil<FlowField> {
 
         	_dim = parameters.geometry.dim;
         	firstCorner = new int [_dim];
-        	std::cout<<"works"<<std::endl;
         	firstCorner = parameters.parallel.firstCorner;
-        	// Memory for writing the velocity values
-        	velocity = new FLOAT [_dim];
         	localSize = new int [_dim];
         	localSize = parameters.parallel.localSize;
         	vtkVelocity = parameters.vtk.prefix;
         	vtkPressure = parameters.vtk.prefix;
-        	pressure = 0;
-        	std::cout<<"works1"<<std::endl;
-
         }
 
         // default destructor
         ~VTKStencil() {
-        	delete[] velocity;
-        	delete[] firstCorner;
-        	delete[] localSize;
+        	firstCorner = NULL;
+        	localSize = NULL;
         	fpV.close();
         	fpP.close();
         }
@@ -77,13 +68,15 @@ class VTKStencil : public FieldStencil<FlowField> {
           // TODO WORKSHEET 1
         	// Writing the vtk file from the local values
         	if( flowField.getFlags().getValue(i,j,k) == 0 ){
-        		flowField.getPressureAndVelocity( pressure, velocity, i, j, k);
-        		fpV << velocity[0] << " " << velocity[1] << " " << velocity[2] << "\n" ;
-        		fpP << pressure << "\n";
+        		flowField.getPressureAndVelocity( flowField.getPressure().getScalar(i, j, k), flowField.getVelocity().getVector(i, j, k), i, j, k);
+
+        		fpV << flowField.getVelocity().getVector(i, j, k)[0] << " " << flowField.getVelocity().getVector(i, j, k)[1] <<
+        				" " << flowField.getVelocity().getVector(i, j, k)[2] << "\n" ;
+        		fpP << flowField.getPressure().getScalar(i, j, k) << "\n";
         	}
         	else {
-        		fpV << (FLOAT) 0 << " " << (FLOAT) 0 << " " << (FLOAT) 0 << "\n" ;
-        		fpP << (FLOAT) 0 << "\n";
+        		fpV << (FLOAT) 0.0 << " " << (FLOAT) 0.0 << " " << (FLOAT) 0.0 << "\n" ;
+        		fpP << (FLOAT) 0.0 << "\n";
         	}
 
         }
@@ -106,18 +99,15 @@ class VTKStencil : public FieldStencil<FlowField> {
         	fpV.open( vtkVelocity.c_str() );
         	fpP.open( vtkPressure.c_str() );
 
-        	std::cout<<"works2"<<std::endl;
         	write_vtkHeader( fpV, localSize[0], localSize[1],
         					localSize[2], firstCorner[0], firstCorner[1],
         					firstCorner[2], _parameters.geometry.dx, _parameters.geometry.dy,
         	        		_parameters.geometry.dz);
-        	std::cout<<"works3"<<std::endl;
 
         	write_vtkHeader( fpP, localSize[0], localSize[1],
         					localSize[2], firstCorner[0], firstCorner[1],
         					firstCorner[2], _parameters.geometry.dx, _parameters.geometry.dy,
         	        		_parameters.geometry.dz);
-        	std::cout<<"works4"<<std::endl;
 
         	fpV << "POINT_DATA " << ((localSize[0]+1) * (localSize[1]+1) * (localSize[2]+1)) << "\n";
         	fpV << "VECTORS velocity double \n" ;
