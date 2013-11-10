@@ -10,6 +10,7 @@
 #include "Definitions.h"
 #include "stencils/InitTaylorGreenFlowFieldStencil.h"
 #include "stencils/VTKStencil.h"
+#include "GlobalBoundaryFactory.h"
 // TODO WORKSHEET 3: include PetscParallelManager
 
 
@@ -66,6 +67,11 @@ class Simulation {
     /** plots the flow field.  */
     void plotVTK(int timeStep){
       // TODO WORKSHEET 1
+    	// Setting up periodic boundary conditions
+    	GlobalBoundaryFactory globalBoundary = GlobalBoundaryFactory(_parameters);
+    	GlobalBoundaryIterator<FlowField> taylorGreenBoundaryIterator = globalBoundary.getGlobalBoundaryVelocityIterator( _flowField );
+    	taylorGreenBoundaryIterator.iterate();
+
     	InitTaylorGreenFlowFieldStencil taylorGreenStencil(_parameters);
     	FieldIterator<FlowField> InitTaylorGreenFlowFieldIterator( _flowField, _parameters, taylorGreenStencil,
     																0, 0);

@@ -32,9 +32,9 @@ class VTKStencil : public FieldStencil<FlowField> {
           // TODO WORKSHEET 1
 
         	_dim = parameters.geometry.dim;
-        	firstCorner = new int [_dim];
+        	firstCorner = NULL;
         	firstCorner = parameters.parallel.firstCorner;
-        	localSize = new int [_dim];
+        	localSize = NULL;
         	localSize = parameters.parallel.localSize;
         	vtkVelocity = parameters.vtk.prefix;
         	vtkPressure = parameters.vtk.prefix;
@@ -110,6 +110,7 @@ class VTKStencil : public FieldStencil<FlowField> {
         	        		_parameters.geometry.dz);
 
         	fpV << "POINT_DATA " << ((localSize[0]+1) * (localSize[1]+1) * (localSize[2]+1)) << "\n";
+        	// fpV << "CELL_DATA " <<  (localSize[0] * localSize[1] * localSize[2]) << "\n" ;
         	fpV << "VECTORS velocity double \n" ;
         	fpP << "CELL_DATA " <<  (localSize[0] * localSize[1] * localSize[2]) << "\n" ;
         	fpP << "SCALARS pressure double 1 \n";
