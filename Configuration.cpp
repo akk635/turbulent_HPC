@@ -117,7 +117,6 @@ void Configuration::loadParameters(Parameters & parameters, const MPI_Comm & com
     tinyxml2::XMLElement *node;
     tinyxml2::XMLElement *subNode;
 
-
     int rank;
 
     MPI_Comm_rank(communicator, &rank);

@@ -99,7 +99,9 @@ void PeriodicBoundaryFGHStencil::applyBottomWall(FlowField & flowField, int i, i
 void PeriodicBoundaryFGHStencil::applyTopWall(FlowField & flowField, int i, int j){}
 
 // 3D Problem
-void PeriodicBoundaryFGHStencil::applyLeftWall(FlowField & flowField, int i, int j, int k){}
+void PeriodicBoundaryFGHStencil::applyLeftWall(FlowField & flowField, int i, int j, int k){
+
+}
 void PeriodicBoundaryFGHStencil::applyRightWall(FlowField & flowField, int i, int j, int k){}
 void PeriodicBoundaryFGHStencil::applyBottomWall(FlowField & flowField, int i, int j, int k){}
 void PeriodicBoundaryFGHStencil::applyTopWall(FlowField & flowField, int i, int j, int k){}

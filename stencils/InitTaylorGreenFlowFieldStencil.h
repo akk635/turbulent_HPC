@@ -45,7 +45,7 @@ class InitTaylorGreenFlowFieldStencil: public FieldStencil<FlowField> {
 
 		}
 
-		// ??For initialising the 3d velocity fields
+		// For initialising the 3d velocity fields
 		void apply ( FlowField & flowField, int i, int j, int k ) {
 			//
 			velocity = flowField.getVelocity().getVector(i, j, k);

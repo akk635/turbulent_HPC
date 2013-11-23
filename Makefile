@@ -2,8 +2,9 @@
 #include ${PETSC_DIR}/${PETSC_ARCH}/conf/variables
 #include ${PETSC_DIR}/${PETSC_ARCH}/conf/rules
 # uncomment the following two lines for mac-cluster
-#include ${PETSC_DIR}/conf/variables
-#include ${PETSC_DIR}/conf/rules
+# PETSC_DIR = /usr/local/petsc
+include ${PETSC_DIR}/conf/variables
+include ${PETSC_DIR}/conf/rules
 
 # default gnu compiler (currently not used)
 # CC = g++
@@ -14,10 +15,6 @@ CC = mpic++
 CFLAGS = -Wall  -O3
 SRCDIR = ../src
 BUILDDIR = build
-PETSC_DIR = /usr/local/petsc
-# uncomment the following two lines for mac-cluster
-include ${PETSC_DIR}/conf/variables
-include ${PETSC_DIR}/conf/rules
 
 INCLUDE = -I. -Istencils -I${PETSC_DIR}/${PETSC_ARCH}/include -I${PETSC_DIR}/include
 
