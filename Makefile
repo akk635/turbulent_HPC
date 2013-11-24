@@ -43,4 +43,5 @@ ns: $(OBJ) $(NSOBJ) $(NSMAIN)
 cleanall:
 	for name in  ns main.o $(NSOBJ) testbin $(OBJ) tests/*.o; do \
 	if [ -f $$name ]; then rm $$name; fi; \
-	done;
+	done;\
+	rm *.vtk

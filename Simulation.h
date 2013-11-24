@@ -153,6 +153,11 @@ class Simulation {
 			}
 		}
 
+		//check that output are exactly at the time they are printing
+		if (_parameters.simulation.currentTime + _parameters.timestep.dt > (_parameters.vtk.vtkCounter + 1) * _parameters.vtk.interval){
+		    _parameters.timestep.dt = (_parameters.vtk.vtkCounter + 1) * _parameters.vtk.interval - _parameters.simulation.currentTime;
+		}
+
       // TODO WORKSHEET 3: determine global minimum of time step
 
     }
