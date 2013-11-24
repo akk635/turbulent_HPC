@@ -23,6 +23,7 @@ class VTKStencil : public FieldStencil<FlowField> {
 		const int *localSize;
     	std::string vtkVelocity;
     	std::string vtkPressure;
+    	FLOAT *const velocity = new FLOAT[3];
 
     public:
         /** Constructor
@@ -46,6 +47,7 @@ class VTKStencil : public FieldStencil<FlowField> {
         	localSize = NULL;
         	fpV.close();
         	fpP.close();
+        	delete[] velocity;
         }
         /** 2D operation for one position
          *
@@ -68,10 +70,10 @@ class VTKStencil : public FieldStencil<FlowField> {
           // TODO WORKSHEET 1
         	// Writing the vtk file from the local values
         	if( flowField.getFlags().getValue(i,j,k) == 0 ){
-        		flowField.getPressureAndVelocity( flowField.getPressure().getScalar(i, j, k), flowField.getVelocity().getVector(i, j, k), i, j, k);
+        		flowField.getPressureAndVelocity( flowField.getPressure().getScalar(i, j, k), velocity, i, j, k);
 
-        		fpV << flowField.getVelocity().getVector(i, j, k)[0] << " " << flowField.getVelocity().getVector(i, j, k)[1] <<
-        				" " << flowField.getVelocity().getVector(i, j, k)[2] << "\n" ;
+        		fpV << velocity[0] << " " << velocity[1] <<
+        				" " << velocity[2] << "\n" ;
         		fpP << flowField.getPressure().getScalar(i, j, k) << "\n";
         	}
         	else {

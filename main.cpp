@@ -58,6 +58,7 @@ int main (int argc, char *argv[]) {
     //                   - solve one time step
     //                   - plot VTK output (if required at this time step)
     //                   - write simulation status to terminal (if required at this time step)
+    simulation->plotVTK(1);
 
     // TODO WORKSHEET 2: plot final VTK output
 

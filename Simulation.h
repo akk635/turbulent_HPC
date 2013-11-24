@@ -47,8 +47,6 @@ class Simulation {
     VelocityStencil newvelocities;
     FieldIterator<FlowField> NewVelocitiesUpdateIterator;
 
-    VTKStencil _vtk;
-	FieldIterator<FlowField> VtkIterator;
     // TODO WORKSHEET 2: add instance of PetscSolver here
     PetscSolver petscsolver;
     // TODO WORKSHEET 3: add instance of PetscParallelManager
@@ -70,10 +68,8 @@ class Simulation {
        globalRHSFieldIterator( _flowField, parameters, RHS, 1, 0),
        petscsolver( _flowField, _parameters ),
        newvelocities( _parameters ),
-       NewVelocitiesUpdateIterator( _flowField, _parameters, newvelocities,1, 0),
+       NewVelocitiesUpdateIterator( _flowField, _parameters, newvelocities,1, 0)
 
-       _vtk(_parameters),
-       VtkIterator(_flowField, _parameters, _vtk, 0, 0)
   	  // TODO WORKSHEET 2: initialize stencils, iterators and pressure solver here
        // TODO WORKSHEET 3: initialize instance of PetscParallelManager
        {
@@ -115,15 +111,17 @@ class Simulation {
     }
 
     void initializeVelocity(){
-    	InitTaylorGreenFlowFieldStencil taylorGreenStencil(_parameters);
+    	InitTaylorGreenFlowFieldStencil taylorGreenStencil( _parameters );
     	FieldIterator<FlowField> InitTaylorGreenFlowFieldIterator( _flowField, _parameters, taylorGreenStencil,
-    																0, 0);
+    																0, 0 );
     	InitTaylorGreenFlowFieldIterator.iterate();
     }
 
     /** plots the flow field.  */
     void plotVTK(int timeStep){
       // TODO WORKSHEET 1
+        VTKStencil _vtk(_parameters);
+    	FieldIterator<FlowField> VtkIterator(_flowField, _parameters, _vtk, 0, 0);
     	_vtk.write ( _flowField, timeStep );
     	VtkIterator.iterate();
     }
