@@ -16,6 +16,7 @@ class TimestepParameters{
 class SimulationParameters{
     public:
         FLOAT finalTime;  //! Final time for the simulation
+        FLOAT currentTime;  //! Current time for the simulation
         std::string scenario;   //! If channel or cavity, for example
 };
 
@@ -86,6 +87,7 @@ class VTKParameters{
     public:
         FLOAT interval;     //! Time interval for file printing
         std::string prefix;   //! Output filename
+        int vtkCounter;     //Number of times the vtk has been output
 };
 
 class StdOutParameters{

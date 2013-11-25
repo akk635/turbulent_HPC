@@ -16,6 +16,7 @@
 #include "stencils/FGHStencil.h"
 #include "stencils/RHSStencil.h"
 #include "stencils/VelocityStencil.h"
+#include "stencils/BFStepInitStencil.h"
 #include "solvers/PetscSolver.h"
 
 
@@ -126,7 +127,7 @@ class Simulation {
 
     /** plots the flow field.  */
     void plotVTK(int timeStep) {
-      // TODO WORKSHEET 1
+      // TODO WORKSHEET 1z
         VTKStencil _vtk(_parameters);
     	FieldIterator<FlowField> VtkIterator(_flowField, _parameters, _vtk, 0, 0);
     	_vtk.write ( _flowField, timeStep );
@@ -158,6 +159,12 @@ class Simulation {
 			else{
 				_parameters.timestep.dt = _parameters.timestep.tau * d;
 			}
+		}
+
+		//check that output are exactly at the time they are printing
+		if (_parameters.simulation.currentTime + _parameters.timestep.dt > (_parameters.vtk.vtkCounter + 1) * _parameters.vtk.interval * 2){
+		    _parameters.timestep.dt = (_parameters.vtk.vtkCounter + 1) * _parameters.vtk.interval - _parameters.simulation.currentTime;
+		    std::cout<<"from inside: counter"<<_parameters.vtk.vtkCounter<<std::endl;
 		}
 
       // TODO WORKSHEET 3: determine global minimum of time step

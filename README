@@ -1,1 +1,0 @@
-Code frame: most of the functionality of the Navier-Stokes solver is available (except for VTK plotting), but not integrated into a common solution strategy (algorithm).
