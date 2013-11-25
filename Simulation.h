@@ -117,8 +117,15 @@ class Simulation {
     	InitTaylorGreenFlowFieldIterator.iterate();
     }
 
+    void initFlagField(){
+    	BFStepInitStencil bfFlagFieldStencil( _parameters );
+    	FieldIterator<FlowField> bfFlagFieldIterator(_flowField, _parameters, bfFlagFieldStencil, 0, 0);
+    	bfFlagFieldIterator.iterate();
+
+    }
+
     /** plots the flow field.  */
-    void plotVTK(int timeStep){
+    void plotVTK(int timeStep) {
       // TODO WORKSHEET 1
         VTKStencil _vtk(_parameters);
     	FieldIterator<FlowField> VtkIterator(_flowField, _parameters, _vtk, 0, 0);

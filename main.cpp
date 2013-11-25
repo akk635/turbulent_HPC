@@ -50,7 +50,12 @@ int main (int argc, char *argv[]) {
     if(simulation == NULL){ handleError(1, "simulation==NULL!"); }
 
     // TODO WORKSHEET 1: plot initial state
-    simulation->initializeVelocity();
+    if( parameters.vtk.prefix == "taylorgreen_sequential_result" ) {
+    	simulation->initializeVelocity();
+    }
+    if( parameters.vtk.prefix == "channel_result" ){
+    	simulation->initFlagField();
+    }
     simulation->solveTimestep();
     simulation->plotVTK(0);
 
