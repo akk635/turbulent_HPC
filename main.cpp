@@ -51,13 +51,11 @@ int main (int argc, char *argv[]) {
 
     // TODO WORKSHEET 1: plot initial state
     if( parameters.vtk.prefix == "taylorgreen_sequential_result" ) {
-    	simulation->initializeVelocity();
+        simulation->initializeVelocity();
     }
     if( parameters.vtk.prefix == "channel_result" ){
-    	simulation->initFlagField();
+        simulation->initFlagField();
     }
-    simulation->solveTimestep();
-
     simulation->plotVTK(0);
 
     // TODO WORKSHEET 2: loop over time and
@@ -66,18 +64,15 @@ int main (int argc, char *argv[]) {
     //                   - write simulation status to terminal (if required at this time step)
     parameters.vtk.vtkCounter=0;
     parameters.simulation.currentTime=0;
-    //    while (parameters.vtk.vtkCounter < 2){
     while (parameters.simulation.currentTime <= parameters.simulation.finalTime){
         simulation->solveTimestep();
         parameters.simulation.currentTime+=parameters.timestep.dt;
         if ( parameters.simulation.currentTime == (parameters.vtk.vtkCounter + 1) * parameters.vtk.interval ){
             (parameters.vtk.vtkCounter)++;
             simulation->plotVTK(parameters.vtk.vtkCounter);
+            std::cout << "parameters.vtk.vtkCounter = " << parameters.vtk.vtkCounter << std::endl;
+            std::cout << "parameters.simulation.currentTime = " << parameters.simulation.currentTime << std::endl;
         }
-        std::cout << "parameters.simulation.currentTime = " << parameters.simulation.currentTime << std::endl;
-        std::cout << "dt = " << parameters.timestep.dt << std::endl;
-
-
     }
 
 
@@ -86,5 +81,4 @@ int main (int argc, char *argv[]) {
     delete simulation; simulation=NULL;
     delete flowField;  flowField= NULL;
     PetscFinalize();
-
 }

@@ -25,7 +25,7 @@
 
 
 class Simulation {
-  protected:
+ protected:
     Parameters &_parameters;
 
     FlowField &_flowField;
@@ -54,37 +54,37 @@ class Simulation {
 
 
 
-  public:
+ public:
     Simulation(Parameters &parameters, FlowField &flowField):
-       _parameters(parameters),
-       _flowField(flowField),
-       MaxU(parameters),
-       MaxUFlowFieldIterator(_flowField, parameters, MaxU, 1, 0),
-       MaxUBoundaryIterator(_flowField, parameters, MaxU, 1, 0),
-       FGH( _parameters ),
-       globalFGHFieldIterator( _flowField, parameters, FGH, 1, 0),
-       globalBoundary( _parameters ),
+        _parameters(parameters),
+        _flowField(flowField),
+        MaxU(parameters),
+        MaxUFlowFieldIterator(_flowField, parameters, MaxU, 1, 0),
+        MaxUBoundaryIterator(_flowField, parameters, MaxU, 1, 0),
+        FGH( _parameters ),
+        globalFGHFieldIterator( _flowField, parameters, FGH, 1, 0),
+        globalBoundary( _parameters ),
 
-       RHS( _parameters ),
-       globalRHSFieldIterator( _flowField, parameters, RHS, 1, 0),
-       petscsolver( _flowField, _parameters ),
-       newvelocities( _parameters ),
-       NewVelocitiesUpdateIterator( _flowField, _parameters, newvelocities,1, 0)
+        RHS( _parameters ),
+        globalRHSFieldIterator( _flowField, parameters, RHS, 1, 0),
+        petscsolver( _flowField, _parameters ),
+        newvelocities( _parameters ),
+        NewVelocitiesUpdateIterator( _flowField, _parameters, newvelocities,1, 0)
 
-  	  // TODO WORKSHEET 2: initialize stencils, iterators and pressure solver here
-       // TODO WORKSHEET 3: initialize instance of PetscParallelManager
-       {
-           // TODO WORKSHEET 2: set up flag field for backward facing step scenario (if required)
-       }
+ // TODO WORKSHEET 2: initialize stencils, iterators and pressure solver here
+ // TODO WORKSHEET 3: initialize instance of PetscParallelManager
+ {
+        // TODO WORKSHEET 2: set up flag field for backward facing step scenario (if required)
+ }
 
     virtual ~Simulation(){}
 
     virtual void solveTimestep(){
         // TODO WORKSHEET 2: reset maximum velocity values and determine new maximum values
-    	MaxU.reset();
-    	MaxUFlowFieldIterator.iterate();
-    	// For covering the domain boundary
-    	MaxUBoundaryIterator.iterate();
+        MaxU.reset();
+        MaxUFlowFieldIterator.iterate();
+        // For covering the domain boundary
+        MaxUBoundaryIterator.iterate();
 
         // TODO WORKSHEET 2: set new time step
         setTimeStep();
@@ -112,62 +112,63 @@ class Simulation {
     }
 
     void initializeVelocity(){
-    	InitTaylorGreenFlowFieldStencil taylorGreenStencil( _parameters );
-    	FieldIterator<FlowField> InitTaylorGreenFlowFieldIterator( _flowField, _parameters, taylorGreenStencil,
-    																0, 0 );
-    	InitTaylorGreenFlowFieldIterator.iterate();
+        InitTaylorGreenFlowFieldStencil taylorGreenStencil( _parameters );
+        FieldIterator<FlowField> InitTaylorGreenFlowFieldIterator( _flowField, _parameters, taylorGreenStencil,
+                                                                   0, 0 );
+        InitTaylorGreenFlowFieldIterator.iterate();
     }
 
     void initFlagField(){
-    	BFStepInitStencil bfFlagFieldStencil( _parameters );
-    	FieldIterator<FlowField> bfFlagFieldIterator(_flowField, _parameters, bfFlagFieldStencil, 0, 0);
-    	bfFlagFieldIterator.iterate();
+        BFStepInitStencil bfFlagFieldStencil( _parameters );
+        FieldIterator<FlowField> bfFlagFieldIterator(_flowField, _parameters, bfFlagFieldStencil, 0, 0);
+        bfFlagFieldIterator.iterate();
 
     }
 
     /** plots the flow field.  */
-    void plotVTK(int timeStep) {
-      // TODO WORKSHEET 1z
+    void plotVTK(int timeStep){
+        // TODO WORKSHEET 1
         VTKStencil _vtk(_parameters);
-    	FieldIterator<FlowField> VtkIterator(_flowField, _parameters, _vtk, 0, 0);
-    	_vtk.write ( _flowField, timeStep );
-    	VtkIterator.iterate();
+        FieldIterator<FlowField> VtkIterator(_flowField, _parameters, _vtk, 0, 0);
+        _vtk.write ( _flowField, timeStep );
+        VtkIterator.iterate();
     }
 
-  protected:
+ protected:
     /** sets the time step according to the maximum velocity values that have been determined before */
     void setTimeStep(){
 
-      // TODO WORKSHEET 2: determine maximum time step according to CFL-condition and maximum velocity values;
-      //                   set the respective timestep in _parameters.timestep.dt.
-		if (_parameters.timestep.tau>0){
-			FLOAT a,b,c,d;
-			a = _parameters.flow.Re/(2.0*(1.0/(_parameters.geometry.dx*_parameters.geometry.dx)
-					+1.0/(_parameters.geometry.dy*_parameters.geometry.dy)+1.0/(_parameters.geometry.dz*_parameters.geometry.dz)));
-			b = _parameters.geometry.dx/( MaxU.getMaxValues() )[0];
-			c = _parameters.geometry.dy/( MaxU.getMaxValues() )[1];
-			d = _parameters.geometry.dz/( MaxU.getMaxValues() )[2];
-			if(a < b && a < c && a<d){
-				_parameters.timestep.dt = _parameters.timestep.tau * a;
-			}
-			else if(b < a && b < c && b < d){
-				_parameters.timestep.dt = _parameters.timestep.tau * b;
-			}
-			else if(c < a && c < b && b<d){
-				_parameters.timestep.dt = _parameters.timestep.tau * c;
-			}
-			else{
-				_parameters.timestep.dt = _parameters.timestep.tau * d;
-			}
-		}
+        // TODO WORKSHEET 2: determine maximum time step according to CFL-condition and maximum velocity values;
+        //                   set the respective timestep in _parameters.timestep.dt.
+        if (_parameters.timestep.tau>0){
+            FLOAT a,b,c,d;
+            a = _parameters.flow.Re/(2.0*(1.0/(_parameters.geometry.dx*_parameters.geometry.dx)
+                    +1.0/(_parameters.geometry.dy*_parameters.geometry.dy)+1.0/(_parameters.geometry.dz*_parameters.geometry.dz)));
+            b = _parameters.geometry.dx/( MaxU.getMaxValues() )[0];
+            c = _parameters.geometry.dy/( MaxU.getMaxValues() )[1];
+            d = _parameters.geometry.dz/( MaxU.getMaxValues() )[2];
+            if(a < b && a < c && a<d){
+                _parameters.timestep.dt = _parameters.timestep.tau * a;
+            }
+            else if(b < a && b < c && b < d){
+                _parameters.timestep.dt = _parameters.timestep.tau * b;
+            }
+            else if(c < a && c < b && b<d){
+                _parameters.timestep.dt = _parameters.timestep.tau * c;
+            }
+            else{
+                _parameters.timestep.dt = _parameters.timestep.tau * d;
+            }
+        }
 
-		//check that output are exactly at the time they are printing
-		if (_parameters.simulation.currentTime + _parameters.timestep.dt > (_parameters.vtk.vtkCounter + 1) * _parameters.vtk.interval * 2){
-		    _parameters.timestep.dt = (_parameters.vtk.vtkCounter + 1) * _parameters.vtk.interval - _parameters.simulation.currentTime;
-		    std::cout<<"from inside: counter"<<_parameters.vtk.vtkCounter<<std::endl;
-		}
+        //check that output are exactly at the time they are printing
+        if (_parameters.simulation.currentTime + _parameters.timestep.dt > (_parameters.vtk.vtkCounter + 1) * _parameters.vtk.interval){
+            if (abs((_parameters.simulation.currentTime + _parameters.timestep.dt - (_parameters.vtk.vtkCounter + 1) * _parameters.vtk.interval))>0.0001){
+                _parameters.timestep.dt = (_parameters.vtk.vtkCounter + 1) * _parameters.vtk.interval - _parameters.simulation.currentTime;
+            }
+        }
 
-      // TODO WORKSHEET 3: determine global minimum of time step
+        // TODO WORKSHEET 3: determine global minimum of time step
 
     }
 
