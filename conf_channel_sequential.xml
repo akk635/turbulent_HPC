@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <configuration>
-    <flow Re="100" />
+    <flow Re="1000" />
     <simulation finalTime="100.0" >
         <scenario>channel</scenario>
     </simulation>

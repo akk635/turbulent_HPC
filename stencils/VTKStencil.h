@@ -114,7 +114,7 @@ class VTKStencil : public FieldStencil<FlowField> {
         	fpV << "POINT_DATA " << ((localSize[0]+1) * (localSize[1]+1) * (localSize[2]+1)) << "\n";
         	// fpV << "CELL_DATA " <<  (localSize[0] * localSize[1] * localSize[2]) << "\n" ;
         	fpV << "VECTORS velocity double \n" ;
-        	fpP << "CELL_DATA " <<  (localSize[0] * localSize[1] * localSize[2]) << "\n" ;
+        	fpP << "POINT_DATA " <<  ((localSize[0]+1) * (localSize[1]+1) * (localSize[2]+1)) << "\n" ;
         	fpP << "SCALARS pressure double 1 \n";
         	fpP << "LOOKUP_TABLE default \n";
 
