@@ -94,7 +94,6 @@ class Simulation {
 
         // TODO WORKSHEET 2: set global boundary values for fgh
         globalBoundary.getGlobalBoundaryFGHIterator(_flowField).iterate();
-        // Internal boundaries must also be considered
 
         // TODO WORKSHEET 2: compute the right hand side
         // Iterated only in the internal domain
@@ -120,9 +119,10 @@ class Simulation {
     }
 
     void initFlagField(){
-    	BFStepInitStencil bfFlagFieldStencil( _parameters );
-    	FieldIterator<FlowField> bfFlagFieldIterator(_flowField, _parameters, bfFlagFieldStencil, 0, 0);
-    	bfFlagFieldIterator.iterate();
+        BFStepInitStencil bfFlagFieldStencil( _parameters );
+        FieldIterator<FlowField> bfFlagFieldIterator(_flowField, _parameters, bfFlagFieldStencil, 0, 0);
+        bfFlagFieldIterator.iterate();
+
     }
 
     /** plots the flow field.  */
