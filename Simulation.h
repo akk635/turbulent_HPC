@@ -138,38 +138,6 @@ class Simulation {
     /** sets the time step according to the maximum velocity values that have been determined before */
     void setTimeStep(){
 
-<<<<<<< HEAD
-      // TODO WORKSHEET 2: determine maximum time step according to CFL-condition and maximum velocity values;
-      //                   set the respective timestep in _parameters.timestep.dt.
-		if (_parameters.timestep.tau>0){
-			FLOAT a,b,c,d;
-			a = _parameters.flow.Re/(2.0*(1.0/(_parameters.geometry.dx*_parameters.geometry.dx)
-					+1.0/(_parameters.geometry.dy*_parameters.geometry.dy)+1.0/(_parameters.geometry.dz*_parameters.geometry.dz)));
-			b = _parameters.geometry.dx/( MaxU.getMaxValues() )[0];
-			c = _parameters.geometry.dy/( MaxU.getMaxValues() )[1];
-			d = _parameters.geometry.dz/( MaxU.getMaxValues() )[2];
-			if(a < b && a < c && a<d){
-				_parameters.timestep.dt = _parameters.timestep.tau * a;
-			}
-			else if(b < a && b < c && b < d){
-				_parameters.timestep.dt = _parameters.timestep.tau * b;
-			}
-			else if(c < a && c < b && b<d){
-				_parameters.timestep.dt = _parameters.timestep.tau * c;
-			}
-			else{
-				_parameters.timestep.dt = _parameters.timestep.tau * d;
-			}
-		}
-
-		//check that output are exactly at the time they are printing
-/*		if (_parameters.simulation.currentTime + _parameters.timestep.dt > (_parameters.vtk.vtkCounter + 1) * _parameters.vtk.interval * 2){
-		    _parameters.timestep.dt = (_parameters.vtk.vtkCounter + 1) * _parameters.vtk.interval - _parameters.simulation.currentTime;
-		    std::cout<<"from inside: counter"<<_parameters.vtk.vtkCounter<<std::endl;
-		}*/
-
-      // TODO WORKSHEET 3: determine global minimum of time step
-=======
         // TODO WORKSHEET 2: determine maximum time step according to CFL-condition and maximum velocity values;
         //                   set the respective timestep in _parameters.timestep.dt.
         if (_parameters.timestep.tau>0){
@@ -201,7 +169,6 @@ class Simulation {
         }
 
         // TODO WORKSHEET 3: determine global minimum of time step
->>>>>>> a03d4be19adfb5a6ef70348a259b61ec1558c231
 
     }
 
