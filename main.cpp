@@ -68,7 +68,7 @@ int main (int argc, char *argv[]) {
     while (parameters.simulation.currentTime <= parameters.simulation.finalTime){
         simulation->solveTimestep();
         parameters.simulation.currentTime+=parameters.timestep.dt;
-        if ( parameters.simulation.currentTime == (parameters.vtk.vtkCounter + 1) * parameters.vtk.interval ){
+        if ( parameters.simulation.currentTime > (parameters.vtk.vtkCounter + 1) * parameters.vtk.interval - 0.00001){
             (parameters.vtk.vtkCounter)++;
             simulation->plotVTK(parameters.vtk.vtkCounter);
             std::cout << "parameters.vtk.vtkCounter = " << parameters.vtk.vtkCounter << std::endl;

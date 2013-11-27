@@ -163,10 +163,9 @@ class Simulation {
         }
 
         //check that output are exactly at the time they are printing
-        if (_parameters.simulation.currentTime + _parameters.timestep.dt > (_parameters.vtk.vtkCounter + 1) * _parameters.vtk.interval){
-            if (abs((_parameters.simulation.currentTime + _parameters.timestep.dt - (_parameters.vtk.vtkCounter + 1) * _parameters.vtk.interval))>0.0001){
-                _parameters.timestep.dt = (_parameters.vtk.vtkCounter + 1) * _parameters.vtk.interval - _parameters.simulation.currentTime;
-            }
+        if (_parameters.simulation.currentTime + _parameters.timestep.dt > (_parameters.vtk.vtkCounter + 1) * _parameters.vtk.interval-0.00001){
+            _parameters.timestep.dt = (_parameters.vtk.vtkCounter + 1) * _parameters.vtk.interval - _parameters.simulation.currentTime;
+            std::cout << "parameters.timestep.dt = " << _parameters.timestep.dt << std::endl;
         }
 
         // TODO WORKSHEET 3: determine global minimum of time step
