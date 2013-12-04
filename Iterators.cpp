@@ -173,3 +173,111 @@ void GlobalBoundaryIterator<FlowField>::iterate () {
     }
 }
 
+template<class FlowField>
+ParallelBoundaryIterator<FlowField>::ParallelBoundaryIterator(FlowField & flowField,
+                                               const Parameters & parameters,
+                                               BoundaryStencil<FlowField> & stencil,
+                                               int lowOffset, int highOffset):
+    Iterator<FlowField> (flowField,parameters),
+    _lowOffset(lowOffset), _highOffset(highOffset),
+    _leftWallStencil(stencil), _rightWallStencil(stencil),
+    _bottomWallStencil(stencil), _topWallStencil(stencil),
+    _frontWallStencil(stencil), _backWallStencil(stencil){}
+
+template<class FlowField>
+ParallelBoundaryIterator<FlowField>::ParallelBoundaryIterator(FlowField & flowField,
+                                               const Parameters & parameters,
+                                               BoundaryStencil<FlowField> & leftWallStencil,
+                                               BoundaryStencil<FlowField> & rightWallStencil,
+                                               BoundaryStencil<FlowField> & bottomWallStencil,
+                                               BoundaryStencil<FlowField> & topWallStencil,
+                                               BoundaryStencil<FlowField> & frontWallStencil,
+                                               BoundaryStencil<FlowField> & backWallStencil,
+                                               int lowOffset, int highOffset):
+    Iterator<FlowField> (flowField,parameters),
+    _lowOffset(lowOffset), _highOffset(highOffset),
+    _leftWallStencil(leftWallStencil), _rightWallStencil(rightWallStencil),
+    _bottomWallStencil(bottomWallStencil), _topWallStencil(topWallStencil),
+    _frontWallStencil(frontWallStencil), _backWallStencil(backWallStencil){}
+
+template<class FlowField>
+void GlobalBoundaryIterator<FlowField>::iterate () {
+
+    if (Iterator<FlowField>::_parameters.geometry.dim == 2){
+
+        if (Iterator<FlowField>::_parameters.parallel.leftNb < 0){
+            for (int j = _lowOffset; j < Iterator<FlowField>::_flowField.getCellsY() + _highOffset; j++) {
+                _leftWallStencil.applyLeftWall (Iterator<FlowField>::_flowField, _lowOffset, j);
+            }
+        }
+
+        if (Iterator<FlowField>::_parameters.parallel.rightNb < 0){
+            for (int j = _lowOffset; j < Iterator<FlowField>::_flowField.getCellsY() + _highOffset; j++) {
+                _rightWallStencil.applyRightWall (Iterator<FlowField>::_flowField, Iterator<FlowField>::_flowField.getCellsX()+_highOffset-1,j);
+            }
+        }
+
+        if (Iterator<FlowField>::_parameters.parallel.bottomNb < 0){
+            for (int i = _lowOffset; i < Iterator<FlowField>::_flowField.getCellsX() + _highOffset; i++) {
+                _bottomWallStencil.applyBottomWall (Iterator<FlowField>::_flowField, i, _lowOffset);
+            }
+        }
+
+        if (Iterator<FlowField>::_parameters.parallel.topNb < 0){
+            for (int i = _lowOffset; i < Iterator<FlowField>::_flowField.getCellsX() + _highOffset; i++) {
+                _topWallStencil.applyTopWall (Iterator<FlowField>::_flowField, i, Iterator<FlowField>::_flowField.getCellsY()+_highOffset-1);
+            }
+        }
+    }
+
+    if (Iterator<FlowField>::_parameters.geometry.dim == 3){
+
+        if (Iterator<FlowField>::_parameters.parallel.leftNb < 0){
+            for (int j = _lowOffset; j < Iterator<FlowField>::_flowField.getCellsY()+_highOffset; j++) {
+                for (int k = _lowOffset; k < Iterator<FlowField>::_flowField.getCellsZ()+_highOffset; k++) {
+                    _leftWallStencil.applyLeftWall   ( Iterator<FlowField>::_flowField, _lowOffset, j, k );
+                }
+            }
+        }
+
+        if (Iterator<FlowField>::_parameters.parallel.rightNb < 0){
+            for (int j = _lowOffset; j < Iterator<FlowField>::_flowField.getCellsY()+_highOffset; j++) {
+                for (int k = _lowOffset; k < Iterator<FlowField>::_flowField.getCellsZ()+_highOffset; k++) {
+                    _rightWallStencil.applyRightWall (Iterator<FlowField>::_flowField, Iterator<FlowField>::_flowField.getCellsX()+_highOffset-1, j, k);
+                }
+            }
+        }
+
+        if (Iterator<FlowField>::_parameters.parallel.bottomNb < 0){
+            for (int i = _lowOffset; i < Iterator<FlowField>::_flowField.getCellsX()+_highOffset; i++) {
+                for (int k = _lowOffset; k < Iterator<FlowField>::_flowField.getCellsZ()+_highOffset; k++) {
+                    _bottomWallStencil.applyBottomWall (Iterator<FlowField>::_flowField, i, _lowOffset, k);
+                }
+            }
+        }
+
+        if (Iterator<FlowField>::_parameters.parallel.topNb < 0){
+            for (int i = _lowOffset; i < Iterator<FlowField>::_flowField.getCellsX()+_highOffset; i++) {
+                for (int k = _lowOffset; k < Iterator<FlowField>::_flowField.getCellsZ()+_highOffset; k++) {
+                    _topWallStencil.applyTopWall (Iterator<FlowField>::_flowField, i, Iterator<FlowField>::_flowField.getCellsY()+_highOffset-1, k);
+                }
+            }
+        }
+
+        if (Iterator<FlowField>::_parameters.parallel.frontNb < 0){
+            for (int i = _lowOffset; i < Iterator<FlowField>::_flowField.getCellsX()+_highOffset; i++) {
+                for (int j = _lowOffset; j < Iterator<FlowField>::_flowField.getCellsY()+_highOffset; j++) {
+                    _frontWallStencil.applyFrontWall (Iterator<FlowField>::_flowField, i, j, _lowOffset);
+                }
+            }
+        }
+
+        if (Iterator<FlowField>::_parameters.parallel.backNb < 0){
+            for (int i = _lowOffset; i < Iterator<FlowField>::_flowField.getCellsX()+_highOffset; i++) {
+                for (int j = _lowOffset; j < Iterator<FlowField>::_flowField.getCellsY()+_highOffset; j++) {
+                    _backWallStencil.applyBackWall (Iterator<FlowField>::_flowField, i, j, Iterator<FlowField>::_flowField.getCellsZ()+_highOffset-1);
+                }
+            }
+        }
+    }
+}
