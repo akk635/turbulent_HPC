@@ -48,7 +48,7 @@ VelocityBufferFillStencil::~VelocityBufferFillStencil() {
 void VelocityBufferFillStencil::applyLeftWall(FlowField & flowField, int i,
 		int j, int k) {
 	// First internal layer of the sub-domain
-	// Iterate with lowoffset = 1, while i = 2 is the subdomian boundary so (i+1) in the vector
+	// Iterate with lowoffset = 1, highoffset = -1 while i = 2 is the subdomian boundary so (i+1) in the vector
 	if ((j >= 2) & (k >= 2)) {
 		leftVelocityBuffer[0][(j - 2) + (k - 2) * localSize[1]] =
 				(flowField.getVelocity().getVector(i + 1, j, k))[0];
@@ -82,7 +82,7 @@ void VelocityBufferFillStencil::applyLeftWall(FlowField & flowField, int i,
 }
 void VelocityBufferFillStencil::applyRightWall(FlowField & flowField, int i,
 		int j, int k) {
-	// 	With lowoffset = 1 and highoffset = 0 since i = cellsX - 1 + highoffset
+	// 	With lowoffset = 1 and highoffset = -1 since i = cellsX - 1 + highoffset
 	if ((j >= 2) & (k >= 2)) {
 		rightVelocityBuffer[0][(j - 2) + (k - 2) * localSize[1]] =
 				(flowField.getVelocity().getVector(i - 1, j, k))[0];
@@ -100,7 +100,7 @@ void VelocityBufferFillStencil::applyRightWall(FlowField & flowField, int i,
 }
 void VelocityBufferFillStencil::applyBottomWall(FlowField & flowField, int i,
 		int j, int k) {
-	// With lowoffset = 1 and highoffset = 0 with (j+1) in the vector access
+	// With lowoffset = 1 and highoffset = -1 with (j+1) in the vector access
 	if ((i >= 2) & (k >= 2)) {
 		bottomVelocityBuffer[0][(i - 1) * localSize[2] + (k - 2)] =
 				(flowField.getVelocity().getVector(i, j+1, k))[0];
@@ -119,7 +119,7 @@ void VelocityBufferFillStencil::applyBottomWall(FlowField & flowField, int i,
 }
 void VelocityBufferFillStencil::applyTopWall(FlowField & flowField, int i,
 		int j, int k) {
-	// With normal lowoffset = 1 and highoffset = 0
+	// With normal lowoffset = 1 and highoffset = -1
 	if ((i >= 2) & (k >= 2)) {
 		topVelocityBuffer[0][(i - 1) * localSize[2] + (k - 2)] =
 				(flowField.getVelocity().getVector(i, j, k))[0];
@@ -137,7 +137,7 @@ void VelocityBufferFillStencil::applyTopWall(FlowField & flowField, int i,
 }
 void VelocityBufferFillStencil::applyFrontWall(FlowField & flowField, int i,
 		int j, int k) {
-	// With lowoffset = 1 and (k+1) vector access
+	// With lowoffset = 1, highoffset = -1 and (k+1) vector access
 	if ((i >= 2) & (j >= 2)) {
 		frontVelocityBuffer[0][(i - 1) * localSize[1] + (j - 2)] =
 				(flowField.getVelocity().getVector(i, j, k+1))[0];
@@ -155,7 +155,7 @@ void VelocityBufferFillStencil::applyFrontWall(FlowField & flowField, int i,
 }
 void VelocityBufferFillStencil::applyBackWall(FlowField & flowField, int i,
 		int j, int k) {
-	// Remains the same with the lowoffset = 1 and highoffset = 0
+	// Remains the same with the lowoffset = 1 and highoffset = -1
 	if ((i >= 2) & (j >= 2)) {
 		backVelocityBuffer[0][(i - 1) * localSize[1] + (j - 2)] =
 				(flowField.getVelocity().getVector(i, j, k))[0];
