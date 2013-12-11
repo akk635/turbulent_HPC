@@ -18,16 +18,15 @@ private:
 	const int *localSize;
 public:
 	// Initialize the buffers
-	FLOAT** leftVelocityBuffer;
-	FLOAT** rightVelocityBuffer;
-	FLOAT** bottomVelocityBuffer;
-	FLOAT** topVelocityBuffer;
-	FLOAT** frontVelocityBuffer;
-	FLOAT** backVelocityBuffer;
-
+	FLOAT* leftVelocityBuffer[3];
+	FLOAT* rightVelocityBuffer[3];
+	FLOAT* bottomVelocityBuffer[3];
+	FLOAT* topVelocityBuffer[3];
+	FLOAT* frontVelocityBuffer[3];
+	FLOAT* backVelocityBuffer[3];
 
 	VelocityBufferFillStencil( Parameters & parameters );
-	~VelocityBufferFillStencil(){};
+	~VelocityBufferFillStencil();
 
 	void applyLeftWall   ( FlowField & flowField, int i, int j );
 	void applyRightWall  ( FlowField & flowField, int i, int j );

@@ -10,13 +10,8 @@
 VelocityBufferFillStencil::VelocityBufferFillStencil(Parameters & parameters) :
 		BoundaryStencil<FlowField>(parameters), localSize(
 				parameters.parallel.localSize) {
+
 	int dim = parameters.geometry.dim;
-	leftVelocityBuffer = new FLOAT* [dim];
-	rightVelocityBuffer = new FLOAT* [dim];
-	bottomVelocityBuffer = new FLOAT* [dim];
-	topVelocityBuffer = new FLOAT* [dim];
-	frontVelocityBuffer = new FLOAT* [dim];
-	backVelocityBuffer = new FLOAT* [dim];
 
 	// Giving the max memory corresponding to the points
 	leftVelocityBuffer[0] = new FLOAT[(localSize[1]) * (localSize[2])];
@@ -33,8 +28,8 @@ VelocityBufferFillStencil::VelocityBufferFillStencil(Parameters & parameters) :
 	for (int i = 0; i < dim; i += 2) {
 		bottomVelocityBuffer[i] = new FLOAT[(localSize[0] + 1)
 				* (localSize[2] + 1)];
-		topVelocityBuffer[i] = new FLOAT[(localSize[0] + 1)
-				* (localSize[2] + 1)];
+		topVelocityBuffer[i] =
+				new FLOAT[(localSize[0] + 1) * (localSize[2] + 1)];
 	}
 
 	frontVelocityBuffer[2] = new FLOAT[(localSize[0]) * (localSize[1])];
@@ -47,29 +42,73 @@ VelocityBufferFillStencil::VelocityBufferFillStencil(Parameters & parameters) :
 	}
 }
 
+VelocityBufferFillStencil::~VelocityBufferFillStencil() {
+}
+
 void VelocityBufferFillStencil::applyLeftWall(FlowField & flowField, int i,
 		int j, int k) {
-	// Representing the outermost boundary for each of the
-/*	if (i == 0) {
+	// First internal layer of the sub-domain
+	// Adopt iterator
+	if ((j >= 2) & (k >= 2)) {
 		leftVelocityBuffer[0][(j - 2) + (k - 2) * localSize[1]] =
 				(flowField.getVelocity().getVector(i, j, k))[0];
-		// Has to be array with z as major direction
 		leftVelocityBuffer[1][(j - 1) * localSize[2] + (k - 2)] =
-				(flowField.getVelocity().getVector(i + 1, j, k))[1];
+				(flowField.getVelocity().getVector(i, j, k))[1];
 		leftVelocityBuffer[2][(j - 2) + (k - 1) * localSize[1]] =
-				(flowField.getVelocity().getVector(i + 1, j, k))[2];
-	} else if (i == 1) {
-		leftVelocityBuffer[1][k - 2] = (flowField.getVelocity().getVector(i, j,
-				k))[1];
-		leftVelocityBuffer[2][j - 2] = (flowField.getVelocity().getVector(i, j,
-				k))[2];
-	}*/
+				(flowField.getVelocity().getVector(i, j, k))[2];
+	} else if (j == 1) {
+		leftVelocityBuffer[1][(j - 1) * localSize[2] + (k - 2)] =
+				(flowField.getVelocity().getVector(i, j, k))[1];
+	} else if (k == 1) {
+		leftVelocityBuffer[2][(j - 2) + (k - 1) * localSize[1]] =
+				(flowField.getVelocity().getVector(i, j, k))[2];
+	}
+
+	// Useful for the write Stencil
+	/*	if (i == 0) {
+	 leftVelocityBuffer[0][(j - 2) + (k - 2) * localSize[1]] =
+	 (flowField.getVelocity().getVector(i, j, k))[0];
+	 // Has to be array with z as major direction
+	 leftVelocityBuffer[1][(j - 1) * localSize[2] + (k - 2)] =
+	 (flowField.getVelocity().getVector(i + 1, j, k))[1];
+	 leftVelocityBuffer[2][(j - 2) + (k - 1) * localSize[1]] =
+	 (flowField.getVelocity().getVector(i + 1, j, k))[2];
+	 } else if (i == 1) {
+	 leftVelocityBuffer[1][k - 2] = (flowField.getVelocity().getVector(i, j,
+	 k))[1];
+	 leftVelocityBuffer[2][j - 2] = (flowField.getVelocity().getVector(i, j,
+	 k))[2];
+	 }*/
 }
 void VelocityBufferFillStencil::applyRightWall(FlowField & flowField, int i,
 		int j, int k) {
+	// Only iterate the outer boundary
+	if ((j >= 2) & (k >= 2)) {
+		rightVelocityBuffer[0][(j - 2) + (k - 2) * localSize[1]] =
+				(flowField.getVelocity().getVector(i - 1, j, k))[0];
+		rightVelocityBuffer[1][(j - 1) * localSize[2] + (k - 2)] =
+				(flowField.getVelocity().getVector(i, j, k))[1];
+		rightVelocityBuffer[2][(j - 2) + (k - 1) * localSize[1]] =
+				(flowField.getVelocity().getVector(i, j, k))[2];
+	} else if ((j == 1) & (k >= 2)) {
+		rightVelocityBuffer[1][(j - 1) * localSize[2] + (k - 2)] =
+				(flowField.getVelocity().getVector(i, j, k))[1];
+	} else if ((k == 1) & (j >= 2)) {
+		rightVelocityBuffer[2][(j - 2) + (k - 1) * localSize[1]] =
+				(flowField.getVelocity().getVector(i, j, k))[2];
+	}
 }
 void VelocityBufferFillStencil::applyBottomWall(FlowField & flowField, int i,
 		int j, int k) {
+	if ((i >= 2) & (k >= 2)){
+		bottomVelocityBuffer[0][(i - 1) * localSize[2] + (k - 2)] =
+				(flowField.getVelocity().getVector(i, j, k))[0];
+		bottomVelocityBuffer[1][(i - 2) * localSize[2] + (k - 2)] =
+				(flowField.getVelocity().getVector(i, j, k))[1];
+		bottomVelocityBuffer[2][(k - 1) * localSize[0] + (i - 2)] =
+				(flowField.getVelocity().getVector(i, j, k))[2];
+	}
+
 }
 void VelocityBufferFillStencil::applyTopWall(FlowField & flowField, int i,
 		int j, int k) {
@@ -81,16 +120,19 @@ void VelocityBufferFillStencil::applyBackWall(FlowField & flowField, int i,
 		int j, int k) {
 }
 
-void applyLeftWall(FlowField & flowField, int i, int j) {
+void VelocityBufferFillStencil::applyLeftWall(FlowField & flowField, int i,
+		int j) {
 }
-;
-void applyRightWall(FlowField & flowField, int i, int j) {
+
+void VelocityBufferFillStencil::applyRightWall(FlowField & flowField, int i,
+		int j) {
 }
-;
-void applyBottomWall(FlowField & flowField, int i, int j) {
+
+void VelocityBufferFillStencil::applyBottomWall(FlowField & flowField, int i,
+		int j) {
 }
-;
-void applyTopWall(FlowField & flowField, int i, int j) {
+
+void VelocityBufferFillStencil::applyTopWall(FlowField & flowField, int i,
+		int j) {
 }
-;
 
