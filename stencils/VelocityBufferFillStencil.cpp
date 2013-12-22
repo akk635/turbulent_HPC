@@ -40,6 +40,9 @@ VelocityBufferFillStencil::VelocityBufferFillStencil(Parameters & parameters) :
 		backVelocityBuffer[i] = new FLOAT[(localSize[0] + 1)
 				* (localSize[1] + 1)];
 	}
+
+	// Initialising the velocity buffer structs
+	leftXbuffer.xVelocityBuffer = leftVelocityBuffer[0]
 }
 
 VelocityBufferFillStencil::~VelocityBufferFillStencil() {
@@ -47,6 +50,7 @@ VelocityBufferFillStencil::~VelocityBufferFillStencil() {
 
 void VelocityBufferFillStencil::applyLeftWall(FlowField & flowField, int i,
 		int j, int k) {
+	// std::cout<<" i : " << i << " j : "<< j << " k : "<<k<<std::endl;
 	// First internal layer of the sub-domain
 	// Iterate with lowoffset = 1, highoffset = -1 while i = 2 is the subdomian boundary so (i+1) in the vector
 	if ((j >= 2) & (k >= 2)) {
@@ -56,29 +60,13 @@ void VelocityBufferFillStencil::applyLeftWall(FlowField & flowField, int i,
 				(flowField.getVelocity().getVector(i + 1, j, k))[1];
 		leftVelocityBuffer[2][(j - 2) + (k - 1) * localSize[1]] =
 				(flowField.getVelocity().getVector(i + 1, j, k))[2];
-	} else if (j == 1) {
+	} else if ((j == 1) & (k >= 2)) {
 		leftVelocityBuffer[1][(j - 1) * localSize[2] + (k - 2)] =
 				(flowField.getVelocity().getVector(i + 1, j, k))[1];
-	} else if (k == 1) {
+	} else if ((k == 1) & (j >= 2)) {
 		leftVelocityBuffer[2][(j - 2) + (k - 1) * localSize[1]] =
 				(flowField.getVelocity().getVector(i + 1, j, k))[2];
 	}
-
-	// Useful for the write Stencil
-	/*	if (i == 0) {
-	 leftVelocityBuffer[0][(j - 2) + (k - 2) * localSize[1]] =
-	 (flowField.getVelocity().getVector(i, j, k))[0];
-	 // Has to be array with z as major direction
-	 leftVelocityBuffer[1][(j - 1) * localSize[2] + (k - 2)] =
-	 (flowField.getVelocity().getVector(i + 1, j, k))[1];
-	 leftVelocityBuffer[2][(j - 2) + (k - 1) * localSize[1]] =
-	 (flowField.getVelocity().getVector(i + 1, j, k))[2];
-	 } else if (i == 1) {
-	 leftVelocityBuffer[1][k - 2] = (flowField.getVelocity().getVector(i, j,
-	 k))[1];
-	 leftVelocityBuffer[2][j - 2] = (flowField.getVelocity().getVector(i, j,
-	 k))[2];
-	 }*/
 }
 void VelocityBufferFillStencil::applyRightWall(FlowField & flowField, int i,
 		int j, int k) {
