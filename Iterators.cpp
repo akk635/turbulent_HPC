@@ -191,6 +191,28 @@ ParallelBoundaryIterator<FlowField>::ParallelBoundaryIterator(FlowField & flowFi
                                                BoundaryStencil<FlowField> & rightWallStencil,
                                                BoundaryStencil<FlowField> & bottomWallStencil,
                                                BoundaryStencil<FlowField> & topWallStencil,
+                                               int lowOffset, int highOffset):
+    Iterator<FlowField> (flowField,parameters),
+    _lowOffset(lowOffset), _highOffset(highOffset),
+    _leftWallStencil(leftWallStencil), _rightWallStencil(rightWallStencil),
+    _bottomWallStencil(bottomWallStencil), _topWallStencil(topWallStencil),
+    // This is plain bad, but it will work. The references had to be initialized somehow
+    _frontWallStencil(leftWallStencil), _backWallStencil(leftWallStencil)
+{
+
+    if (Iterator<FlowField>::_parameters.geometry.dim == 3){
+        handleError(1, "Trying to use 2D constructor for a 3D field");
+    }
+
+}
+
+template<class FlowField>
+ParallelBoundaryIterator<FlowField>::ParallelBoundaryIterator(FlowField & flowField,
+                                               const Parameters & parameters,
+                                               BoundaryStencil<FlowField> & leftWallStencil,
+                                               BoundaryStencil<FlowField> & rightWallStencil,
+                                               BoundaryStencil<FlowField> & bottomWallStencil,
+                                               BoundaryStencil<FlowField> & topWallStencil,
                                                BoundaryStencil<FlowField> & frontWallStencil,
                                                BoundaryStencil<FlowField> & backWallStencil,
                                                int lowOffset, int highOffset):
@@ -201,7 +223,7 @@ ParallelBoundaryIterator<FlowField>::ParallelBoundaryIterator(FlowField & flowFi
     _frontWallStencil(frontWallStencil), _backWallStencil(backWallStencil){}
 
 template<class FlowField>
-void GlobalBoundaryIterator<FlowField>::iterate () {
+void ParallelBoundaryIterator<FlowField>::iterate () {
 
     if (Iterator<FlowField>::_parameters.geometry.dim == 2){
 

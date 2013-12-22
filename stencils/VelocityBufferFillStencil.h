@@ -15,21 +15,16 @@
 class VelocityBufferFillStencil : public BoundaryStencil<FlowField> {
 
 private:
-	const static int *localSize;
-public:
 
+public:
+	const int *localSize;
 	// Initialize the buffers
-	FLOAT* leftVelocityBuffer[3];
-	FLOAT* rightVelocityBuffer[3];
-	FLOAT* bottomVelocityBuffer[3];
-	FLOAT* topVelocityBuffer[3];
-	FLOAT* frontVelocityBuffer[3];
-	FLOAT* backVelocityBuffer[3];
-	struct xbuffer{
-		FLOAT xVelocityBuffer[localSize[1] * localSize[2]];
-		FLOAT yVelocityBuffer[(localSize[1]+1) * (localSize[2]+1)];
-		FLOAT zVelocityBuffer[(localSize[1]+1) * (localSize[2]+1)];
-	}leftXbuffer, rightXbuffer;
+	FLOAT* leftVelocityBuffer;
+	FLOAT* rightVelocityBuffer;
+	FLOAT* bottomVelocityBuffer;
+	FLOAT* topVelocityBuffer;
+	FLOAT* frontVelocityBuffer;
+	FLOAT* backVelocityBuffer;
 
 	VelocityBufferFillStencil( Parameters & parameters );
 	~VelocityBufferFillStencil();

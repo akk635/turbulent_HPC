@@ -177,11 +177,11 @@ public:
 	 */
 	FLOAT & getScalar(int i, int j, int k = 0) {
 		// TODO WORKSHEET 1
-		if ((i < _x) && (j < _y) && (k < _z)) {
-			return scalarfield[index2array(i, j, k)];
-		}
-		static FLOAT invalidInitialValueForWorksheet1CodeFrame = -1;
-		return invalidInitialValueForWorksheet1CodeFrame;
+
+		return scalarfield[index2array(i, j, k)];
+
+/*		static FLOAT invalidInitialValueForWorksheet1CodeFrame = -1;
+		return invalidInitialValueForWorksheet1CodeFrame;*/
 	}
 
 	virtual int index2array(int i, int j, int k = 0) const {
@@ -284,10 +284,7 @@ public:
 	 */
 	FLOAT* getVector(int i, int j, int k = 0) {
 		// TODO WORKSHEET 1
-		if ((i < _x) && (j < _y) && (k < _z)) {
-			return &(vectorfield[index2array(i, j, k)]);
-		}
-		return NULL;
+		return &(vectorfield[index2array(i, j, k)]);
 	}
 	/** Prints the contents of the field
 	 *
@@ -375,11 +372,7 @@ public:
 	 */
 	int & getValue(int i, int j, int k = 0) {
 		// TODO WORKSHEET 1
-		if ((i < _x) && (j < _y) && (k < _z)) {
-			return flagfield[index2array(i, j, k)];
-		}
-		static int invalidInitialValueForWorksheet1CodeFrame = -1;
-		return invalidInitialValueForWorksheet1CodeFrame;
+		return flagfield[index2array(i, j, k)];
 
 	}
 

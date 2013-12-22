@@ -28,7 +28,7 @@ public:
 	FLOAT* backPressureReadBuffer;
 
 	PressureBufferReadStencil( Parameters & parameters );
-	~PressureBufferReadStencil();
+	~PressureBufferReadStencil(){};
 
 	void applyLeftWall   ( FlowField & flowField, int i, int j );
 	void applyRightWall  ( FlowField & flowField, int i, int j );

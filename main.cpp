@@ -57,12 +57,13 @@ int main (int argc, char *argv[]) {
         simulation->initFlagField();
     }
     // Initialization state
-    simulation->plotVTK(0);
-
+    // simulation->plotVTK(0);
+    simulation->solveTimestep();
     // TODO WORKSHEET 2: loop over time and
     //                   - solve one time step
     //                   - plot VTK output (if required at this time step)
     //                   - write simulation status to terminal (if required at this time step)
+
     parameters.vtk.vtkCounter=0;
     parameters.simulation.currentTime=0;
     while (parameters.simulation.currentTime <= parameters.simulation.finalTime){
@@ -75,7 +76,6 @@ int main (int argc, char *argv[]) {
             std::cout << "parameters.simulation.currentTime = " << parameters.simulation.currentTime << std::endl;
         }
     }
-
 
     // TODO WORKSHEET 2: plot final VTK output
 

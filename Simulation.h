@@ -17,7 +17,9 @@
 #include "stencils/RHSStencil.h"
 #include "stencils/VelocityStencil.h"
 #include "stencils/BFStepInitStencil.h"
+#include "stencils/VelocityBufferFillStencil.h"
 #include "solvers/PetscSolver.h"
+#include "parallelManagers/MessagePassingConfiguration.h"
 
 
 // TODO WORKSHEET 3: include PetscParallelManager
@@ -51,6 +53,10 @@ class Simulation {
     // TODO WORKSHEET 2: add instance of PetscSolver here
     PetscSolver petscsolver;
     // TODO WORKSHEET 3: add instance of PetscParallelManager
+    VelocityBufferFillStencil fillStencil;
+    ParallelBoundaryIterator<FlowField> velocityfillIterator;
+
+    MessagePassingConfiguration comm;
 
 
 
@@ -63,13 +69,17 @@ class Simulation {
         MaxUBoundaryIterator(_flowField, parameters, MaxU, 1, 0),
         FGH( _parameters ),
         globalFGHFieldIterator( _flowField, parameters, FGH, 1, 0),
+
         globalBoundary( _parameters ),
 
         RHS( _parameters ),
         globalRHSFieldIterator( _flowField, parameters, RHS, 1, 0),
         petscsolver( _flowField, _parameters ),
         newvelocities( _parameters ),
-        NewVelocitiesUpdateIterator( _flowField, _parameters, newvelocities,1, 0)
+        NewVelocitiesUpdateIterator( _flowField, _parameters, newvelocities,1, 0),
+        fillStencil(_parameters),
+        velocityfillIterator(_flowField, _parameters, fillStencil,1, -1 ),
+        comm( _parameters, _flowField)
 
  // TODO WORKSHEET 2: initialize stencils, iterators and pressure solver here
  // TODO WORKSHEET 3: initialize instance of PetscParallelManager
@@ -88,6 +98,9 @@ class Simulation {
 
         // TODO WORKSHEET 2: set new time step
         setTimeStep();
+
+        // velocityfillIterator.iterate();
+        comm.communicateVelocity();
 
         // TODO WORKSHEET 2: compute fgh
         globalFGHFieldIterator.iterate();
@@ -148,17 +161,19 @@ class Simulation {
             b = _parameters.geometry.dx/( MaxU.getMaxValues() )[0];
             c = _parameters.geometry.dy/( MaxU.getMaxValues() )[1];
             d = _parameters.geometry.dz/( MaxU.getMaxValues() )[2];
-            if(a < b && a < c && a<d){
-                _parameters.timestep.dt = _parameters.timestep.tau * a;
+
+            _parameters.timestep.dt = 1;
+            if ( _parameters.timestep.dt > a ){
+            	_parameters.timestep.dt = _parameters.timestep.tau * a;
             }
-            else if(b < a && b < c && b < d){
-                _parameters.timestep.dt = _parameters.timestep.tau * b;
+            if (_parameters.timestep.dt > b ){
+            	_parameters.timestep.dt = _parameters.timestep.tau * b;
             }
-            else if(c < a && c < b && b<d){
-                _parameters.timestep.dt = _parameters.timestep.tau * c;
+            if (_parameters.timestep.dt > c ){
+            	_parameters.timestep.dt = _parameters.timestep.tau * c;
             }
-            else{
-                _parameters.timestep.dt = _parameters.timestep.tau * d;
+            if (_parameters.timestep.dt > d){
+            	_parameters.timestep.dt = _parameters.timestep.tau * d;
             }
         }
 

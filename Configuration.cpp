@@ -202,7 +202,6 @@ void Configuration::loadParameters(Parameters & parameters, const MPI_Comm & com
         }
         // Now, the size of the elements should be set
 
-
         if (parameters.geometry.dx <= 0 || parameters.geometry.dy <= 0){
             handleError(1, "Invalid specification for dx or dy in the configuration file");
         }
@@ -411,6 +410,7 @@ void Configuration::loadParameters(Parameters & parameters, const MPI_Comm & com
     }
 
     // Broadcasting of the values
+    // Golbal size of the domain
     MPI_Bcast(&(parameters.geometry.sizeX), 1, MPI_INT, 0, communicator);
     MPI_Bcast(&(parameters.geometry.sizeY), 1, MPI_INT, 0, communicator);
     MPI_Bcast(&(parameters.geometry.sizeZ), 1, MPI_INT, 0, communicator);

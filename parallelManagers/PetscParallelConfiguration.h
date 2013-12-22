@@ -3,8 +3,11 @@
 
 #include "../Parameters.h"
 #include "../Definitions.h"
+#include "../stencils/VelocityBufferFillStencil.h"
+#include "../stencils/VelocityBufferReadStencil.h"
+#include "../Iterators.h"
+#include "../FlowField.h"
 #include <mpi.h>
-
 
 /** Class used to set parameters relevant to the parallel distribution. All functions modify the
  * parameters instance

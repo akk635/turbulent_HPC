@@ -1,0 +1,5 @@
+*.swp
+.cproject
+.project
+.settings/
+.svn/
