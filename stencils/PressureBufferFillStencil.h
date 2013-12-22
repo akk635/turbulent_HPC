@@ -16,8 +16,9 @@
 class PressureBufferFillStencil : public BoundaryStencil<FlowField> {
 
 private:
-	const int *localSize;
+
 public:
+	const int *localSize;
 	// Initialize the buffers
 	FLOAT* leftPressureBuffer;
 	FLOAT* rightPressureBuffer;

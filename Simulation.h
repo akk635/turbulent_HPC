@@ -52,10 +52,8 @@ class Simulation {
 
     // TODO WORKSHEET 2: add instance of PetscSolver here
     PetscSolver petscsolver;
-    // TODO WORKSHEET 3: add instance of PetscParallelManager
-    VelocityBufferFillStencil fillStencil;
-    ParallelBoundaryIterator<FlowField> velocityfillIterator;
 
+    // TODO WORKSHEET 3: add instance of PetscParallelManager
     MessagePassingConfiguration comm;
 
 
@@ -77,8 +75,6 @@ class Simulation {
         petscsolver( _flowField, _parameters ),
         newvelocities( _parameters ),
         NewVelocitiesUpdateIterator( _flowField, _parameters, newvelocities,1, 0),
-        fillStencil(_parameters),
-        velocityfillIterator(_flowField, _parameters, fillStencil,1, -1 ),
         comm( _parameters, _flowField)
 
  // TODO WORKSHEET 2: initialize stencils, iterators and pressure solver here
@@ -106,7 +102,8 @@ class Simulation {
         globalFGHFieldIterator.iterate();
 
         // TODO WORKSHEET 2: set global boundary values for fgh
-        globalBoundary.getGlobalBoundaryFGHIterator(_flowField).iterate();
+        // globalBoundary.getGlobalBoundaryFGHIterator(_flowField).iterate();
+        // For the internal boundaries and the external boundaries
 
         // TODO WORKSHEET 2: compute the right hand side
         // Iterated only in the internal domain
@@ -139,11 +136,11 @@ class Simulation {
     }
 
     /** plots the flow field.  */
-    void plotVTK(int timeStep){
+    void plotVTK(int timeStep, int rank){
         // TODO WORKSHEET 1
         VTKStencil _vtk(_parameters);
         FieldIterator<FlowField> VtkIterator(_flowField, _parameters, _vtk, 0, 0);
-        _vtk.write ( _flowField, timeStep );
+        _vtk.write ( _flowField, timeStep, rank );
         VtkIterator.iterate();
         _vtk.writeFinished();
     }
@@ -184,7 +181,8 @@ class Simulation {
         }
 
         // TODO WORKSHEET 3: determine global minimum of time step
-
+        // MPI_Allreduce (&sendbuf,&recvbuf,count,datatype,op,comm)
+        MPI_Allreduce( MPI_IN_PLACE, &(_parameters.timestep.dt), 1, MPI_DOUBLE, MPI_MIN, MPI_COMM_WORLD);
     }
 
 };

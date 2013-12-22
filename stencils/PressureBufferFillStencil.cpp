@@ -28,6 +28,8 @@ PressureBufferFillStencil::PressureBufferFillStencil(Parameters &parameters):
 
 }
 
+PressureBufferFillStencil::~PressureBufferFillStencil(){};
+
 void PressureBufferFillStencil::applyLeftWall(FlowField & flowField, int i,
 		int j, int k) {
 	// First internal layer of the sub-domain

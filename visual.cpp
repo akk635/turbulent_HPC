@@ -29,7 +29,7 @@ void write_vtkHeader( std::ofstream &fp, int localsizeX, int localsizeY,
 	  for (int k=0; k < ( localsizeZ+2 ); k++){
 		  for (int j=0; j < ( localsizeY+2 ); j++){
 			  for (int i=0; i < ( localsizeX+2 ); i++){
-				  fp << (float)(originX + ((i-1)*dx)) << " " << (float) (originY + ((j-1)*dy)) << " " << (float) (originZ + ((k-1)*dz)) << "\n";
+				  fp << (float)(originX * dx + ((i-1)*dx)) << " " << (float) (originY * dy + ((j-1)*dy)) << " " << (float) (originZ * dz + ((k-1)*dz)) << "\n";
 			  }
 		  }
 	  }

@@ -85,11 +85,11 @@ class VTKStencil : public FieldStencil<FlowField> {
          * @param flowField Flow field to be written
          * @param timeStep Current time step as integer
          */
-        void write ( FlowField & flowField, int timeStep ){
+        void write ( FlowField & flowField, int timeStep, int rank ){
           // TODO WORKSHEET 1
         	// the apply method itself writes the files into apply
         	std::stringstream ss;
-        	ss<<timeStep;
+        	ss<<'.'<<rank<<'.'<<timeStep;
         	vtkFile += ( ss.str()+".vtk" );
 
         	fpV.open( vtkFile.c_str() );

@@ -17,8 +17,9 @@
 class PressureBufferReadStencil : public BoundaryStencil<FlowField> {
 
 private:
-	const int *localSize;
+
 public:
+	const int *localSize;
 	// Initialize the buffers
 	FLOAT* leftPressureReadBuffer;
 	FLOAT* rightPressureReadBuffer;
@@ -28,7 +29,7 @@ public:
 	FLOAT* backPressureReadBuffer;
 
 	PressureBufferReadStencil( Parameters & parameters );
-	~PressureBufferReadStencil(){};
+	~PressureBufferReadStencil();
 
 	void applyLeftWall   ( FlowField & flowField, int i, int j );
 	void applyRightWall  ( FlowField & flowField, int i, int j );
