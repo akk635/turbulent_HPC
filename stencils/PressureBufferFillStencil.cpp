@@ -45,7 +45,7 @@ void PressureBufferFillStencil::applyRightWall(FlowField & flowField, int i,
 	// 	With lowoffset = 1 and highoffset = -1 since i = cellsX - 1 + highoffset
 	if ((j >= 2) & (k >= 2)) {
 		rightPressureBuffer[(j - 2) + (k - 2) * localSize[1]] =
-				(flowField.getPressure().getScalar(i - 1, j, k));
+				(flowField.getPressure().getScalar(i, j, k));
 	}
 }
 
@@ -63,7 +63,7 @@ void PressureBufferFillStencil::applyTopWall(FlowField & flowField, int i,
 	// With normal lowoffset = 1 and highoffset = -1
 	if ((i >= 2) & (k >= 2)) {
 		topPressureBuffer[(i - 2) * localSize[2] + (k - 2)] =
-				(flowField.getPressure().getScalar(i, j-1, k));
+				(flowField.getPressure().getScalar(i, j, k));
 	}
 }
 
@@ -80,7 +80,7 @@ void PressureBufferFillStencil::applyBackWall(FlowField & flowField, int i,
 	// Remains the same with the lowoffset = 1 and highoffset = -1
 	if ((i >= 2) & (j >= 2)) {
 		backPressureBuffer[(i - 2) * localSize[1] + (j - 2)] =
-				(flowField.getPressure().getScalar(i, j, k-1));
+				(flowField.getPressure().getScalar(i, j, k));
 	}
 }
 

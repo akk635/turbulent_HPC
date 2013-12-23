@@ -136,27 +136,27 @@ void MessagePassingConfiguration::communicatePressure() {
 			((localSize[0]) * (localSize[2])), MPI_DOUBLE,
 			_parameters.parallel.bottomNb, 203, MPI_COMM_WORLD, &(request[4]));
 	// MPI_Irecv(buffer,count,type,source,tag,comm,request)
-	MPI_Irecv(readStencil.topVelocityReadBuffer,
+	MPI_Irecv(readPStencil.topPressureReadBuffer,
 			((localSize[0]) * (localSize[2]))
 					+ 2 * ((localSize[0] + 1) * (localSize[2] + 1)), MPI_DOUBLE,
 			_parameters.parallel.topNb, 203, MPI_COMM_WORLD, &(request[5]));
 
 	// Send top and recv from bottom
 	// MPI_Isend(buffer,count,type,dest,tag,comm,request)
-	MPI_Isend(fillStencil.topVelocityBuffer, ((localSize[0]) * (localSize[2])),
+	MPI_Isend(fillPStencil.topPressureBuffer, ((localSize[0]) * (localSize[2])),
 	MPI_DOUBLE, _parameters.parallel.topNb, 204, MPI_COMM_WORLD, &(request[6]));
 	// MPI_Irecv(buffer,count,type,source,tag,comm,request)
-	MPI_Irecv(readStencil.bottomVelocityReadBuffer,
+	MPI_Irecv(readPStencil.bottomPressureReadBuffer,
 			((localSize[0]) * (localSize[2])), MPI_DOUBLE,
 			_parameters.parallel.bottomNb, 204, MPI_COMM_WORLD, &(request[7]));
 
 	// Send front and recv from back
 	// MPI_Isend(buffer,count,type,dest,tag,comm,request)
-	MPI_Isend(fillStencil.frontVelocityBuffer,
+	MPI_Isend(fillPStencil.frontPressureBuffer,
 			((localSize[0]) * (localSize[1])), MPI_DOUBLE,
 			_parameters.parallel.frontNb, 205, MPI_COMM_WORLD, &(request[8]));
 	// MPI_Irecv(buffer,count,type,source,tag,comm,request)
-	MPI_Irecv(readStencil.backVelocityReadBuffer,
+	MPI_Irecv(readPStencil.backPressureReadBuffer,
 			((localSize[0]) * (localSize[1])), MPI_DOUBLE,
 			_parameters.parallel.backNb, 205, MPI_COMM_WORLD, &(request[9]));
 
@@ -173,6 +173,7 @@ void MessagePassingConfiguration::communicatePressure() {
 	for (int i = 0; i < 12; i++) {
 		MPI_Wait(&(request[i]), &(status[i]));
 	}
+	pressurereadIterator.iterate();
 
 }
 

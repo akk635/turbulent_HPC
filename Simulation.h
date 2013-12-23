@@ -23,7 +23,6 @@
 // TODO WORKSHEET 3: include PetscParallelManager
 #include "parallelManagers/MessagePassingConfiguration.h"
 
-
 class Simulation {
  protected:
     Parameters &_parameters;
@@ -54,9 +53,6 @@ class Simulation {
     // TODO WORKSHEET 3: add instance of PetscParallelManager
     MessagePassingConfiguration comm;
 
-    // For maintaining  the boundary cdns
-    internalFGHboundaryStencil fghboundarycalc;
-
  public:
     Simulation(Parameters &parameters, FlowField &flowField):
         _parameters(parameters),
@@ -74,8 +70,7 @@ class Simulation {
         petscsolver( _flowField, _parameters ),
         newvelocities( _parameters ),
         NewVelocitiesUpdateIterator( _flowField, _parameters, newvelocities,1 , 0),
-        comm( _parameters, _flowField),
-        fghboundarycalc( _parameters)
+        comm( _parameters, _flowField)
 
  // TODO WORKSHEET 2: initialize stencils, iterators and pressure solver here
  // TODO WORKSHEET 3: initialize instance of PetscParallelManager
@@ -95,12 +90,11 @@ class Simulation {
         // TODO WORKSHEET 2: set new time step
         setTimeStep();
 
-        // velocityfillIterator.iterate();
-        comm.communicateVelocity();
-        comm.communicatePressure();
-
         // TODO WORKSHEET 2: compute fgh
         globalFGHFieldIterator.iterate();
+
+        // velocityfillIterator.iterate();
+        comm.communicateVelocity();
 
         // TODO WORKSHEET 2: set global boundary values for fgh
         globalBoundary.getGlobalBoundaryFGHIterator(_flowField).iterate();
@@ -112,7 +106,9 @@ class Simulation {
 
         // TODO WORKSHEET 2: solve for pressure poisson equation
         petscsolver.solve();
+
         // TODO WORKSHEET 3: communicate pressure values after solving the pressure Poisson equation
+        comm.communicatePressure();
 
         // TODO WORKSHEET 2: compute velocity update (time stepping)
         NewVelocitiesUpdateIterator.iterate();

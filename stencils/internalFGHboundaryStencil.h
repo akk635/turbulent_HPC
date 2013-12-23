@@ -12,8 +12,14 @@
 #include "../Parameters.h"
 #include "../Stencil.h"
 #include "../FlowField.h"
-#include "StencilFunctions.h"
 #include "../GlobalBoundaryFactory.h"
+#include "StencilFunctions.h"
+
+/*void loadLocalVelocity3D(FlowField & flowField, FLOAT * const localVelocity, int i, int j, int k);
+inline FLOAT computeF3D(const FLOAT * const localVelocity, const Parameters & parameters, FLOAT dt);
+inline FLOAT computeG3D(const FLOAT * const localVelocity, const Parameters & parameters, FLOAT dt);
+inline FLOAT computeH3D(const FLOAT * const localVelocity, const Parameters & parameters, FLOAT dt);*/
+
 
 class internalFGHboundaryStencil:  protected BoundaryStencil<FlowField>, public GlobalBoundaryFactory{
 

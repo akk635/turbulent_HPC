@@ -30,12 +30,11 @@ parallelManagers/PetscParallelConfiguration.o \
 stencils/BFStepInitStencil.o stencils/NeumannBoundaryStencils.o stencils/BFInputStencils.o \
 visual.o stencils/VelocityBufferFillStencil.o  parallelManagers/MessagePassingConfiguration.o \
 stencils/VelocityBufferReadStencil.o stencils/PressureBufferReadStencil.o stencils/PressureBufferFillStencil.o \
-stencils/internalFGHboundaryStencil.o
 
 all: ns
 
-ns: $(OBJ) $(NSOBJ) $(NSMAIN)
-	$(CC) -o ns $(OBJ) $(NSOBJ) $(NSMAIN) $(PETSC_KSP_LIB) -lstdc++ $(CFLAGS)
+ns:  $(OBJ) $(NSOBJ) $(NSMAIN) 
+	$(CC) -o ns  $(OBJ) $(NSOBJ) $(NSMAIN) $(PETSC_KSP_LIB)  -lstdc++ $(CFLAGS)
 
 
 %.o: %.cpp

@@ -12,7 +12,6 @@ PressureBufferReadStencil::PressureBufferReadStencil(Parameters &parameters):
 		BoundaryStencil<FlowField>(parameters), localSize(
 				parameters.parallel.localSize) {
 
-	int dim = parameters.geometry.dim;
 
 	// Giving the max memory corresponding to the points
 	leftPressureReadBuffer = new FLOAT[(localSize[1]) * (localSize[2])];
@@ -58,7 +57,6 @@ void PressureBufferReadStencil::applyBottomWall(FlowField & flowField, int i,
 
 	// With normal lowoffset = 1 and highoffset = -1
 	if ((i >= 2) & (k >= 2)) {
-		bottomPressureReadBuffer[(i - 2) * localSize[2] + (k - 2)] =
 				(flowField.getPressure().getScalar(i, j, k));
 	}
 

@@ -10,8 +10,6 @@ VelocityBufferReadStencil::VelocityBufferReadStencil(Parameters & parameters) :
 		BoundaryStencil<FlowField>(parameters), localSize(
 				parameters.parallel.localSize) {
 
-	int dim = parameters.geometry.dim;
-
 	leftVelocityReadBuffer = new FLOAT[((localSize[1]) * (localSize[2]))
 			+ 2 * ((localSize[1] + 1) * (localSize[2] + 1))];
 	rightVelocityReadBuffer = new FLOAT[((localSize[1]) * (localSize[2]))

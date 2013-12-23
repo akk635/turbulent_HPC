@@ -11,8 +11,6 @@ VelocityBufferFillStencil::VelocityBufferFillStencil(Parameters & parameters) :
 		BoundaryStencil<FlowField>(parameters), localSize(
 				parameters.parallel.localSize) {
 
-	int dim = parameters.geometry.dim;
-
 	leftVelocityBuffer = new FLOAT[((localSize[1]) * (localSize[2]))
 			+ 2 * ((localSize[1] + 1) * (localSize[2] + 1))];
 	rightVelocityBuffer = new FLOAT[((localSize[1]) * (localSize[2]))
