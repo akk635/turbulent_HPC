@@ -29,7 +29,8 @@ GlobalBoundaryFactory.o \
 parallelManagers/PetscParallelConfiguration.o \
 stencils/BFStepInitStencil.o stencils/NeumannBoundaryStencils.o stencils/BFInputStencils.o \
 visual.o stencils/VelocityBufferFillStencil.o  parallelManagers/MessagePassingConfiguration.o \
-stencils/VelocityBufferReadStencil.o stencils/PressureBufferReadStencil.o stencils/PressureBufferFillStencil.o
+stencils/VelocityBufferReadStencil.o stencils/PressureBufferReadStencil.o stencils/PressureBufferFillStencil.o \
+stencils/internalFGHboundaryStencil.o
 
 all: ns
 
@@ -45,3 +46,4 @@ cleanall:
 	for name in  ns main.o $(NSOBJ) testbin $(OBJ) tests/*.o; do \
 	if [ -f $$name ]; then rm $$name; fi; \
 	done;\
+	rm *.vtk;

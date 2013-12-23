@@ -19,11 +19,9 @@
 #include "stencils/BFStepInitStencil.h"
 #include "stencils/VelocityBufferFillStencil.h"
 #include "solvers/PetscSolver.h"
-#include "parallelManagers/MessagePassingConfiguration.h"
-
 
 // TODO WORKSHEET 3: include PetscParallelManager
-
+#include "parallelManagers/MessagePassingConfiguration.h"
 
 
 class Simulation {
@@ -56,7 +54,8 @@ class Simulation {
     // TODO WORKSHEET 3: add instance of PetscParallelManager
     MessagePassingConfiguration comm;
 
-
+    // For maintaining  the boundary cdns
+    internalFGHboundaryStencil fghboundarycalc;
 
  public:
     Simulation(Parameters &parameters, FlowField &flowField):
@@ -74,8 +73,9 @@ class Simulation {
         globalRHSFieldIterator( _flowField, parameters, RHS, 1, 0),
         petscsolver( _flowField, _parameters ),
         newvelocities( _parameters ),
-        NewVelocitiesUpdateIterator( _flowField, _parameters, newvelocities,1, 0),
-        comm( _parameters, _flowField)
+        NewVelocitiesUpdateIterator( _flowField, _parameters, newvelocities,1 , 0),
+        comm( _parameters, _flowField),
+        fghboundarycalc( _parameters)
 
  // TODO WORKSHEET 2: initialize stencils, iterators and pressure solver here
  // TODO WORKSHEET 3: initialize instance of PetscParallelManager
@@ -97,12 +97,13 @@ class Simulation {
 
         // velocityfillIterator.iterate();
         comm.communicateVelocity();
+        comm.communicatePressure();
 
         // TODO WORKSHEET 2: compute fgh
         globalFGHFieldIterator.iterate();
 
         // TODO WORKSHEET 2: set global boundary values for fgh
-        // globalBoundary.getGlobalBoundaryFGHIterator(_flowField).iterate();
+        globalBoundary.getGlobalBoundaryFGHIterator(_flowField).iterate();
         // For the internal boundaries and the external boundaries
 
         // TODO WORKSHEET 2: compute the right hand side
