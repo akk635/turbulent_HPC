@@ -59,6 +59,7 @@ int main (int argc, char *argv[]) {
     // Initialization state
     simulation->plotVTK(0, rank);
     simulation->solveTimestep();
+    std::cout << "parameters.timestep.dt = " << parameters.timestep.dt << std::endl;
     simulation->plotVTK(1, rank);
     // TODO WORKSHEET 2: loop over time and
     //                   - solve one time step

@@ -75,7 +75,7 @@ void MessagePassingConfiguration::communicateVelocity() {
 	// Send front and recv from back
 	// MPI_Isend(buffer,count,type,dest,tag,comm,request)
 	MPI_Isend(fillStencil.frontVelocityBuffer,
-			((localSize[0]) * (localSize[0]))
+			((localSize[0]) * (localSize[1]))
 					+ 2 * ((localSize[0] + 1) * (localSize[1] + 1)), MPI_DOUBLE,
 			_parameters.parallel.frontNb, 105, MPI_COMM_WORLD, &(request[8]));
 	// MPI_Irecv(buffer,count,type,source,tag,comm,request)

@@ -15,7 +15,7 @@
  */
 class GlobalBoundaryFactory{
 
-    private:
+    protected:
         // List of all the stencils
         BoundaryStencil<FlowField> * _velocityStencils[6];    //! A stencil for each face
         BoundaryStencil<FlowField> * _FGHStencils[6];    //! A stencil for each face

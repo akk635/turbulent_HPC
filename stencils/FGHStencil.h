@@ -6,7 +6,7 @@
 #include "../Parameters.h"
 #include "../GlobalBoundaryFactory.h"
 
-class FGHStencil : public FieldStencil<FlowField>, public BoundaryStencil<FlowField>, public GlobalBoundaryFactory
+class FGHStencil : public FieldStencil<FlowField>, public BoundaryStencil<FlowField>, protected GlobalBoundaryFactory
 {
 
     private:
@@ -43,12 +43,12 @@ class FGHStencil : public FieldStencil<FlowField>, public BoundaryStencil<FlowFi
     	void applyBottomWall ( FlowField & flowField, int i, int j ){};
     	void applyTopWall    ( FlowField & flowField, int i, int j ){};
 
-        void applyLeftWall   ( FlowField & flowField, int i, int j, int k ){};
-        void applyRightWall  ( FlowField & flowField, int i, int j, int k ){};
-        void applyBottomWall ( FlowField & flowField, int i, int j, int k ){};
-        void applyTopWall    ( FlowField & flowField, int i, int j, int k ){};
-        void applyFrontWall  ( FlowField & flowField, int i, int j, int k ){};
-        void applyBackWall   ( FlowField & flowField, int i, int j, int k ){};
+        void applyLeftWall   ( FlowField & flowField, int i, int j, int k );
+        void applyRightWall  ( FlowField & flowField, int i, int j, int k );
+        void applyBottomWall ( FlowField & flowField, int i, int j, int k );
+        void applyTopWall    ( FlowField & flowField, int i, int j, int k );
+        void applyFrontWall  ( FlowField & flowField, int i, int j, int k );
+        void applyBackWall   ( FlowField & flowField, int i, int j, int k );
 };
 
 

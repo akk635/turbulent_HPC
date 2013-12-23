@@ -38,6 +38,7 @@ class Simulation {
     FGHStencil FGH;
     // Named global valid only in the computation over entire domain
     FieldIterator<FlowField> globalFGHFieldIterator;
+    GlobalBoundaryIterator<FlowField> fghboundaryIterator;
 
     GlobalBoundaryFactory globalBoundary;
 
@@ -46,6 +47,7 @@ class Simulation {
 
     VelocityStencil newvelocities;
     FieldIterator<FlowField> NewVelocitiesUpdateIterator;
+    GlobalBoundaryIterator<FlowField> velocityboundaryIterator;
 
     // TODO WORKSHEET 2: add instance of PetscSolver here
     PetscSolver petscsolver;
@@ -70,7 +72,9 @@ class Simulation {
         petscsolver( _flowField, _parameters ),
         newvelocities( _parameters ),
         NewVelocitiesUpdateIterator( _flowField, _parameters, newvelocities,1 , 0),
-        comm( _parameters, _flowField)
+        comm( _parameters, _flowField),
+        fghboundaryIterator(_flowField, parameters, FGH, 1, 0),
+        velocityboundaryIterator(_flowField, parameters, newvelocities, 1, 0)
 
  // TODO WORKSHEET 2: initialize stencils, iterators and pressure solver here
  // TODO WORKSHEET 3: initialize instance of PetscParallelManager
@@ -94,11 +98,13 @@ class Simulation {
         globalFGHFieldIterator.iterate();
 
         // velocityfillIterator.iterate();
-        comm.communicateVelocity();
+
+        fghboundaryIterator.iterate();
 
         // TODO WORKSHEET 2: set global boundary values for fgh
-        globalBoundary.getGlobalBoundaryFGHIterator(_flowField).iterate();
+        // globalBoundary.getGlobalBoundaryFGHIterator(_flowField).iterate();
         // For the internal boundaries and the external boundaries
+
 
         // TODO WORKSHEET 2: compute the right hand side
         // Iterated only in the internal domain
@@ -113,9 +119,11 @@ class Simulation {
         // TODO WORKSHEET 2: compute velocity update (time stepping)
         NewVelocitiesUpdateIterator.iterate();
         // TODO WORKSHEET 3: communicate velocity values after velocity update is finished
+        comm.communicateVelocity();
 
         // TODO WORKSHEET 2: update velocity values on the boundary
-        globalBoundary.getGlobalBoundaryVelocityIterator(_flowField).iterate();
+        // globalBoundary.getGlobalBoundaryVelocityIterator(_flowField).iterate();
+        velocityboundaryIterator.iterate();
     }
 
     void initializeVelocity(){
