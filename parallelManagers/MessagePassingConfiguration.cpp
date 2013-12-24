@@ -7,6 +7,7 @@
 #include "MessagePassingConfiguration.h"
 #include <fstream>
 #include <sstream>
+#include <assert.h>
 
 MessagePassingConfiguration::MessagePassingConfiguration(
 		Parameters & parameters, FlowField & flowfield) :
@@ -29,10 +30,15 @@ void MessagePassingConfiguration::communicateVelocity() {
 	std::string test = "testV";
 	test+=ss.str();
 	fpT.open(  test.c_str());
+
 	velocityfillIterator.iterate();
+
 	MPI_Request request[2 * 6];
 	MPI_Status status[2 * 6];
 	const int * localSize = fillStencil.localSize;
+
+/*	std::cout<<rank<<"\t"<<(fillStencil.counter)[0]<<std::endl;
+	std::cout<<rank<<"\t"<<((localSize[1]+1) * (localSize[2]+1))<<std::endl;*/
 
 	// Now the actual comm to the left side process and recv from the right
 	// MPI_Isend(buffer,count,type,dest,tag,comm,request)

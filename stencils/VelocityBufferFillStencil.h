@@ -17,6 +17,7 @@ class VelocityBufferFillStencil : public BoundaryStencil<FlowField> {
 private:
 
 public:
+/*	int counter[6] = {0,0,0,0,0,0};*/
 	const int *localSize;
 	// Initialize the buffers
 	FLOAT* leftVelocityBuffer;

@@ -58,6 +58,10 @@ int main (int argc, char *argv[]) {
     }
     // Initialization state
     simulation->plotVTK(0, rank);
+/*    for (int i = 0; i <= 2; i++){
+    	simulation->solveTimestep();
+    }
+    simulation->plotVTK(1, rank);*/
 //    simulation->solveTimestep();
 
 /*    std::cout << "parameters.timestep.dt = " << parameters.timestep.dt << std::endl;

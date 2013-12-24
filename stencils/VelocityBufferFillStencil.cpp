@@ -39,6 +39,7 @@ VelocityBufferFillStencil::~VelocityBufferFillStencil() {
 
 void VelocityBufferFillStencil::applyLeftWall(FlowField & flowField, int i,
 		int j, int k) {
+/*	counter[0]++;*/
 	// std::cout<<" i : " << i << " j : "<< j << " k : "<<k<<std::endl;
 	// First internal layer of the sub-domain
 	// Iterate with lowoffset = 1, highoffset = -1 while i = 2 is the subdomian boundary so (i+1) in the vector

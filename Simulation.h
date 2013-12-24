@@ -144,7 +144,7 @@ class Simulation {
     void plotVTK(int timeStep, int rank){
         // TODO WORKSHEET 1
         VTKStencil _vtk(_parameters);
-        FieldIterator<FlowField> VtkIterator(_flowField, _parameters, _vtk, 0, 0);
+        FieldIterator<FlowField> VtkIterator(_flowField, _parameters, _vtk, 1, 0);
         _vtk.write ( _flowField, timeStep, rank );
         VtkIterator.iterate();
         _vtk.writeFinished();
