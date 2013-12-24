@@ -58,15 +58,16 @@ int main (int argc, char *argv[]) {
     }
     // Initialization state
     simulation->plotVTK(0, rank);
-    simulation->solveTimestep();
-    std::cout << "parameters.timestep.dt = " << parameters.timestep.dt << std::endl;
-    simulation->plotVTK(1, rank);
+//    simulation->solveTimestep();
+
+/*    std::cout << "parameters.timestep.dt = " << parameters.timestep.dt << std::endl;
+    simulation->plotVTK(1, rank);*/
     // TODO WORKSHEET 2: loop over time and
     //                   - solve one time step
     //                   - plot VTK output (if required at this time step)
     //                   - write simulation status to terminal (if required at this time step)
 
-/*    parameters.vtk.vtkCounter=0;
+    parameters.vtk.vtkCounter=0;
     parameters.simulation.currentTime=0;
     while (parameters.simulation.currentTime <= parameters.simulation.finalTime){
         simulation->solveTimestep();
@@ -77,7 +78,7 @@ int main (int argc, char *argv[]) {
             std::cout << "parameters.vtk.vtkCounter = " << parameters.vtk.vtkCounter << std::endl;
             std::cout << "parameters.simulation.currentTime = " << parameters.simulation.currentTime << std::endl;
         }
-    }*/
+    }
 
     // TODO WORKSHEET 2: plot final VTK output
 

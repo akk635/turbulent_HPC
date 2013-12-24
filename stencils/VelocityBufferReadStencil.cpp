@@ -10,20 +10,42 @@ VelocityBufferReadStencil::VelocityBufferReadStencil(Parameters & parameters) :
 		BoundaryStencil<FlowField>(parameters), localSize(
 				parameters.parallel.localSize) {
 
+	/*	leftVelocityReadBuffer = new FLOAT[((localSize[1]) * (localSize[2]))
+	 + 2 * ((localSize[1] + 1) * (localSize[2] + 1))];
+	 rightVelocityReadBuffer = new FLOAT[((localSize[1]) * (localSize[2]))
+	 + 2 * ((localSize[1] + 1) * (localSize[2] + 1))];
+
+	 bottomVelocityReadBuffer = new FLOAT[((localSize[0]) * (localSize[2]))
+	 + 2 * ((localSize[0] + 1) * (localSize[2] + 1))];
+	 topVelocityReadBuffer = new FLOAT[((localSize[0]) * (localSize[2]))
+	 + 2 * ((localSize[0] + 1) * (localSize[2] + 1))];
+
+	 frontVelocityReadBuffer = new FLOAT[((localSize[0]) * (localSize[1]))
+	 + 2 * ((localSize[0] + 1) * (localSize[1] + 1))];
+	 backVelocityReadBuffer = new FLOAT[((localSize[0]) * (localSize[1]))
+	 + 2 * ((localSize[0] + 1) * (localSize[1] + 1))];*/
+
 	leftVelocityReadBuffer = new FLOAT[((localSize[1]) * (localSize[2]))
-			+ 2 * ((localSize[1] + 1) * (localSize[2] + 1))];
+			+ ((localSize[1] + 1) * (localSize[2]))
+			+ (localSize[1] * (localSize[2] + 1))];
 	rightVelocityReadBuffer = new FLOAT[((localSize[1]) * (localSize[2]))
-			+ 2 * ((localSize[1] + 1) * (localSize[2] + 1))];
+			+ ((localSize[1] + 1) * (localSize[2]))
+			+ (localSize[1] * (localSize[2] + 1))];
 
 	bottomVelocityReadBuffer = new FLOAT[((localSize[0]) * (localSize[2]))
-			+ 2 * ((localSize[0] + 1) * (localSize[2] + 1))];
+			+ ((localSize[0] + 1) * (localSize[2]))
+			+ ((localSize[0]) * (localSize[2] + 1))];
 	topVelocityReadBuffer = new FLOAT[((localSize[0]) * (localSize[2]))
-			+ 2 * ((localSize[0] + 1) * (localSize[2] + 1))];
+			+ ((localSize[0] + 1) * (localSize[2]))
+			+ ((localSize[0]) * (localSize[2] + 1))];
 
 	frontVelocityReadBuffer = new FLOAT[((localSize[0]) * (localSize[1]))
-			+ 2 * ((localSize[0] + 1) * (localSize[1] + 1))];
+			+ ((localSize[0]) * (localSize[1] + 1))
+			+ ((localSize[0] + 1) * (localSize[1]))];
 	backVelocityReadBuffer = new FLOAT[((localSize[0]) * (localSize[1]))
-			+ 2 * ((localSize[0] + 1) * (localSize[1] + 1))];
+			+ ((localSize[0]) * (localSize[1] + 1))
+			+ ((localSize[0] + 1) * (localSize[1]))];
+
 }
 
 VelocityBufferReadStencil::~VelocityBufferReadStencil() {
@@ -42,7 +64,7 @@ void VelocityBufferReadStencil::applyLeftWall(FlowField & flowField, int i,
 						+ (j - 1) * localSize[2] + (k - 2)];
 		(flowField.getVelocity().getVector(i, j, k))[2] =
 				leftVelocityReadBuffer[((localSize[1]) * (localSize[2]))
-						+ ((localSize[1] + 1) * (localSize[2] + 1)) + (j - 2)
+						+ ((localSize[1] + 1) * (localSize[2])) + (j - 2)
 						+ (k - 1) * localSize[1]];
 	} else if ((j == 1) & (k >= 2)) {
 
@@ -52,7 +74,7 @@ void VelocityBufferReadStencil::applyLeftWall(FlowField & flowField, int i,
 	} else if ((k == 1) & (j >= 2)) {
 		(flowField.getVelocity().getVector(i, j, k))[2] =
 				leftVelocityReadBuffer[((localSize[1]) * (localSize[2]))
-						+ ((localSize[1] + 1) * (localSize[2] + 1)) + (j - 2)
+						+ ((localSize[1] + 1) * (localSize[2])) + (j - 2)
 						+ (k - 1) * localSize[1]];
 	}
 
@@ -71,7 +93,7 @@ void VelocityBufferReadStencil::applyRightWall(FlowField & flowField, int i,
 						+ (j - 1) * localSize[2] + (k - 2)];
 		(flowField.getVelocity().getVector(i + 1, j, k))[2] =
 				rightVelocityReadBuffer[((localSize[1]) * (localSize[2]))
-						+ ((localSize[1] + 1) * (localSize[2] + 1)) + (j - 2)
+						+ ((localSize[1] + 1) * (localSize[2])) + (j - 2)
 						+ (k - 1) * localSize[1]];
 	} else if ((j == 1) & (k >= 2)) {
 		(flowField.getVelocity().getVector(i + 1, j, k))[1] =
@@ -80,7 +102,7 @@ void VelocityBufferReadStencil::applyRightWall(FlowField & flowField, int i,
 	} else if ((k == 1) & (j >= 2)) {
 		(flowField.getVelocity().getVector(i + 1, j, k))[2] =
 				rightVelocityReadBuffer[((localSize[1]) * (localSize[2]))
-						+ ((localSize[1] + 1) * (localSize[2] + 1)) + (j - 2)
+						+ ((localSize[1] + 1) * (localSize[2])) + (j - 2)
 						+ (k - 1) * localSize[1]];
 	}
 
@@ -93,12 +115,10 @@ void VelocityBufferReadStencil::applyBottomWall(FlowField & flowField, int i,
 		(flowField.getVelocity().getVector(i, j, k))[0] =
 				bottomVelocityReadBuffer[(i - 1) * localSize[2] + (k - 2)];
 		(flowField.getVelocity().getVector(i, j - 1, k))[1] =
-				bottomVelocityReadBuffer[((localSize[1]) * (localSize[2]))
-						+ ((localSize[1] + 1) * (localSize[2] + 1)) + (j - 2)
-						+ (k - 1) * localSize[1]];
+				bottomVelocityReadBuffer[((localSize[0] + 1) * (localSize[2]))
+						+ (i - 2) * localSize[2] + (k - 2)];
 		(flowField.getVelocity().getVector(i, j, k))[2] =
-				bottomVelocityReadBuffer[((localSize[0] + 1)
-						* (localSize[2] + 1))
+				bottomVelocityReadBuffer[((localSize[0] + 1) * (localSize[2]))
 						+ ((localSize[0]) * (localSize[2]))
 						+ (k - 1) * localSize[0] + (i - 2)];
 	} else if ((i == 1) & (k >= 2)) {
@@ -106,8 +126,7 @@ void VelocityBufferReadStencil::applyBottomWall(FlowField & flowField, int i,
 				bottomVelocityReadBuffer[(i - 1) * localSize[2] + (k - 2)];
 	} else if ((k == 1) & (i >= 2)) {
 		(flowField.getVelocity().getVector(i, j, k))[2] =
-				bottomVelocityReadBuffer[((localSize[0] + 1)
-						* (localSize[2] + 1))
+				bottomVelocityReadBuffer[((localSize[0] + 1) * (localSize[2]))
 						+ ((localSize[0]) * (localSize[2]))
 						+ (k - 1) * localSize[0] + (i - 2)];
 	}
@@ -121,10 +140,10 @@ void VelocityBufferReadStencil::applyTopWall(FlowField & flowField, int i,
 		(flowField.getVelocity().getVector(i, j + 1, k))[0] =
 				topVelocityReadBuffer[(i - 1) * localSize[2] + (k - 2)];
 		(flowField.getVelocity().getVector(i, j + 1, k))[1] =
-				topVelocityReadBuffer[((localSize[0] + 1) * (localSize[2] + 1))
+				topVelocityReadBuffer[((localSize[0] + 1) * (localSize[2]))
 						+ (i - 2) * localSize[2] + (k - 2)];
 		(flowField.getVelocity().getVector(i, j + 1, k))[2] =
-				topVelocityReadBuffer[((localSize[0] + 1) * (localSize[2] + 1))
+				topVelocityReadBuffer[((localSize[0] + 1) * (localSize[2]))
 						+ ((localSize[0]) * (localSize[2]))
 						+ (k - 1) * localSize[0] + (i - 2)];
 	} else if ((i == 1) & (k >= 2)) {
@@ -132,7 +151,7 @@ void VelocityBufferReadStencil::applyTopWall(FlowField & flowField, int i,
 				topVelocityReadBuffer[(i - 1) * localSize[2] + (k - 2)];
 	} else if ((k == 1) & (i >= 2)) {
 		(flowField.getVelocity().getVector(i, j + 1, k))[2] =
-				topVelocityReadBuffer[((localSize[0] + 1) * (localSize[2] + 1))
+				topVelocityReadBuffer[((localSize[0] + 1) * (localSize[2]))
 						+ ((localSize[0]) * (localSize[2]))
 						+ (k - 1) * localSize[0] + (i - 2)];
 	}
@@ -147,12 +166,12 @@ void VelocityBufferReadStencil::applyFrontWall(FlowField & flowField, int i,
 				frontVelocityReadBuffer[(i - 1) * localSize[1] + (j - 2)];
 
 		(flowField.getVelocity().getVector(i, j, k))[1] =
-				frontVelocityReadBuffer[((localSize[0] + 1) * (localSize[1] + 1))
+				frontVelocityReadBuffer[((localSize[0] + 1) * (localSize[1]))
 						+ (j - 1) * localSize[0] + (i - 2)];
 
 		(flowField.getVelocity().getVector(i, j, k - 1))[2] =
-				frontVelocityReadBuffer[2
-						* ((localSize[0] + 1) * (localSize[1] + 1))
+				frontVelocityReadBuffer[((localSize[0]) * (localSize[1] + 1))
+						+ ((localSize[0] + 1) * (localSize[1]))
 						+ (i - 2) * localSize[1] + (j - 2)];
 	} else if ((i == 1) & (j >= 2)) {
 		(flowField.getVelocity().getVector(i, j, k))[0] =
@@ -160,7 +179,7 @@ void VelocityBufferReadStencil::applyFrontWall(FlowField & flowField, int i,
 	} else if ((j == 1) & (i >= 2)) {
 
 		(flowField.getVelocity().getVector(i, j, k))[1] =
-				frontVelocityReadBuffer[((localSize[0] + 1) * (localSize[1] + 1))
+				frontVelocityReadBuffer[((localSize[0] + 1) * (localSize[1]))
 						+ (j - 1) * localSize[0] + (i - 2)];
 	}
 }
@@ -174,12 +193,12 @@ void VelocityBufferReadStencil::applyBackWall(FlowField & flowField, int i,
 				backVelocityReadBuffer[(i - 1) * localSize[1] + (j - 2)];
 
 		(flowField.getVelocity().getVector(i, j, k + 1))[1] =
-				backVelocityReadBuffer[((localSize[0] + 1) * (localSize[1] + 1))
+				backVelocityReadBuffer[((localSize[0] + 1) * (localSize[1]))
 						+ (j - 1) * localSize[0] + (i - 2)];
 		(flowField.getVelocity().getVector(i, j, k + 1))[2] =
-				backVelocityReadBuffer[2
-						* ((localSize[0] + 1) * (localSize[1] + 1))
-						+ (i - 2) * localSize[1] + (j - 2)];
+				backVelocityReadBuffer[((localSize[0]) * (localSize[1] + 1))
+										+ ((localSize[0] + 1) * (localSize[1]))
+										+ (i - 2) * localSize[1] + (j - 2)];
 	} else if ((i == 1) & (j >= 2)) {
 
 		(flowField.getVelocity().getVector(i, j, k + 1))[0] =
@@ -187,7 +206,7 @@ void VelocityBufferReadStencil::applyBackWall(FlowField & flowField, int i,
 	} else if ((j == 1) & (i >= 2)) {
 
 		(flowField.getVelocity().getVector(i, j, k + 1))[1] =
-				backVelocityReadBuffer[((localSize[0] + 1) * (localSize[1] + 1))
+				backVelocityReadBuffer[((localSize[0] + 1) * (localSize[1]))
 						+ (j - 1) * localSize[0] + (i - 2)];
 	}
 }

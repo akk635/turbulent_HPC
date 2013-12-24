@@ -154,40 +154,57 @@ class Simulation {
     /** sets the time step according to the maximum velocity values that have been determined before */
     void setTimeStep(){
 
+        int rank;   // This processor's identifier
+        int nproc;  // Number of processors in the group
+        MPI_Comm_size(PETSC_COMM_WORLD, &nproc);
+        MPI_Comm_rank(PETSC_COMM_WORLD, &rank);
+
         // TODO WORKSHEET 2: determine maximum time step according to CFL-condition and maximum velocity values;
         //                   set the respective timestep in _parameters.timestep.dt.
         if (_parameters.timestep.tau>0){
-            FLOAT a,b,c,d;
+            FLOAT a=1,b=1,c=1,d=1;
             a = _parameters.flow.Re/(2.0*(1.0/(_parameters.geometry.dx*_parameters.geometry.dx)
                     +1.0/(_parameters.geometry.dy*_parameters.geometry.dy)+1.0/(_parameters.geometry.dz*_parameters.geometry.dz)));
+            if ( ( MaxU.getMaxValues() )[0]>0 && ( MaxU.getMaxValues() )[1]>0 && ( MaxU.getMaxValues() )[2]>0){
             b = _parameters.geometry.dx/( MaxU.getMaxValues() )[0];
             c = _parameters.geometry.dy/( MaxU.getMaxValues() )[1];
             d = _parameters.geometry.dz/( MaxU.getMaxValues() )[2];
+            }
 
             _parameters.timestep.dt = 1;
             if ( _parameters.timestep.dt > a ){
             	_parameters.timestep.dt = _parameters.timestep.tau * a;
+                std::cout << "rank :" << rank << "dt_a = " << _parameters.timestep.dt << std::endl;
+
             }
             if (_parameters.timestep.dt > b ){
             	_parameters.timestep.dt = _parameters.timestep.tau * b;
+                std::cout << "rank :" << rank << "dt_b = " << _parameters.timestep.dt << std::endl;
+
             }
             if (_parameters.timestep.dt > c ){
             	_parameters.timestep.dt = _parameters.timestep.tau * c;
+                std::cout << "rank :" << rank << "dt_c = " << _parameters.timestep.dt << std::endl;
+
             }
             if (_parameters.timestep.dt > d){
             	_parameters.timestep.dt = _parameters.timestep.tau * d;
+                std::cout << "rank :" << rank << "dt_d = " << _parameters.timestep.dt << std::endl;
+
             }
         }
+
+
+
+        // TODO WORKSHEET 3: determine global minimum of time step
+        // MPI_Allreduce (&sendbuf,&recvbuf,count,datatype,op,comm)
+        MPI_Allreduce( MPI_IN_PLACE, &(_parameters.timestep.dt), 1, MPI_DOUBLE, MPI_MIN, PETSC_COMM_WORLD);
 
         //check that output are exactly at the time they are printing
         if (_parameters.simulation.currentTime + _parameters.timestep.dt > (_parameters.vtk.vtkCounter + 1) * _parameters.vtk.interval-0.00001){
             _parameters.timestep.dt = (_parameters.vtk.vtkCounter + 1) * _parameters.vtk.interval - _parameters.simulation.currentTime;
-            std::cout << "parameters.timestep.dt = " << _parameters.timestep.dt << std::endl;
-        }
 
-        // TODO WORKSHEET 3: determine global minimum of time step
-        // MPI_Allreduce (&sendbuf,&recvbuf,count,datatype,op,comm)
-        MPI_Allreduce( MPI_IN_PLACE, &(_parameters.timestep.dt), 1, MPI_DOUBLE, MPI_MIN, MPI_COMM_WORLD);
+        }
     }
 
 };
