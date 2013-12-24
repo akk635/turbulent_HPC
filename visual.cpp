@@ -23,12 +23,12 @@ void write_vtkHeader( std::ofstream &fp, int localsizeX, int localsizeY,
 	  fp << "Visualization \n";
 	  fp << "ASCII \n";
 	  fp << "DATASET STRUCTURED_GRID \n";
-	  fp << "DIMENSIONS"<<" "<<(localsizeX + 2)<<" "<<(localsizeY + 2)<<" "<<(localsizeZ + 2) <<"\n";
-	  fp << "POINTS " << ((localsizeX + 2) * (localsizeY + 2) * (localsizeZ + 2)) << " float" << "\n";
+	  fp << "DIMENSIONS"<<" "<<(localsizeX + 1)<<" "<<(localsizeY + 1)<<" "<<(localsizeZ + 1) <<"\n";
+	  fp << "POINTS " << ((localsizeX + 1) * (localsizeY + 1) * (localsizeZ + 1)) << " float" << "\n";
 
-	  for (int k=0; k < ( localsizeZ+2 ); k++){
-		  for (int j=0; j < ( localsizeY+2 ); j++){
-			  for (int i=0; i < ( localsizeX+2 ); i++){
+	  for (int k=0; k < ( localsizeZ+1 ); k++){
+		  for (int j=0; j < ( localsizeY+1 ); j++){
+			  for (int i=0; i < ( localsizeX+1 ); i++){
 				  fp << (float)(originX * dx + ((i-1)*dx)) << " " << (float) (originY * dy + ((j-1)*dy)) << " " << (float) (originZ * dz + ((k-1)*dz)) << "\n";
 			  }
 		  }
