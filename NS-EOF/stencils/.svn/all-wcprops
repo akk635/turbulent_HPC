@@ -1,0 +1,125 @@
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/svn/ernstottofischer2012/!svn/ver/117/trunk/worksheets/codeframe/stencils
+END
+MovingWallStencils.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 97
+/svn/ernstottofischer2012/!svn/ver/106/trunk/worksheets/codeframe/stencils/MovingWallStencils.cpp
+END
+VelocityStencil.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/ernstottofischer2012/!svn/ver/106/trunk/worksheets/codeframe/stencils/VelocityStencil.h
+END
+FGHStencil.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/ernstottofischer2012/!svn/ver/106/trunk/worksheets/codeframe/stencils/FGHStencil.cpp
+END
+MovingWallStencils.h
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/svn/ernstottofischer2012/!svn/ver/106/trunk/worksheets/codeframe/stencils/MovingWallStencils.h
+END
+BFStepInitStencil.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/svn/ernstottofischer2012/!svn/ver/106/trunk/worksheets/codeframe/stencils/BFStepInitStencil.cpp
+END
+FGHStencil.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/ernstottofischer2012/!svn/ver/106/trunk/worksheets/codeframe/stencils/FGHStencil.h
+END
+VTKStencil.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/ernstottofischer2012/!svn/ver/106/trunk/worksheets/codeframe/stencils/VTKStencil.h
+END
+MaxUStencil.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/svn/ernstottofischer2012/!svn/ver/117/trunk/worksheets/codeframe/stencils/MaxUStencil.cpp
+END
+BFStepInitStencil.h
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/ernstottofischer2012/!svn/ver/106/trunk/worksheets/codeframe/stencils/BFStepInitStencil.h
+END
+StencilFunctions.h
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/svn/ernstottofischer2012/!svn/ver/106/trunk/worksheets/codeframe/stencils/StencilFunctions.h
+END
+MaxUStencil.h
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/svn/ernstottofischer2012/!svn/ver/117/trunk/worksheets/codeframe/stencils/MaxUStencil.h
+END
+PeriodicBoundaryStencils.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 103
+/svn/ernstottofischer2012/!svn/ver/106/trunk/worksheets/codeframe/stencils/PeriodicBoundaryStencils.cpp
+END
+NeumannBoundaryStencils.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 102
+/svn/ernstottofischer2012/!svn/ver/106/trunk/worksheets/codeframe/stencils/NeumannBoundaryStencils.cpp
+END
+PeriodicBoundaryStencils.h
+K 25
+svn:wc:ra_dav:version-url
+V 101
+/svn/ernstottofischer2012/!svn/ver/106/trunk/worksheets/codeframe/stencils/PeriodicBoundaryStencils.h
+END
+BFInputStencils.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/ernstottofischer2012/!svn/ver/106/trunk/worksheets/codeframe/stencils/BFInputStencils.cpp
+END
+RHSStencil.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/svn/ernstottofischer2012/!svn/ver/106/trunk/worksheets/codeframe/stencils/RHSStencil.cpp
+END
+NeumannBoundaryStencils.h
+K 25
+svn:wc:ra_dav:version-url
+V 100
+/svn/ernstottofischer2012/!svn/ver/106/trunk/worksheets/codeframe/stencils/NeumannBoundaryStencils.h
+END
+VelocityStencil.cpp
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/svn/ernstottofischer2012/!svn/ver/106/trunk/worksheets/codeframe/stencils/VelocityStencil.cpp
+END
+BFInputStencils.h
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/svn/ernstottofischer2012/!svn/ver/106/trunk/worksheets/codeframe/stencils/BFInputStencils.h
+END
+RHSStencil.h
+K 25
+svn:wc:ra_dav:version-url
+V 87
+/svn/ernstottofischer2012/!svn/ver/106/trunk/worksheets/codeframe/stencils/RHSStencil.h
+END

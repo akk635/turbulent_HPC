@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+    <flow Re="50" />
+    <simulation finalTime="10" >
+        <scenario>cavity</scenario>
+    </simulation>
+    <timestep dt="1" tau="0.5" />
+    <solver gamma="0.5" />
+    <geometry dx="0.1" dy="0.1" dz="0.1" sizeX="20" sizeY="20" sizeZ="20" />
+    <environment gx="0" gy="0" gz="0" />
+    <walls>
+        <left>
+            <vector x="0" y="0" z="0" />
+        </left>
+        <right>
+            <vector x="0" y="1" z="0" />
+        </right>
+        <top>
+            <vector x="0" y="0" z="0" />
+        </top>
+        <bottom>
+            <vector x="0" y="0" z="0" />
+        </bottom>
+        <front>
+            <vector x="0" y="0" z="0" />
+        </front>
+        <back>
+            <vector x="0" y="0" z="0" />
+        </back>
+    </walls>
+    <vtk interval="1.0">cavity_result</vtk>
+    <stdOut interval="1.0" />
+    <parallel numProcessorsX="1" numProcessorsY="2" numProcessorsZ="1" />
+</configuration>
