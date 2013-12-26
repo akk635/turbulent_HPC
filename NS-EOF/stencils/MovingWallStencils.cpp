@@ -52,11 +52,10 @@ void MovingWallVelocityStencil::applyLeftWall ( FlowField & flowField, int i, in
 
 
 void MovingWallVelocityStencil::applyRightWall ( FlowField & flowField, int i, int j , int k ){
-
     flowField.getVelocity().getVector(i-1, j, k)[0] = _parameters.walls.vectorRight[0];
-    if ( (i == 22) && ( j == 10 ) && ( k == 10 )){
+/*    if ( (i == 22) && ( j == 10 ) && ( k == 10 )){
     	std::cout<<"atleast here"<<    flowField.getVelocity().getVector(i-1, j, k)[0]<<std::endl;
-    }
+    }*/
     flowField.getVelocity().getVector(i, j, k)[1] =
         2 * _parameters.walls.vectorRight[1] -
         flowField.getVelocity().getVector(i-1, j, k)[1];
@@ -141,7 +140,13 @@ void MovingWallFGHStencil::applyLeftWall ( FlowField & flowField, int i, int j, 
 
 
 void MovingWallFGHStencil::applyRightWall ( FlowField & flowField, int i, int j , int k ){
+	if( (j == 10)  && (k == 10)){
+		std::cout<<i<<std::endl;
+	}
     flowField.getFGH().getVector(i-1, j, k)[0] = _parameters.walls.vectorRight[0];
+/*    if ( (i == 22) && ( j == 10 ) && ( k == 10 )){
+    	std::cout<<"atleast here FGh "<<    flowField.getVelocity().getVector(i-1, j, k)[0]<<std::endl;
+    }*/
 }
 
 

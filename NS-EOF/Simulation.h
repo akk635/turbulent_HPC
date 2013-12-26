@@ -4,8 +4,7 @@
 #include <petscksp.h>
 #include <float.h>
 #include "FlowField.h"
-#include <time.h>
-#include <unistd.h>
+#include <assert.h>
 
 // TODO WORKSHEET 1: include VTKStencil here
 // TODO WORKSHEET 2: include all stencils, iterators etc. here
@@ -107,25 +106,19 @@ class Simulation {
 
         fghboundaryIterator.iterate();
 
-        int i = 22-1;
-        std::cout<<"be zero FGH "<<_flowField.getVelocity().getVector(i, 10, 10)[0]<<std::endl;
+        // assert( _flowField.getVelocity().getVector(21, 10, 10)[0] == 0);
+        // std::cout<<"be zero FGH "<<_flowField.getVelocity().getVector(i, 10, 10)[0]<<std::endl;
 
         // TODO WORKSHEET 2: set global boundary values for fgh
         // globalBoundary.getGlobalBoundaryFGHIterator(_flowField).iterate();
         // For the internal boundaries and the external boundaries
 
-        std::cout<<"afetr bdny"<<std::endl;
-
         // TODO WORKSHEET 2: compute the right hand side
         // Iterated only in the internal domain
         globalRHSFieldIterator.iterate();
 
-        std::cout<<"b4 solev"<<std::endl;
-
         // TODO WORKSHEET 2: solve for pressure poisson equation
         petscsolver.solve();
-
-        std::cout<<"afetr  solve"<<std::endl;
 
         // TODO WORKSHEET 3: communicate pressure values after solving the pressure Poisson equation
         comm.communicatePressure();
@@ -138,8 +131,8 @@ class Simulation {
         // TODO WORKSHEET 2: update velocity values on the boundary
         // globalBoundary.getGlobalBoundaryVelocityIterator(_flowField).iterate();
         velocityboundaryIterator.iterate();
-        i = 22-1;
-        std::cout<<"be zero "<<_flowField.getVelocity().getVector(i, 10, 10)[0]<<std::endl;
+        // assert( _flowField.getVelocity().getVector(21, 10, 10)[0] == 0);
+
     }
 
     void initializeVelocity(){

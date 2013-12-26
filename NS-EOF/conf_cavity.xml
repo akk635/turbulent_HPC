@@ -13,10 +13,10 @@
             <vector x="0" y="0" z="0" />
         </left>
         <right>
-            <vector x="0" y="1" z="0" />
+            <vector x="0" y="0" z="0" />
         </right>
         <top>
-            <vector x="0" y="0" z="0" />
+            <vector x="1" y="0" z="0" />
         </top>
         <bottom>
             <vector x="0" y="0" z="0" />
@@ -30,5 +30,5 @@
     </walls>
     <vtk interval="1.0">cavity_result</vtk>
     <stdOut interval="1.0" />
-    <parallel numProcessorsX="1" numProcessorsY="2" numProcessorsZ="1" />
+    <parallel numProcessorsX="3" numProcessorsY="1" numProcessorsZ="1" />
 </configuration>

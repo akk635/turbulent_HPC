@@ -149,7 +149,7 @@ void FGHStencil::applyRightWall(FlowField & flowField, int i,
 
 void FGHStencil::applyBottomWall ( FlowField & flowField, int i, int j, int k ){
 
-	if(FieldStencil<FlowField>::_parameters.parallel.bottomNb < -1){
+	if(FieldStencil<FlowField>::_parameters.parallel.bottomNb < 0){
 		_FGHStencils[2]->applyBottomWall ( flowField, i, j , k );
 		return;
 	}

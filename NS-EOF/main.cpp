@@ -60,7 +60,7 @@ int main (int argc, char *argv[]) {
     }
     // Initialization state
     simulation->plotVTK(0, rank);
-    for (int i = 0; i <= 13; i++){
+    for (int i = 0; i <= 50; i++){
     	simulation->solveTimestep();
         simulation->plotVTK(i+1, rank);
     }
@@ -74,8 +74,7 @@ int main (int argc, char *argv[]) {
     //                   - plot VTK output (if required at this time step)
     //                   - write simulation status to terminal (if required at this time step)
 
-/*
-    parameters.vtk.vtkCounter=0;
+/*    parameters.vtk.vtkCounter=0;
     parameters.simulation.currentTime=0;
     while (parameters.simulation.currentTime <= parameters.simulation.finalTime){
         simulation->solveTimestep();
@@ -86,8 +85,7 @@ int main (int argc, char *argv[]) {
             std::cout << "parameters.vtk.vtkCounter = " << parameters.vtk.vtkCounter << std::endl;
             std::cout << "parameters.simulation.currentTime = " << parameters.simulation.currentTime << std::endl;
         }
-    }
-*/
+    }*/
 
     // TODO WORKSHEET 2: plot final VTK output
 
