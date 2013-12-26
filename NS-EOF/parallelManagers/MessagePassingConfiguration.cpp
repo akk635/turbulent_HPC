@@ -201,17 +201,18 @@ void MessagePassingConfiguration::communicatePressure() {
 
 	// Send back and recv from front
 	// MPI_Isend(buffer,count,type,dest,tag,comm,request)
-	MPI_Isend(fillStencil.backVelocityBuffer, ((localSize[0]) * (localSize[1])),
+	MPI_Isend(fillPStencil.backPressureBuffer, ((localSize[0]) * (localSize[1])),
 	MY_MPI_FLOAT, _parameters.parallel.backNb, 206, PETSC_COMM_WORLD,
 			&(request[10]));
 	// MPI_Irecv(buffer,count,type,source,tag,comm,request)
-	MPI_Irecv(readStencil.frontVelocityReadBuffer,
+	MPI_Irecv(readPStencil.frontPressureReadBuffer,
 			((localSize[0]) * (localSize[1])), MY_MPI_FLOAT,
 			_parameters.parallel.frontNb, 206, PETSC_COMM_WORLD, &(request[11]));
 
 	for (int i = 0; i < 12; i++) {
 		MPI_Wait(&(request[i]), &(status[i]));
 	}
+
 	pressurereadIterator.iterate();
 
 }
