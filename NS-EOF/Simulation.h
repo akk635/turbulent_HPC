@@ -62,15 +62,15 @@ class Simulation {
         _parameters(parameters),
         _flowField(flowField),
         MaxU(parameters),
-        MaxUFlowFieldIterator(_flowField, parameters, MaxU, 1, 0),
-        MaxUBoundaryIterator(_flowField, parameters, MaxU, 1, 0),
+        MaxUFlowFieldIterator(_flowField, _parameters, MaxU, 1, 0),
+        MaxUBoundaryIterator(_flowField, _parameters, MaxU, 1, 0),
         FGH( _parameters ),
-        globalFGHFieldIterator( _flowField, parameters, FGH, 1, 0),
+        globalFGHFieldIterator( _flowField, _parameters, FGH, 1, 0),
 
         globalBoundary( _parameters ),
 
         RHS( _parameters ),
-        globalRHSFieldIterator( _flowField, parameters, RHS, 1, 0),
+        globalRHSFieldIterator( _flowField, _parameters, RHS, 1, 0),
         petscsolver( _flowField, _parameters ),
         newvelocities( _parameters ),
         NewVelocitiesUpdateIterator( _flowField, _parameters, newvelocities,1 , 0),
@@ -94,7 +94,6 @@ class Simulation {
         MaxUFlowFieldIterator.iterate();
         // For covering the domain boundary
         MaxUBoundaryIterator.iterate();
-
 
         // TODO WORKSHEET 2: set new time step
         setTimeStep();

@@ -27,7 +27,7 @@ class VTKStencil : public FieldStencil<FlowField> {
         /** Constructor
          *
          */
-        VTKStencil ( const Parameters & parameters ): FieldStencil<FlowField>(parameters) {
+        VTKStencil ( const Parameters & parameters ): FieldStencil<FlowField>(parameters){
           // TODO WORKSHEET 1
 
         	_dim = parameters.geometry.dim;
