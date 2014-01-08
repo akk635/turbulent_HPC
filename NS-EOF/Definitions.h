@@ -1,3 +1,4 @@
+
 #ifndef _DEFINITIONS_H_
 #define _DEFINITIONS_H_
 
@@ -5,7 +6,6 @@
 #include <stdio.h>
 #include <iostream>
 #include <float.h>
-#include <petscksp.h>
 
 // Datatype for the type of data stored in the structures
 #ifdef USE_SINGLE_PRECISION

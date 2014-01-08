@@ -41,12 +41,12 @@ class GlobalBoundaryFactory{
         /** Returns an instance of the global boundary iterator for velocities.
          * @param flowField Flow field information
          */
-        GlobalBoundaryIterator<FlowField> getGlobalBoundaryVelocityIterator(FlowField & flowField);
+        // GlobalBoundaryIterator<FlowField> getGlobalBoundaryVelocityIterator(FlowField & flowField);
 
         /** Returns an instance of the global boundary iterator for FGH.
          * @param flowField Flow field information
          */
-        GlobalBoundaryIterator<FlowField> getGlobalBoundaryFGHIterator(FlowField & flowField);
+        // GlobalBoundaryIterator<FlowField> getGlobalBoundaryFGHIterator(FlowField & flowField);
 };
 
 #endif

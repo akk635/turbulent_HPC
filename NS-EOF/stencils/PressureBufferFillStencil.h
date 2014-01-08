@@ -8,10 +8,13 @@
 #ifndef PRESSUREBUFFERFILLSTENCIL_H_
 #define PRESSUREBUFFERFILLSTENCIL_H_
 
+#include <fstream>
 #include "../Definitions.h"
 #include "../Parameters.h"
 #include "../Stencil.h"
 #include "../FlowField.h"
+#include <mpi.h>
+#include <sstream>
 
 class PressureBufferFillStencil : public BoundaryStencil<FlowField> {
 
@@ -27,6 +30,7 @@ public:
 	FLOAT* frontPressureBuffer;
 	FLOAT* backPressureBuffer;
 
+	std::ofstream fpi;
 	PressureBufferFillStencil( Parameters & parameters );
 	~PressureBufferFillStencil();
 
@@ -41,6 +45,8 @@ public:
     void applyTopWall    ( FlowField & flowField, int i, int j, int k );
     void applyFrontWall  ( FlowField & flowField, int i, int j, int k );
     void applyBackWall   ( FlowField & flowField, int i, int j, int k );
+
+    void applyTest ( FlowField & flowField, int i, int j, int k );
 
 };
 

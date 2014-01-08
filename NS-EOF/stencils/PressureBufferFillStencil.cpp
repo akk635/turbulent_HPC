@@ -22,13 +22,21 @@ PressureBufferFillStencil::PressureBufferFillStencil(Parameters &parameters):
 	bottomPressureBuffer = new FLOAT[(localSize[0]) * (localSize[2])];
 	topPressureBuffer = new FLOAT[(localSize[0]) * (localSize[2])];
 
-
 	frontPressureBuffer = new FLOAT[(localSize[0]) * (localSize[1])];
 	backPressureBuffer = new FLOAT[(localSize[0]) * (localSize[1])];
 
+	int rank;
+    MPI_Comm_rank(PETSC_COMM_WORLD, &rank);
+	std::string testItr = "pItr";
+	std::stringstream ss;
+	ss >> rank;
+	testItr += ss.str();
+	testItr+=".dat";
+	fpi.open(testItr.c_str());
+
 }
 
-PressureBufferFillStencil::~PressureBufferFillStencil(){};
+PressureBufferFillStencil::~PressureBufferFillStencil(){ fpi.close();};
 
 void PressureBufferFillStencil::applyLeftWall(FlowField & flowField, int i,
 		int j, int k) {
@@ -82,6 +90,10 @@ void PressureBufferFillStencil::applyBackWall(FlowField & flowField, int i,
 		backPressureBuffer[(i - 2) * localSize[1] + (j - 2)] =
 				(flowField.getPressure().getScalar(i, j, k));
 	}
+}
+
+void PressureBufferFillStencil::applyTest ( FlowField & flowField, int i, int j, int k ){
+
 }
 
 void PressureBufferFillStencil::applyLeftWall(FlowField & flowField, int i,

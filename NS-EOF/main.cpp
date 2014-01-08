@@ -30,9 +30,9 @@ int main (int argc, char *argv[]) {
     FlowField *flowField = NULL;
     Simulation *simulation = NULL;
 
-        std::cout << "Processor " << parameters.parallel.rank << " with index ";
-        std::cout << parameters.parallel.indices[0] << ",";
-        std::cout << parameters.parallel.indices[1] << ",";
+    std::cout << "Processor " << parameters.parallel.rank << " with index ";
+    std::cout << parameters.parallel.indices[0] << ",";
+    std::cout << parameters.parallel.indices[1] << ",";
         std::cout << parameters.parallel.indices[2];
         std::cout <<    " is computing the size of its subdomain and obtains ";
         std::cout << parameters.parallel.localSize[0] << ", ";
@@ -41,8 +41,6 @@ int main (int argc, char *argv[]) {
         std::cout << ". front neighbour: " << parameters.parallel.frontNb;
         std::cout << ", back neighbour: " << parameters.parallel.backNb;
         std::cout << std::endl;
-
-
 
     // initialise simulation
     std::cout << "Start DNS simulation in " << parameters.geometry.dim << "D" << std::endl;
@@ -60,7 +58,7 @@ int main (int argc, char *argv[]) {
     }
     // Initialization state
     simulation->plotVTK(0, rank);
-    for (int i = 0; i <= 50; i++){
+    for (int i = 0; i <= 13; i++){
     	simulation->solveTimestep();
         simulation->plotVTK(i+1, rank);
     }

@@ -47,7 +47,10 @@ GlobalBoundaryIterator<FlowField>::GlobalBoundaryIterator(FlowField & flowField,
     _lowOffset(lowOffset), _highOffset(highOffset),
     _leftWallStencil(stencil), _rightWallStencil(stencil),
     _bottomWallStencil(stencil), _topWallStencil(stencil),
-    _frontWallStencil(stencil), _backWallStencil(stencil){}
+    _frontWallStencil(stencil), _backWallStencil(stencil)
+    {
+    MPI_Comm_rank(PETSC_COMM_WORLD, &rank);
+}
 
 
 template<class FlowField>
@@ -209,6 +212,30 @@ void GlobalBoundaryIterator<FlowField>::iterate () {
     	}
 
     }
+}
+
+template<class FlowField>
+void GlobalBoundaryIterator<FlowField>::testItr (){
+	testVelocity.openfile();
+ if(rank == 1){
+		for (int j = 1+_lowOffset; j < Iterator<FlowField>::_flowField.getCellsY()+_highOffset - 1; j++) {
+	        for (int k = 1+_lowOffset; k < Iterator<FlowField>::_flowField.getCellsZ()+_highOffset - 1; k++) {
+	        	testVelocity.applyTest( Iterator<FlowField>::_flowField, _lowOffset+1, j, k );
+	        	testVelocity.applyTestlr(Iterator<FlowField>::_flowField, _lowOffset, j, k );
+	        	testVelocity.applyFGHbnd(Iterator<FlowField>::_flowField, _lowOffset, j, k);
+	        }
+	    }
+ }
+ else if (rank == 0 ){
+		for (int j =  1+_lowOffset; j < Iterator<FlowField>::_flowField.getCellsY()+_highOffset - 1; j++) {
+	        for (int k = 1+_lowOffset; k < Iterator<FlowField>::_flowField.getCellsZ()+_highOffset - 1; k++) {
+	        	testVelocity.applyTest  ( Iterator<FlowField>::_flowField, Iterator<FlowField>::_flowField.getCellsX()-1-_highOffset, j, k );
+	        	testVelocity.applyTestlr(Iterator<FlowField>::_flowField, Iterator<FlowField>::_flowField.getCellsX()-2-_highOffset, j, k);
+	        	testVelocity.applyFGHbnd(Iterator<FlowField>::_flowField, Iterator<FlowField>::_flowField.getCellsX()-2-_highOffset, j, k);
+	        }
+	    }
+ }
+ testVelocity.overwrite();
 }
 
 template<class FlowField>

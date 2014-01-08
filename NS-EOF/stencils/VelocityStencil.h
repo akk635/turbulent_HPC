@@ -11,12 +11,16 @@
  */
 class VelocityStencil : public FieldStencil<FlowField>, public BoundaryStencil<FlowField> , protected GlobalBoundaryFactory {
 
+private:
+
     public:
 
         /** Constructor
          * @param parameters Parameters of the problem
          */
         VelocityStencil(Parameters & parameters);
+
+        ~VelocityStencil(){};
 
         /** Apply the stencil in 2D
          * @param flowField Flow field information
@@ -47,7 +51,7 @@ class VelocityStencil : public FieldStencil<FlowField>, public BoundaryStencil<F
          * @param i Index in the x direction
          * @param j Index in the y direction
          */
-void applyRightWall  (FlowField & flowField, int i, int j){};
+        void applyRightWall  (FlowField & flowField, int i, int j){};
 
         /** Represents an operation in the bottom wall of a 2D domain.
          *
@@ -55,7 +59,7 @@ void applyRightWall  (FlowField & flowField, int i, int j){};
          * @param i Index in the x direction
          * @param j Index in the y direction
          */
-void applyBottomWall (FlowField & flowField, int i, int j){};
+        void applyBottomWall (FlowField & flowField, int i, int j){};
 
         /** Represents an operation in the top wall of a 2D domain.
          *
@@ -63,7 +67,7 @@ void applyBottomWall (FlowField & flowField, int i, int j){};
          * @param i Index in the x direction
          * @param j Index in the y direction
          */
-void applyTopWall    (FlowField & flowField, int i, int j){};
+        void applyTopWall    (FlowField & flowField, int i, int j){};
 
 
         /** Represents an operation in the left wall of a 3D domain.
@@ -119,7 +123,6 @@ void applyFrontWall  (FlowField & flowField, int i, int j, int k);
          * @param k Index in the z direction
          */
 void applyBackWall   (FlowField & flowField, int i, int j, int k);
-
 
 };
 

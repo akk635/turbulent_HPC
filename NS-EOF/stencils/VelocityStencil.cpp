@@ -227,10 +227,9 @@ void VelocityStencil:: applyFrontWall (FlowField & flowField, int i,int j, int k
 
 
 void VelocityStencil:: applyBackWall (FlowField & flowField, int i,int j, int k) {
-
         if(FieldStencil<FlowField>::_parameters.parallel.backNb < 0 ){
             _velocityStencils[5] -> applyBackWall(flowField, i , j, k);
             return ;
         }
-
 }
+

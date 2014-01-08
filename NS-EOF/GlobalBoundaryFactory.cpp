@@ -97,7 +97,7 @@ GlobalBoundaryFactory::~GlobalBoundaryFactory(){
     delete _channelInput[1];
 }
 
-GlobalBoundaryIterator<FlowField> GlobalBoundaryFactory::
+/*GlobalBoundaryIterator<FlowField> GlobalBoundaryFactory::
     getGlobalBoundaryVelocityIterator(FlowField & flowField){
     if (_parameters.geometry.dim == 2){
         return GlobalBoundaryIterator<FlowField>(flowField, _parameters,
@@ -125,4 +125,4 @@ GlobalBoundaryIterator<FlowField> GlobalBoundaryFactory::
                                   *(_FGHStencils[2]), *(_FGHStencils[3]),
                                   *(_FGHStencils[4]), *(_FGHStencils[5]),
                                   1, 0);
-}
+}*/

@@ -3,6 +3,8 @@
 
 #include "Stencil.h"
 #include "Parameters.h"
+#include <mpi.h>
+#include "stencils/testStencil.h"
 
 
 /** Iterator class
@@ -61,12 +63,13 @@ class FieldIterator : public Iterator<FlowField> {
 
 
 template<class FlowField>
-class GlobalBoundaryIterator : public Iterator<FlowField> {
+class GlobalBoundaryIterator : protected Iterator<FlowField> {
 
     private:
 
         const int _lowOffset;
         const int _highOffset;
+        int rank;
 
         // This iterator has a reference to a stencil for each side, and will call its methods
         BoundaryStencil<FlowField> & _leftWallStencil;   //! Stencil used on the left wall
@@ -77,6 +80,8 @@ class GlobalBoundaryIterator : public Iterator<FlowField> {
         BoundaryStencil<FlowField> & _backWallStencil;   //! Stencil used on the back wall
 
     public:
+        // For testing
+        testStencil testVelocity;
 
         /** Constructor for a single stencil in all faces
          * @param flowField The flowfield information
@@ -115,6 +120,8 @@ class GlobalBoundaryIterator : public Iterator<FlowField> {
          * Iterates on the boundary cells. Only upper corners and edges are iterated.
          */
         void iterate ();
+
+        void testItr();
 };
 
 template<class FlowField>
@@ -175,7 +182,6 @@ public:
 };
 
 // TODO WORKSHEET 3: Include ParallelBoundaryIterator, analogously to GlobalBoundaryIterator, for parallel boundaries
-
 #include "Iterators.cpp"
 
 #endif
