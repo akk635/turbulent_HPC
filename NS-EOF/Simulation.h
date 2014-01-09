@@ -56,6 +56,9 @@ class Simulation {
 
     // TODO WORKSHEET 3: add instance of PetscParallelManager
     MessagePassingConfiguration comm;
+    int rank;
+
+
 
  public:
     Simulation(Parameters &parameters, FlowField &flowField):
@@ -75,20 +78,21 @@ class Simulation {
         newvelocities( _parameters ),
         NewVelocitiesUpdateIterator( _flowField, _parameters, newvelocities,1 , 0),
         comm( _parameters, _flowField),
-        fghboundaryIterator(_flowField, parameters, FGH, 1, 0),
-        velocityboundaryIterator(_flowField, parameters, newvelocities, 1, 0)
+        fghboundaryIterator(_flowField, _parameters, FGH, 1, 0),
+        velocityboundaryIterator(_flowField, _parameters, newvelocities, 1, 0)
 
  // TODO WORKSHEET 2: initialize stencils, iterators and pressure solver here
  // TODO WORKSHEET 3: initialize instance of PetscParallelManager
  {
         // TODO WORKSHEET 2: set up flag field for backward facing step scenario (if required)
+        MPI_Comm_rank(PETSC_COMM_WORLD, &rank);
+
  }
 
     virtual ~Simulation(){}
 
     virtual void solveTimestep(){
         // TODO WORKSHEET 2: reset maximum velocity values and determine new maximum values
-
 
         MaxU.reset();
         MaxUFlowFieldIterator.iterate();
@@ -130,7 +134,9 @@ class Simulation {
         // TODO WORKSHEET 2: update velocity values on the boundary
         // globalBoundary.getGlobalBoundaryVelocityIterator(_flowField).iterate();
         velocityboundaryIterator.iterate();
-        // assert( _flowField.getVelocity().getVector(21, 10, 10)[0] == 0);
+
+        // For checking the boundary velocity
+        // velocityboundaryIterator.testItr();
 
     }
 
@@ -162,11 +168,6 @@ class Simulation {
     /** sets the time step according to the maximum velocity values that have been determined before */
     void setTimeStep(){
 
-        int rank;   // This processor's identifier
-        int nproc;  // Number of processors in the group
-        MPI_Comm_size(PETSC_COMM_WORLD, &nproc);
-        MPI_Comm_rank(PETSC_COMM_WORLD, &rank);
-
         // TODO WORKSHEET 2: determine maximum time step according to CFL-condition and maximum velocity values;
         //                   set the respective timestep in _parameters.timestep.dt.
         if (_parameters.timestep.tau>0){
@@ -182,23 +183,15 @@ class Simulation {
             _parameters.timestep.dt = 1;
             if ( _parameters.timestep.dt > a ){
             	_parameters.timestep.dt = _parameters.timestep.tau * a;
-                std::cout << "rank :" << rank << "dt_a = " << _parameters.timestep.dt << std::endl;
-
             }
             if (_parameters.timestep.dt > b ){
             	_parameters.timestep.dt = _parameters.timestep.tau * b;
-                std::cout << "rank :" << rank << "dt_b = " << _parameters.timestep.dt << std::endl;
-
             }
             if (_parameters.timestep.dt > c ){
             	_parameters.timestep.dt = _parameters.timestep.tau * c;
-                std::cout << "rank :" << rank << "dt_c = " << _parameters.timestep.dt << std::endl;
-
             }
             if (_parameters.timestep.dt > d){
             	_parameters.timestep.dt = _parameters.timestep.tau * d;
-                std::cout << "rank :" << rank << "dt_d = " << _parameters.timestep.dt << std::endl;
-
             }
         }
 

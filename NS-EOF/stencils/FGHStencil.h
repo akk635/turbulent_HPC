@@ -5,6 +5,8 @@
 #include "../Stencil.h"
 #include "../Parameters.h"
 #include "../GlobalBoundaryFactory.h"
+#include <mpi.h>
+#include <assert.h>
 
 class FGHStencil : public FieldStencil<FlowField>, public BoundaryStencil<FlowField>, protected GlobalBoundaryFactory
 {
@@ -17,7 +19,7 @@ class FGHStencil : public FieldStencil<FlowField>, public BoundaryStencil<FlowFi
 
 
     public:
-
+        int rank;
         FGHStencil ( Parameters & parameters );
 
         /** Apply the stencil in 2D

@@ -24,12 +24,13 @@ void MessagePassingConfiguration::communicateVelocity() {
 	// Now filling the velocity buffers
 	int rank;
     MPI_Comm_rank(PETSC_COMM_WORLD, &rank);
-	std::ofstream fpT;
+	std::ofstream fpv;
 	std::stringstream ss;
 	ss << rank;
-	std::string test = "testV";
+	std::string test = "commV";
 	test+=ss.str();
-	fpT.open(  test.c_str());
+	test+=".dat";
+	fpv.open(  test.c_str());
 
 	velocityfillIterator.iterate();
 
@@ -46,13 +47,12 @@ void MessagePassingConfiguration::communicateVelocity() {
 			((localSize[1]) * (localSize[2]))
 					+ ((localSize[1]) * (localSize[2] + 1))+ ((localSize[1] + 1) * (localSize[2] )), MY_MPI_FLOAT,
 			_parameters.parallel.leftNb, 101, PETSC_COMM_WORLD, &(request[0]));
-	if(rank == 1){
-		fpT << "bottom buffer on rank 1 : "<<"\n";
-		for ( int i = 0 ; i < 3 *((localSize[0]) * (localSize[2]))
-		+ localSize[0] + localSize[2] ; i++) {
-			fpT << (fillStencil.bottomVelocityBuffer)[i] << "\n";
+/*	if(rank == 1){
+		for ( int i = 0 ; i < 3 *((localSize[1]) * (localSize[2]))
+		+ localSize[1] + localSize[2] ; i++) {
+			fpv << (fillStencil.leftVelocityBuffer)[i] << "\n";
 		}
-	}
+	}*/
 	// MPI_Irecv(buffer,count,type,source,tag,comm,request)
 	MPI_Irecv(readStencil.rightVelocityReadBuffer,
 			3 *((localSize[1]) * (localSize[2]))
@@ -65,6 +65,12 @@ void MessagePassingConfiguration::communicateVelocity() {
 			3 *((localSize[1]) * (localSize[2]))
 								+ localSize[1] + localSize[2], MY_MPI_FLOAT,
 			_parameters.parallel.rightNb, 102, PETSC_COMM_WORLD, &(request[2]));
+	if( rank == 0 ){
+		for ( int i = 0 ; i < 3 *((localSize[1]) * (localSize[2]))
+		+ localSize[1] + localSize[2] ; i++) {
+			fpv << (fillStencil.rightVelocityBuffer)[i] << "\n";
+		}
+	}
 	// MPI_Irecv(buffer,count,type,source,tag,comm,request)
 	MPI_Irecv(readStencil.leftVelocityReadBuffer,
 			3 *((localSize[1]) * (localSize[2]))
@@ -126,16 +132,14 @@ void MessagePassingConfiguration::communicateVelocity() {
 		MPI_Wait(&(request[i]), &(status[i]));
 	}
 
-	if (rank == 0){
-		fpT << "top buffer"<<"\n";
-		for (int i = 0 ; i < 3 * ((localSize[0]) * (localSize[2]))
-		+ localSize[0] + localSize[2] ; i++){
-			fpT << (readStencil.topVelocityReadBuffer)[i]<<"\n";
+	if(rank == 1){
+		for ( int i = 0 ; i < 3 *((localSize[1]) * (localSize[2]))
+		+ localSize[1] + localSize[2] ; i++) {
+			fpv << (readStencil.leftVelocityReadBuffer)[i] << "\n";
 		}
 	}
 
-	fpT.close();
-
+	fpv.close();
 	// Writing the buffers into appropriate flowfields
 	velocityreadIterator.iterate();
 }
@@ -143,76 +147,99 @@ void MessagePassingConfiguration::communicateVelocity() {
 void MessagePassingConfiguration::communicatePressure() {
 	int rank;
     MPI_Comm_rank(PETSC_COMM_WORLD, &rank);
+	std::ofstream fpp;
+	std::stringstream ss;
+	ss << rank;
+	std::string test = "commP";
+	test+=ss.str();
+	test+=".dat";
+	fpp.open(  test.c_str());
 
 	pressurefillIterator.iterate();
-	MPI_Request request[2 * 6];
-	MPI_Status status[2 * 6];
+	MPI_Request requestP[2 * 6];
+	MPI_Status statusP[2 * 6];
 	const int * localSize = fillPStencil.localSize;
 
 	// Now the actual comm to the left side process and recv from the right
 	// MPI_Isend(buffer,count,type,dest,tag,comm,request)
 	MPI_Isend(fillPStencil.leftPressureBuffer,
 			((localSize[1]) * (localSize[2])), MY_MPI_FLOAT,
-			_parameters.parallel.leftNb, 201, PETSC_COMM_WORLD, &(request[0]));
+			_parameters.parallel.leftNb, 201, PETSC_COMM_WORLD, &(requestP[0]));
+/*	if(rank == 1){
+		for (int i = 0; i < ((localSize[1]) * (localSize[2])); i++){
+			fpp << fillPStencil.leftPressureBuffer[i] <<"\n";
+		}
+	}*/
 	// MPI_Irecv(buffer,count,type,source,tag,comm,request)
 	MPI_Irecv(readPStencil.rightPressureReadBuffer,
 			((localSize[1]) * (localSize[2])), MY_MPI_FLOAT,
-			_parameters.parallel.rightNb, 201, PETSC_COMM_WORLD, &(request[1]));
-
+			_parameters.parallel.rightNb, 201, PETSC_COMM_WORLD, &(requestP[1]));
 
 	// Send to right and recv from left
 	// MPI_Isend(buffer,count,type,dest,tag,comm,request)
 	MPI_Isend(fillPStencil.rightPressureBuffer,
 			((localSize[1]) * (localSize[2])), MY_MPI_FLOAT,
-			_parameters.parallel.rightNb, 202, PETSC_COMM_WORLD, &(request[2]));
+			_parameters.parallel.rightNb, 202, PETSC_COMM_WORLD, &(requestP[2]));
+	if(rank ==0 ){
+		for (int i = 0; i < ((localSize[1]) * (localSize[2])); i++){
+			fpp << fillPStencil.rightPressureBuffer[i] <<"\n";
+		}
+	}
 	// MPI_Irecv(buffer,count,type,source,tag,comm,request)
 	MPI_Irecv(readPStencil.leftPressureReadBuffer,
 			((localSize[1]) * (localSize[2])), MY_MPI_FLOAT,
-			_parameters.parallel.leftNb, 202, PETSC_COMM_WORLD, &(request[3]));
+			_parameters.parallel.leftNb, 202, PETSC_COMM_WORLD, &(requestP[3]));
 
 	// Send bottom and recv from top
 	// MPI_Isend(buffer,count,type,dest,tag,comm,request)
 	MPI_Isend(fillPStencil.bottomPressureBuffer,
 			((localSize[0]) * (localSize[2])), MY_MPI_FLOAT,
-			_parameters.parallel.bottomNb, 203, PETSC_COMM_WORLD, &(request[4]));
+			_parameters.parallel.bottomNb, 203, PETSC_COMM_WORLD, &(requestP[4]));
 	// MPI_Irecv(buffer,count,type,source,tag,comm,request)
 	MPI_Irecv(readPStencil.topPressureReadBuffer,
 			((localSize[0]) * (localSize[2])), MY_MPI_FLOAT,
-			_parameters.parallel.topNb, 203, PETSC_COMM_WORLD, &(request[5]));
+			_parameters.parallel.topNb, 203, PETSC_COMM_WORLD, &(requestP[5]));
 
 	// Send top and recv from bottom
 	// MPI_Isend(buffer,count,type,dest,tag,comm,request)
 	MPI_Isend(fillPStencil.topPressureBuffer, ((localSize[0]) * (localSize[2])),
-	MY_MPI_FLOAT, _parameters.parallel.topNb, 204, PETSC_COMM_WORLD, &(request[6]));
+	MY_MPI_FLOAT, _parameters.parallel.topNb, 204, PETSC_COMM_WORLD, &(requestP[6]));
 	// MPI_Irecv(buffer,count,type,source,tag,comm,request)
 	MPI_Irecv(readPStencil.bottomPressureReadBuffer,
 			((localSize[0]) * (localSize[2])), MY_MPI_FLOAT,
-			_parameters.parallel.bottomNb, 204, PETSC_COMM_WORLD, &(request[7]));
+			_parameters.parallel.bottomNb, 204, PETSC_COMM_WORLD, &(requestP[7]));
 
 	// Send front and recv from back
 	// MPI_Isend(buffer,count,type,dest,tag,comm,request)
 	MPI_Isend(fillPStencil.frontPressureBuffer,
 			((localSize[0]) * (localSize[1])), MY_MPI_FLOAT,
-			_parameters.parallel.frontNb, 205, PETSC_COMM_WORLD, &(request[8]));
+			_parameters.parallel.frontNb, 205, PETSC_COMM_WORLD, &(requestP[8]));
 	// MPI_Irecv(buffer,count,type,source,tag,comm,request)
 	MPI_Irecv(readPStencil.backPressureReadBuffer,
 			((localSize[0]) * (localSize[1])), MY_MPI_FLOAT,
-			_parameters.parallel.backNb, 205, PETSC_COMM_WORLD, &(request[9]));
+			_parameters.parallel.backNb, 205, PETSC_COMM_WORLD, &(requestP[9]));
 
 	// Send back and recv from front
 	// MPI_Isend(buffer,count,type,dest,tag,comm,request)
 	MPI_Isend(fillPStencil.backPressureBuffer, ((localSize[0]) * (localSize[1])),
 	MY_MPI_FLOAT, _parameters.parallel.backNb, 206, PETSC_COMM_WORLD,
-			&(request[10]));
+			&(requestP[10]));
 	// MPI_Irecv(buffer,count,type,source,tag,comm,request)
 	MPI_Irecv(readPStencil.frontPressureReadBuffer,
 			((localSize[0]) * (localSize[1])), MY_MPI_FLOAT,
-			_parameters.parallel.frontNb, 206, PETSC_COMM_WORLD, &(request[11]));
+			_parameters.parallel.frontNb, 206, PETSC_COMM_WORLD, &(requestP[11]));
 
 	for (int i = 0; i < 12; i++) {
-		MPI_Wait(&(request[i]), &(status[i]));
+		MPI_Wait(&(requestP[i]), &(statusP[i]));
 	}
 
+	if( rank == 1 ){
+		for (int i = 0; i < ((localSize[1]) * (localSize[2])); i++){
+			fpp << readPStencil.leftPressureReadBuffer[i] <<"\n";
+		}
+	}
+
+	fpp.close();
 	pressurereadIterator.iterate();
 
 }

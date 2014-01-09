@@ -16,7 +16,8 @@ class testStencil {
 private:
 	int rank;
 public:
-	std::ofstream fpeq;
+	std::ofstream fpVcomm;
+	std::ofstream fpPcomm;
 	std::ofstream fpeqFGH;
 	std::ofstream fpeqVbnd;
     int count = 0;
@@ -27,6 +28,7 @@ public:
 	void applyTestlr(FlowField & flowField, int i, int j, int k);
 	void applyFGHbnd(FlowField & flowField, int i, int j, int k);
 	void overwrite();
+	void printItr(int j);
 
 };
 

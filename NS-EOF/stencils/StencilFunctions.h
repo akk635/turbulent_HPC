@@ -224,10 +224,11 @@ inline FLOAT computeG2D(const FLOAT * const localVelocity, const Parameters & pa
 
 inline FLOAT computeF3D(const FLOAT * const localVelocity, const Parameters & parameters, FLOAT dt){
     return localVelocity [mapd(0,0,0,0)]
-                +  dt * ( 1 / parameters.flow.Re * ( d2udx2 ( localVelocity, parameters )
-                + d2udy2 ( localVelocity, parameters ) + d2udz2 ( localVelocity, parameters ) )
+                +  dt * (1 / parameters.flow.Re * ( d2udx2 ( localVelocity, parameters )
+                        + d2udy2 ( localVelocity, parameters ) +  d2udz2 ( localVelocity, parameters ))
                 - du2dx ( localVelocity, parameters ) - duvdy ( localVelocity, parameters )
-                - duwdz ( localVelocity, parameters ) + parameters.environment.gx );
+                - duwdz ( localVelocity, parameters ) + parameters.environment.gx
+                );
 }
 
 

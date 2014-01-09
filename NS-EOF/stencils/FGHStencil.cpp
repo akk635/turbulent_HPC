@@ -5,6 +5,7 @@
 FGHStencil::FGHStencil(Parameters & parameters) :
 		FieldStencil<FlowField>(parameters), BoundaryStencil<FlowField>(
 				parameters), GlobalBoundaryFactory(parameters) {
+    MPI_Comm_rank(PETSC_COMM_WORLD, &rank);
 }
 
 void FGHStencil::apply(FlowField & flowField, int i, int j) {

@@ -17,7 +17,6 @@ count++;
 cout << count << endl;
 assert(v0 == v1);
 }
-cout<<count<<endl;
 f0.close();
 f1.close();
 return 0;

@@ -25,11 +25,12 @@ OBJ = Configuration.o 3rdparty/tinyxml2/tinyxml2.o SimpleTimer.o
 NSOBJ = FlowField.o LinearSolver.o stencils/MaxUStencil.o stencils/MovingWallStencils.o stencils/PeriodicBoundaryStencils.o\
 stencils/FGHStencil.o solvers/SORSolver.o solvers/PetscSolver.o \
 stencils/RHSStencil.o stencils/VelocityStencil.o \
-GlobalBoundaryFactory.o \
+GlobalBoundaryFactory.o  stencils/testStencil.o \
 parallelManagers/PetscParallelConfiguration.o \
 stencils/BFStepInitStencil.o stencils/NeumannBoundaryStencils.o stencils/BFInputStencils.o \
 visual.o stencils/VelocityBufferFillStencil.o  parallelManagers/MessagePassingConfiguration.o \
 stencils/VelocityBufferReadStencil.o stencils/PressureBufferReadStencil.o stencils/PressureBufferFillStencil.o \
+
 
 all: ns
 
@@ -45,3 +46,5 @@ cleanall:
 	for name in  ns main.o $(NSOBJ) testbin $(OBJ) tests/*.o; do \
 	if [ -f $$name ]; then rm $$name; fi; \
 	done;\
+	rm *.vtk;\
+	rm *.dat;
