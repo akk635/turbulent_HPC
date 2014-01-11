@@ -7,7 +7,7 @@
 #include "testStencil.h"
 
 testStencil::testStencil(){
-
+    count = 0;
 }
 
 testStencil::~testStencil(){

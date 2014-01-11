@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <iostream>
+#include <fstream>
 #include "Configuration.h"
 #include "Simulation.h"
 #include "parallelManagers/PetscParallelConfiguration.h"
@@ -63,39 +64,50 @@ int main( int argc, char *argv[] ) {
         simulation->initFlagField();
     }
     // Initialization state
-    simulation->plotVTK( 0, rank );
+    // simulation->plotVTK( 0, rank );
     // For testing purposes
-/*    for ( int i = 0; i <= 15; i++ ) {
-        simulation->solveTimestep();
-        simulation->plotVTK( i + 1, rank );
-    }*/
+    /*    for ( int i = 0; i <= 15; i++ ) {
+     simulation->solveTimestep();
+     simulation->plotVTK( i + 1, rank );
+     }*/
 
     // TODO WORKSHEET 2: loop over time and
     //                   - solve one time step
     //                   - plot VTK output (if required at this time step)
     //                   - write simulation status to terminal (if required at this time step)
+    MPI_Barrier (PETSC_COMM_WORLD);
 
-    SimpleTimer timer;
-    timer.start();
+    if (rank == 0){
+        SimpleTimer timer;
+        timer.start();
+    }
 
     parameters.vtk.vtkCounter = 0;
     parameters.simulation.currentTime = 0;
     while ( parameters.simulation.currentTime <= parameters.simulation.finalTime ) {
         simulation->solveTimestep();
         parameters.simulation.currentTime += parameters.timestep.dt;
-/*        if ( parameters.simulation.currentTime
-                > ( parameters.vtk.vtkCounter + 1 ) * parameters.vtk.interval - 0.001 ) {
-            ( parameters.vtk.vtkCounter )++;
-            simulation->plotVTK( parameters.vtk.vtkCounter, rank );
-            std::cout << "parameters.vtk.vtkCounter = " << parameters.vtk.vtkCounter << std::endl;
-            std::cout << "parameters.simulation.currentTime = " << parameters.simulation.currentTime
-                      << std::endl;
-        }*/
+        /*        if ( parameters.simulation.currentTime
+         > ( parameters.vtk.vtkCounter + 1 ) * parameters.vtk.interval - 0.001 ) {
+         ( parameters.vtk.vtkCounter )++;
+         simulation->plotVTK( parameters.vtk.vtkCounter, rank );
+         std::cout << "parameters.vtk.vtkCounter = " << parameters.vtk.vtkCounter << std::endl;
+         std::cout << "parameters.simulation.currentTime = " << parameters.simulation.currentTime
+         << std::endl;
+         }*/
     }
 
-    FLOAT timeElapsed = timer.getTimeAndRestart();
+    MPI_Barrier (PETSC_COMM_WORLD);
+    if (rank == 0){
+        FLOAT timeElapsed = timer.getTimeAndRestart();
+        std::ofstream fpres;
+        std::string result = "result.csv";
+        fpres.open(result.c_str());
+        fpres << "TimeElapsed" << std::endl;
+        fpres << timeElapsed << "\n";
+        fpres.close();
+    }
 
-    std::cout << "Rank " << rank << " Time Elapsed " << timeElapsed << std::endl;
 
     delete simulation;
     simulation = NULL;

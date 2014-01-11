@@ -20,7 +20,7 @@ public:
 	std::ofstream fpPcomm;
 	std::ofstream fpeqFGH;
 	std::ofstream fpeqVbnd;
-    int count = 0;
+    int count;
 	testStencil();
 	~testStencil();
 	void openfile();
