@@ -110,7 +110,7 @@ void VelocityBufferReadStencil::applyRightWall(FlowField & flowField, int i,
 }
 void VelocityBufferReadStencil::applyBottomWall(FlowField & flowField, int i,
 		int j, int k) {
-	if( _parameters.parallel.backNb >= 0){
+	if( _parameters.parallel.bottomNb >= 0){
 		// With normal lowoffset = 1 and highoffset = -1
 			if ((i >= 2) & (k >= 2)) {
 				(flowField.getVelocity().getVector(i, j, k))[0] =

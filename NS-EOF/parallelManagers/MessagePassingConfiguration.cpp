@@ -21,16 +21,6 @@ MessagePassingConfiguration::MessagePassingConfiguration(
 }
 
 void MessagePassingConfiguration::communicateVelocity() {
-	// Now filling the velocity buffers
-	int rank;
-    MPI_Comm_rank(PETSC_COMM_WORLD, &rank);
-	std::ofstream fpv;
-	std::stringstream ss;
-	ss << rank;
-	std::string test = "commV";
-	test+=ss.str();
-	test+=".dat";
-	fpv.open(  test.c_str());
 
 	velocityfillIterator.iterate();
 
@@ -38,21 +28,12 @@ void MessagePassingConfiguration::communicateVelocity() {
 	MPI_Status status[2 * 6];
 	const int * localSize = fillStencil.localSize;
 
-/*	std::cout<<rank<<"\t"<<(fillStencil.counter)[0]<<std::endl;
-	std::cout<<rank<<"\t"<<((localSize[1]+1) * (localSize[2]+1))<<std::endl;*/
-
 	// Now the actual comm to the left side process and recv from the right
 	// MPI_Isend(buffer,count,type,dest,tag,comm,request)
 	MPI_Isend(fillStencil.leftVelocityBuffer,
 			((localSize[1]) * (localSize[2]))
 					+ ((localSize[1]) * (localSize[2] + 1))+ ((localSize[1] + 1) * (localSize[2] )), MY_MPI_FLOAT,
 			_parameters.parallel.leftNb, 101, PETSC_COMM_WORLD, &(request[0]));
-/*	if(rank == 1){
-		for ( int i = 0 ; i < 3 *((localSize[1]) * (localSize[2]))
-		+ localSize[1] + localSize[2] ; i++) {
-			fpv << (fillStencil.leftVelocityBuffer)[i] << "\n";
-		}
-	}*/
 	// MPI_Irecv(buffer,count,type,source,tag,comm,request)
 	MPI_Irecv(readStencil.rightVelocityReadBuffer,
 			3 *((localSize[1]) * (localSize[2]))
@@ -65,12 +46,6 @@ void MessagePassingConfiguration::communicateVelocity() {
 			3 *((localSize[1]) * (localSize[2]))
 								+ localSize[1] + localSize[2], MY_MPI_FLOAT,
 			_parameters.parallel.rightNb, 102, PETSC_COMM_WORLD, &(request[2]));
-	if( rank == 0 ){
-		for ( int i = 0 ; i < 3 *((localSize[1]) * (localSize[2]))
-		+ localSize[1] + localSize[2] ; i++) {
-			fpv << (fillStencil.rightVelocityBuffer)[i] << "\n";
-		}
-	}
 	// MPI_Irecv(buffer,count,type,source,tag,comm,request)
 	MPI_Irecv(readStencil.leftVelocityReadBuffer,
 			3 *((localSize[1]) * (localSize[2]))
@@ -132,20 +107,12 @@ void MessagePassingConfiguration::communicateVelocity() {
 		MPI_Wait(&(request[i]), &(status[i]));
 	}
 
-	if(rank == 1){
-		for ( int i = 0 ; i < 3 *((localSize[1]) * (localSize[2]))
-		+ localSize[1] + localSize[2] ; i++) {
-			fpv << (readStencil.leftVelocityReadBuffer)[i] << "\n";
-		}
-	}
-
-	fpv.close();
 	// Writing the buffers into appropriate flowfields
 	velocityreadIterator.iterate();
 }
 
 void MessagePassingConfiguration::communicatePressure() {
-	int rank;
+/*	int rank;
     MPI_Comm_rank(PETSC_COMM_WORLD, &rank);
 	std::ofstream fpp;
 	std::stringstream ss;
@@ -153,7 +120,7 @@ void MessagePassingConfiguration::communicatePressure() {
 	std::string test = "commP";
 	test+=ss.str();
 	test+=".dat";
-	fpp.open(  test.c_str());
+	fpp.open(  test.c_str());*/
 
 	pressurefillIterator.iterate();
 	MPI_Request requestP[2 * 6];
@@ -180,11 +147,11 @@ void MessagePassingConfiguration::communicatePressure() {
 	MPI_Isend(fillPStencil.rightPressureBuffer,
 			((localSize[1]) * (localSize[2])), MY_MPI_FLOAT,
 			_parameters.parallel.rightNb, 202, PETSC_COMM_WORLD, &(requestP[2]));
-	if(rank ==0 ){
+/*	if(rank ==0 ){
 		for (int i = 0; i < ((localSize[1]) * (localSize[2])); i++){
 			fpp << fillPStencil.rightPressureBuffer[i] <<"\n";
 		}
-	}
+	}*/
 	// MPI_Irecv(buffer,count,type,source,tag,comm,request)
 	MPI_Irecv(readPStencil.leftPressureReadBuffer,
 			((localSize[1]) * (localSize[2])), MY_MPI_FLOAT,
@@ -233,13 +200,13 @@ void MessagePassingConfiguration::communicatePressure() {
 		MPI_Wait(&(requestP[i]), &(statusP[i]));
 	}
 
-	if( rank == 1 ){
+/*	if( rank == 1 ){
 		for (int i = 0; i < ((localSize[1]) * (localSize[2])); i++){
 			fpp << readPStencil.leftPressureReadBuffer[i] <<"\n";
 		}
 	}
 
-	fpp.close();
+	fpp.close();*/
 	pressurereadIterator.iterate();
 
 }

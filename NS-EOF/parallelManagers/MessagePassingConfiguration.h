@@ -16,7 +16,6 @@
 #include "../stencils/PressureBufferReadStencil.h"
 #include "../Iterators.h"
 #include "../FlowField.h"
-#include <mpi.h>
 
 // Class for the message passing of the pressures and velocities
 class MessagePassingConfiguration{
