@@ -34,11 +34,17 @@ private:
     ParallelBoundaryIterator<FlowField> pressurefillIterator;
     ParallelBoundaryIterator<FlowField> pressurereadIterator;
 
+    PressureBufferFillStencil fillVisStencil;
+    PressureBufferReadStencil readVisStencil;
+    ParallelBoundaryIterator<FlowField> viscosityfillIterator;
+    ParallelBoundaryIterator<FlowField> viscosityreadIterator;
+
 public:
     MessagePassingConfiguration(Parameters & parameters, FlowField & flowfield);
     void communicateVelocity();
     void communicatePressure();
-
+    void communicateViscosity();
+    void communicateParameters();
     /** Destructor */
     ~MessagePassingConfiguration(){};
 };
