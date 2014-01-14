@@ -102,13 +102,15 @@ int main(int argc, char *argv[]) {
 
 	MPI_Barrier(PETSC_COMM_WORLD);
 	if (rank == 0) {
-		FLOAT timeElapsed = timer.getTimeAndRestart();
-		std::ofstream fpres;
-		std::string result = "result.csv";
-		fpres.open(result.c_str());
-		fpres << "TimeElapsed" << std::endl;
-		fpres << timeElapsed << "\n";
-		fpres.close();
+        FLOAT timeElapsed = timer.getTimeAndRestart();
+        std::ofstream fpres;
+        std::string result = "result.csv";
+        fpres.open(result.c_str(), std::ios::app);
+        fpres.seekp(0, std::ios_base::end);
+        if( nproc == 1)
+        fpres <<"Procs , " << "TimeElapsed" << std::endl;
+        fpres << nproc << ',' << timeElapsed << "\n";
+        fpres.close();
 	}
 
 	delete simulation;
