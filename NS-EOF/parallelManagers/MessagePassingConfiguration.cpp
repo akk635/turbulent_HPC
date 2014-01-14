@@ -9,18 +9,19 @@
 #include <sstream>
 #include <assert.h>
 
-MessagePassingConfiguration::MessagePassingConfiguration( Parameters & parameters,
-                                                          FlowField & flowfield )
-        : _parameters( parameters ),
-          fillStencil( _parameters ),
-          readStencil( _parameters ),
-          _flowField( flowfield ),
-          velocityfillIterator( _flowField, _parameters, fillStencil, 1, -1 ),
-          velocityreadIterator( _flowField, _parameters, readStencil, 1, -1 ),
-          fillPStencil( _parameters ),
-          readPStencil( _parameters ),
-          pressurefillIterator( _flowField, _parameters, fillPStencil, 1, -1 ),
-          pressurereadIterator( _flowField, _parameters, readPStencil, 1, -1 ) {
+
+MessagePassingConfiguration::MessagePassingConfiguration(
+		Parameters & parameters, FlowField & flowfield) :
+		_parameters(parameters), fillStencil(_parameters), readStencil(
+				_parameters), _flowField(flowfield), velocityfillIterator(
+				_flowField, _parameters, fillStencil, 1, -1), velocityreadIterator(
+				_flowField, _parameters, readStencil, 1, -1), fillPStencil(
+				_parameters), readPStencil(_parameters), pressurefillIterator(
+				_flowField, _parameters, fillPStencil, 1, -1), pressurereadIterator(
+				_flowField, _parameters, readPStencil, 1, -1) ,fillVisStencil(
+                _parameters), readVisStencil(_parameters),viscosityfillIterator(
+                _flowField,_parameters,fillVisStencil, 1, -1), viscosityreadIterator(
+                _flowField,_parameters,readVisStencil, 1, -1){
 }
 
 void MessagePassingConfiguration::communicateVelocity() {
@@ -264,3 +265,101 @@ void MessagePassingConfiguration::communicatePressure() {
 
 }
 
+void MessagePassingConfiguration::communicateViscosity(){
+
+/*	int rank;
+    MPI_Comm_rank(PETSC_COMM_WORLD, &rank);
+	std::ofstream fpp;
+	std::stringstream ss;
+	ss << rank;
+	std::string test = "commP";
+	test+=ss.str();
+	test+=".dat";
+	fpp.open(  test.c_str());*/
+
+	viscosityfillIterator.iterate();
+	MPI_Status statusP[6];
+	const int * localSize = fillVisStencil.localSize;
+
+	// Now the actual comm to the left side process and recv from the right
+	// MPI_Send(buffer,count,type,dest,tag,comm,request)
+	MPI_Send(fillVisStencil.leftPressureBuffer,
+			((localSize[1]) * (localSize[2])), MY_MPI_FLOAT,
+			_parameters.parallel.leftNb, 201, PETSC_COMM_WORLD );
+/*	if(rank == 1){
+		for (int i = 0; i < ((localSize[1]) * (localSize[2])); i++){
+			fpp << fillPStencil.leftPressureBuffer[i] <<"\n";
+		}
+	}*/
+	// MPI_Recv(buffer,count,type,source,tag,comm,request)
+	MPI_Recv(readVisStencil.rightPressureReadBuffer,
+			((localSize[1]) * (localSize[2])), MY_MPI_FLOAT,
+			_parameters.parallel.rightNb, 201, PETSC_COMM_WORLD, &( statusP[0]) );
+
+	// Send to right and recv from left
+	// MPI_Send(buffer,count,type,dest,tag,comm,request)
+	MPI_Send(fillVisStencil.rightPressureBuffer,
+			((localSize[1]) * (localSize[2])), MY_MPI_FLOAT,
+			_parameters.parallel.rightNb, 202, PETSC_COMM_WORLD );
+/*	if(rank ==0 ){
+		for (int i = 0; i < ((localSize[1]) * (localSize[2])); i++){
+			fpp << fillVisStencil.rightPressureBuffer[i] <<"\n";
+		}
+	}*/
+	// MPI_Recv(buffer,count,type,source,tag,comm,request)
+	MPI_Recv(readPStencil.leftPressureReadBuffer,
+			((localSize[1]) * (localSize[2])), MY_MPI_FLOAT,
+			_parameters.parallel.leftNb, 202, PETSC_COMM_WORLD, &(statusP[1]));
+
+	// Send bottom and recv from top
+	// MPI_Send(buffer,count,type,dest,tag,comm,request)
+	MPI_Send(fillVisStencil.bottomPressureBuffer,
+			((localSize[0]) * (localSize[2])), MY_MPI_FLOAT,
+			_parameters.parallel.bottomNb, 203, PETSC_COMM_WORLD );
+	// MPI_Recv(buffer,count,type,source,tag,comm,request)
+	MPI_Recv(readPStencil.topPressureReadBuffer,
+			((localSize[0]) * (localSize[2])), MY_MPI_FLOAT,
+			_parameters.parallel.topNb, 203, PETSC_COMM_WORLD, &(statusP[2]));
+
+	// Send top and recv from bottom
+	// MPI_Send(buffer,count,type,dest,tag,comm,request)
+	MPI_Send(fillVisStencil.topPressureBuffer, ((localSize[0]) * (localSize[2])),
+	MY_MPI_FLOAT, _parameters.parallel.topNb, 204, PETSC_COMM_WORLD);
+	// MPI_Recv(buffer,count,type,source,tag,comm,request)
+	MPI_Recv(readPStencil.bottomPressureReadBuffer,
+			((localSize[0]) * (localSize[2])), MY_MPI_FLOAT,
+			_parameters.parallel.bottomNb, 204, PETSC_COMM_WORLD, &(statusP[3]));
+
+	// Send front and recv from back
+	// MPI_Send(buffer,count,type,dest,tag,comm,request)
+	MPI_Send(fillVisStencil.frontPressureBuffer,
+			((localSize[0]) * (localSize[1])), MY_MPI_FLOAT,
+			_parameters.parallel.frontNb, 205, PETSC_COMM_WORLD );
+	// MPI_Recv(buffer,count,type,source,tag,comm,request)
+	MPI_Recv(readPStencil.backPressureReadBuffer,
+			((localSize[0]) * (localSize[1])), MY_MPI_FLOAT,
+			_parameters.parallel.backNb, 205, PETSC_COMM_WORLD, &(statusP[4]));
+
+	// Send back and recv from front
+	// MPI_Send(buffer,count,type,dest,tag,comm,request)
+	MPI_Send(fillVisStencil.backPressureBuffer, ((localSize[0]) * (localSize[1])),
+	MY_MPI_FLOAT, _parameters.parallel.backNb, 206, PETSC_COMM_WORLD );
+	// MPI_Recv(buffer,count,type,source,tag,comm,request)
+	MPI_Recv(readPStencil.frontPressureReadBuffer,
+			((localSize[0]) * (localSize[1])), MY_MPI_FLOAT,
+			_parameters.parallel.frontNb, 206, PETSC_COMM_WORLD, &(statusP[5]));
+
+
+/*	if( rank == 1 ){
+		for (int i = 0; i < ((localSize[1]) * (localSize[2])); i++){
+			fpp << readPStencil.leftPressureReadBuffer[i] <<"\n";
+		}
+	}
+
+	fpp.close();*/
+	pressurereadIterator.iterate();
+
+}
+void MessagePassingConfiguration::communicateParameters(){
+
+}
