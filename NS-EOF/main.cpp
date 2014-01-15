@@ -64,6 +64,8 @@ int main(int argc, char *argv[]) {
 	if (parameters.vtk.prefix == "channel_result") {
 		simulation->initFlagField();
 	}
+	simulation->initializeNearestWall();
+	simulation->initializeBoundLayerThickness();
 	// Initialization state
 	// simulation->plotVTK( 0, rank );
 	// For testing purposes
