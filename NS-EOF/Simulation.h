@@ -11,7 +11,7 @@
 #include "Iterators.h"
 #include "Definitions.h"
 #include "stencils/InitTaylorGreenFlowFieldStencil.h"
-#include "stencils/VTKStencil.h"
+// #include "stencils/VTKStencil.h"
 #include "stencils/MaxUStencil.h"
 #include "GlobalBoundaryFactory.h"
 #include "stencils/MaxUStencil.h"
@@ -145,14 +145,14 @@ class Simulation {
     }
 
     /** plots the flow field.  */
-    void plotVTK( int timeStep, int rank ) {
+/*    void plotVTK( int timeStep, int rank ) {
         // TODO WORKSHEET 1
         VTKStencil _vtk( _parameters );
         FieldIterator<FlowField> VtkIterator( _flowField, _parameters, _vtk, 1, 0 );
         _vtk.write( timeStep, rank );
         VtkIterator.iterate();
         _vtk.writeFinished();
-    }
+    }*/
 
  protected:
     /** sets the time step according to the maximum velocity values that have been determined before */
