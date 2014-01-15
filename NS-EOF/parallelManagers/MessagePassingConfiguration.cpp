@@ -307,7 +307,7 @@ void MessagePassingConfiguration::communicateViscosity(){
 		}
 	}*/
 	// MPI_Recv(buffer,count,type,source,tag,comm,request)
-	MPI_Recv(readPStencil.leftPressureReadBuffer,
+	MPI_Recv(readVisStencil.leftPressureReadBuffer,
 			((localSize[1]) * (localSize[2])), MY_MPI_FLOAT,
 			_parameters.parallel.leftNb, 202, PETSC_COMM_WORLD, &(statusP[1]));
 
@@ -317,7 +317,7 @@ void MessagePassingConfiguration::communicateViscosity(){
 			((localSize[0]) * (localSize[2])), MY_MPI_FLOAT,
 			_parameters.parallel.bottomNb, 203, PETSC_COMM_WORLD );
 	// MPI_Recv(buffer,count,type,source,tag,comm,request)
-	MPI_Recv(readPStencil.topPressureReadBuffer,
+	MPI_Recv(readVisStencil.topPressureReadBuffer,
 			((localSize[0]) * (localSize[2])), MY_MPI_FLOAT,
 			_parameters.parallel.topNb, 203, PETSC_COMM_WORLD, &(statusP[2]));
 
@@ -326,7 +326,7 @@ void MessagePassingConfiguration::communicateViscosity(){
 	MPI_Send(fillVisStencil.topPressureBuffer, ((localSize[0]) * (localSize[2])),
 	MY_MPI_FLOAT, _parameters.parallel.topNb, 204, PETSC_COMM_WORLD);
 	// MPI_Recv(buffer,count,type,source,tag,comm,request)
-	MPI_Recv(readPStencil.bottomPressureReadBuffer,
+	MPI_Recv(readVisStencil.bottomPressureReadBuffer,
 			((localSize[0]) * (localSize[2])), MY_MPI_FLOAT,
 			_parameters.parallel.bottomNb, 204, PETSC_COMM_WORLD, &(statusP[3]));
 
@@ -336,7 +336,7 @@ void MessagePassingConfiguration::communicateViscosity(){
 			((localSize[0]) * (localSize[1])), MY_MPI_FLOAT,
 			_parameters.parallel.frontNb, 205, PETSC_COMM_WORLD );
 	// MPI_Recv(buffer,count,type,source,tag,comm,request)
-	MPI_Recv(readPStencil.backPressureReadBuffer,
+	MPI_Recv(readVisStencil.backPressureReadBuffer,
 			((localSize[0]) * (localSize[1])), MY_MPI_FLOAT,
 			_parameters.parallel.backNb, 205, PETSC_COMM_WORLD, &(statusP[4]));
 
@@ -345,7 +345,7 @@ void MessagePassingConfiguration::communicateViscosity(){
 	MPI_Send(fillVisStencil.backPressureBuffer, ((localSize[0]) * (localSize[1])),
 	MY_MPI_FLOAT, _parameters.parallel.backNb, 206, PETSC_COMM_WORLD );
 	// MPI_Recv(buffer,count,type,source,tag,comm,request)
-	MPI_Recv(readPStencil.frontPressureReadBuffer,
+	MPI_Recv(readVisStencil.frontPressureReadBuffer,
 			((localSize[0]) * (localSize[1])), MY_MPI_FLOAT,
 			_parameters.parallel.frontNb, 206, PETSC_COMM_WORLD, &(statusP[5]));
 

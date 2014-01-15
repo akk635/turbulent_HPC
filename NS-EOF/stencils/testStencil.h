@@ -20,6 +20,7 @@ class testStencil {
     std::ofstream fpPcomm;
     std::ofstream fpeqFGH;
     std::ofstream fpeqVbnd;
+    std::ofstream fpVisComm;
     int count;
     testStencil();
     ~testStencil();

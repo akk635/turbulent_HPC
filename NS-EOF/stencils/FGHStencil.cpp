@@ -33,9 +33,10 @@ void FGHStencil::apply(FlowField & flowField, int i, int j, int k) {
 	if ((obstacle & OBSTACLE_SELF) == 0) {   // If the cell is fluid
 
 		loadLocalVelocity3D(flowField, _localVelocity, i, j, k);
+		loadLocalViscosity3D(flowField, _localViscosity, i, j, k);
 
 		if ((obstacle & OBSTACLE_RIGHT) == 0) { // If the right cell is fluid
-			values[0] = computeF3D(_localVelocity, FieldStencil<FlowField>::_parameters,
+			values[0] = computeF3D(_localVelocity, _localViscosity, FieldStencil<FlowField>::_parameters,
 					FieldStencil<FlowField>::_parameters.timestep.dt);
 		} else {
 			values[0] = flowField.getVelocity().getVector(i, j, k)[0];
@@ -43,7 +44,7 @@ void FGHStencil::apply(FlowField & flowField, int i, int j, int k) {
 					flowField.getPressure().getScalar(i, j, k);
 		}
 		if ((obstacle & OBSTACLE_TOP) == 0) {
-			values[1] = computeG3D(_localVelocity, FieldStencil<FlowField>::_parameters,
+			values[1] = computeG3D(_localVelocity, _localViscosity, FieldStencil<FlowField>::_parameters,
 					FieldStencil<FlowField>::_parameters.timestep.dt);
 		} else {
 			values[1] = flowField.getVelocity().getVector(i, j, k)[1];
@@ -51,7 +52,7 @@ void FGHStencil::apply(FlowField & flowField, int i, int j, int k) {
 					flowField.getPressure().getScalar(i, j, k);
 		}
 		if ((obstacle & OBSTACLE_BACK) == 0) {
-			values[2] = computeH3D(_localVelocity, FieldStencil<FlowField>::_parameters,
+			values[2] = computeH3D(_localVelocity, _localViscosity, FieldStencil<FlowField>::_parameters,
 					FieldStencil<FlowField>::_parameters.timestep.dt);
 		} else {
 			values[2] = flowField.getVelocity().getVector(i, j, k)[2];
@@ -92,9 +93,10 @@ void FGHStencil::applyLeftWall(FlowField & flowField, int i,
 	if ((obstacle & OBSTACLE_SELF) == 0) {   // If the cell is fluid
 
 		loadLocalVelocity3D(flowField, _localVelocity, i, j, k);
+        loadLocalViscosity3D(flowField, _localViscosity, i, j, k);
 
 		if ((obstacle & OBSTACLE_RIGHT) == 0) { // If the right cell is fluid
-			values[0] = computeF3D(_localVelocity, FieldStencil<FlowField>::_parameters,
+			values[0] = computeF3D(_localVelocity, _localViscosity, FieldStencil<FlowField>::_parameters,
 					FieldStencil<FlowField>::_parameters.timestep.dt);
 		} else {
 			values[0] = flowField.getVelocity().getVector(i, j, k)[0];
@@ -161,6 +163,7 @@ void FGHStencil::applyBottomWall ( FlowField & flowField, int i, int j, int k ){
 	if ((obstacle & OBSTACLE_SELF) == 0) {   // If the cell is fluid
 
 		loadLocalVelocity3D(flowField, _localVelocity, i, j, k);
+        loadLocalViscosity3D(flowField, _localViscosity, i, j, k);
 
 /*		if ((obstacle & OBSTACLE_RIGHT) == 0) { // If the right cell is fluid
 			values[0] = computeF3D(_localVelocity, FieldStencil<FlowField>::_parameters,
@@ -171,7 +174,7 @@ void FGHStencil::applyBottomWall ( FlowField & flowField, int i, int j, int k ){
 					flowField.getPressure().getScalar(i, j, k);
 		}*/
 		if ((obstacle & OBSTACLE_TOP) == 0) {
-			values[1] = computeG3D(_localVelocity, FieldStencil<FlowField>::_parameters,
+			values[1] = computeG3D(_localVelocity, _localViscosity, FieldStencil<FlowField>::_parameters,
 					FieldStencil<FlowField>::_parameters.timestep.dt);
 		} else {
 			values[1] = flowField.getVelocity().getVector(i, j, k)[1];
@@ -227,6 +230,7 @@ void FGHStencil::applyFrontWall  ( FlowField & flowField, int i, int j, int k ){
 	if ((obstacle & OBSTACLE_SELF) == 0) {   // If the cell is fluid
 
 		loadLocalVelocity3D(flowField, _localVelocity, i, j, k);
+        loadLocalViscosity3D(flowField, _localViscosity, i, j, k);
 
 /*		if ((obstacle & OBSTACLE_RIGHT) == 0) { // If the right cell is fluid
 			values[0] = computeF3D(_localVelocity, FieldStencil<FlowField>::_parameters,
@@ -245,7 +249,7 @@ void FGHStencil::applyFrontWall  ( FlowField & flowField, int i, int j, int k ){
 					flowField.getPressure().getScalar(i, j, k);
 		}*/
 		if ((obstacle & OBSTACLE_BACK) == 0) {
-			values[2] = computeH3D(_localVelocity, FieldStencil<FlowField>::_parameters,
+			values[2] = computeH3D(_localVelocity, _localViscosity, FieldStencil<FlowField>::_parameters,
 					FieldStencil<FlowField>::_parameters.timestep.dt);
 		} else {
 			values[2] = flowField.getVelocity().getVector(i, j, k)[2];

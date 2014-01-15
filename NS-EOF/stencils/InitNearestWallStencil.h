@@ -40,9 +40,6 @@ public:
 		if ( ( _parameters.geometry.sizeZ - k ) * _parameters.geometry.dz < distance ){
 			distance = ( _parameters.geometry.sizeZ - k ) * _parameters.geometry.dz;
 		}
-		if ( ){
-
-		}
 		if (_parameters.simulation.scenario != "channel"){
 			if ( ( _parameters.geometry.sizeX - i ) * _parameters.geometry.dx < distance ){
 				distance = ( _parameters.geometry.sizeX - i ) * _parameters.geometry.dx;

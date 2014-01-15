@@ -117,6 +117,7 @@ class VTKStencil : public FieldStencil<FlowField> {
         void writeFinished( ){
         	std::string line;
         	line = ssP.str();
+        	line += ssV.str();
         	fpV << line;
         }
 

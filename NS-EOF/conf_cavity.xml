@@ -9,7 +9,7 @@
     </turbulent>
     <timestep dt="1" tau="0.5" />
     <solver gamma="0.5" />
-    <geometry dx="0.1" dy="0.1" dz="0.1" sizeX="20" sizeY="20" sizeZ="20" />
+    <geometry dx="0.1" dy="0.1" dz="0.1" sizeX="10" sizeY="10" sizeZ="10" />
     <environment gx="0" gy="0" gz="0" />
     <walls>
         <left>
@@ -33,5 +33,5 @@
     </walls>
     <vtk interval="1.0">cavity_result</vtk>
     <stdOut interval="1.0" />
-    <parallel numProcessorsX="1" numProcessorsY="2" numProcessorsZ="1" />
+    <parallel numProcessorsX="2" numProcessorsY="1" numProcessorsZ="1" />
 </configuration>

@@ -15,7 +15,6 @@ void TurbulentViscosityStencil::apply ( FlowField & flowField, int i, int j, int
 	mixing_length = FieldStencil<FlowField> ::_parameters.turbulent.kappa * flowField.getDistanceToNearWall().getScalar(i,j,k);
 	if(FieldStencil<FlowField> ::_parameters.turbulent.turbulent_scenario == "turbulent_laminar_plate" ||
 			FieldStencil<FlowField> ::_parameters.turbulent.turbulent_scenario == "turbulent_turbulent_plate" ){
-		mixing_length = FieldStencil<FlowField> ::_parameters.turbulent.kappa * flowField.getDistanceToNearWall().getScalar(i,j,k);
 				if ( 0.09*flowField.getDelta().getScalar(i,j,k) < mixing_length ){
 					mixing_length = 0.09*flowField.getDelta().getScalar(i,j,k);
 				}

@@ -237,7 +237,7 @@ testVelocity.openfile();
 		for (int j =  1+_lowOffset; j < Iterator<FlowField>::_flowField.getCellsY()+_highOffset - 1; j++) {
 			testVelocity.printItr(j);
 	        for (int k = 1+_lowOffset; k < Iterator<FlowField>::_flowField.getCellsZ()+_highOffset - 1; k++) {
-	        	testVelocity.applyTestlr  ( Iterator<FlowField>::_flowField, Iterator<FlowField>::_flowField.getCellsX()-1-_highOffset, j, k );
+	        	testVelocity.applyTestrl  ( Iterator<FlowField>::_flowField, Iterator<FlowField>::_flowField.getCellsX()-1-_highOffset, j, k );
 	        	testVelocity.applyTestlr(Iterator<FlowField>::_flowField, Iterator<FlowField>::_flowField.getCellsX()-2-_highOffset, j, k);
 	        	testVelocity.applyFGHbnd(Iterator<FlowField>::_flowField, Iterator<FlowField>::_flowField.getCellsX()-2-_highOffset, j, k);
 	        }

@@ -15,6 +15,8 @@ class FGHStencil : public FieldStencil<FlowField>, public BoundaryStencil<FlowFi
         // A local velocity variable that will be used to approximate derivatives. Size matches 3D
         // case, but can be used for 2D as well.
         FLOAT _localVelocity [ 27 * 3 ];
+        // Just the turbulence viscosity
+        FLOAT _localViscosity [ 27 * 3 ];
 
 
     public:

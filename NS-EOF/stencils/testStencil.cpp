@@ -20,6 +20,7 @@ if ( j >= 2 && k >=2 ){
 	fpVcomm << (flowField.getVelocity().getVector(i,j,k))[1] << "\n";
 	fpVcomm << (flowField.getVelocity().getVector(i,j,k))[2] << "\n";
 	fpPcomm << flowField.getPressure().getScalar(i,j,k) << "\n";
+	fpVisComm << flowField.getViscosity().getScalar(i,j,k) << "\n";
 }else if ( j == 1 && k >= 2 ){
 	fpVcomm << (flowField.getVelocity().getVector(i,j,k))[1] << "\n";
 }
@@ -35,6 +36,7 @@ if ( j >= 2 && k >=2 ){
 	fpVcomm << (flowField.getVelocity().getVector(i,j,k))[1] << "\n";
 	fpVcomm << (flowField.getVelocity().getVector(i,j,k))[2] << "\n";
 	fpPcomm << flowField.getPressure().getScalar(i,j,k) << "\n";
+	fpVisComm << flowField.getViscosity().getScalar(i,j,k) << "\n";
 }
 else if( j == 1 && k >= 2 ){
 	fpVcomm << (flowField.getVelocity().getVector(i,j,k))[1] << "\n";
@@ -108,6 +110,7 @@ void testStencil::openfile(){
     std::string testPcomm = "Pcomm";
     std::string testFGH = "FGH";
     std::string testVel = "Vel";
+    std::string testVis = "Vis";
     std::stringstream ss;
     MPI_Comm_rank(PETSC_COMM_WORLD, &rank);
     ss << rank;
@@ -117,14 +120,17 @@ void testStencil::openfile(){
     testPcomm+=ss.str();
     testFGH+=ss.str();
     testVel+=ss.str();
+    testVis+=ss.str();
     testVcomm+=".dat";
     testPcomm+=".dat";
     testFGH+=".dat";
     testVel+=".dat";
+    testVis+=".dat";
 	fpVcomm.open(testVcomm.c_str());
 	fpPcomm.open(testPcomm.c_str());
 	fpeqFGH.open(testFGH.c_str());
 	fpeqVbnd.open(testVel.c_str());
+	fpVisComm.open(testVis.c_str());
 }
 
 void testStencil::overwrite(){
@@ -132,6 +138,7 @@ void testStencil::overwrite(){
 	fpPcomm.close();
 	fpeqFGH.close();
 	fpeqVbnd.close();
+	fpVisComm.close();
 }
 
 void testStencil::printItr( int j ){
@@ -139,6 +146,7 @@ void testStencil::printItr( int j ){
 	fpPcomm << 0 << j << "\n";
 	fpeqFGH << 0 << j << "\n";
 	fpeqVbnd << 0 << j << "\n";
+	fpVisComm << 0 << j << "\n";
 }
 
 
