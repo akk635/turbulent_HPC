@@ -11,7 +11,7 @@
 #include "Iterators.h"
 #include "Definitions.h"
 #include "stencils/InitTaylorGreenFlowFieldStencil.h"
-// #include "stencils/VTKStencil.h"
+#include "stencils/VTKStencil.h"
 #include "stencils/MaxUStencil.h"
 #include "GlobalBoundaryFactory.h"
 #include "stencils/MaxUStencil.h"
@@ -41,6 +41,7 @@ class Simulation {
     // Named global valid only in the computation over entire domain
     FieldIterator<FlowField> globalFGHFieldIterator;
     GlobalBoundaryIterator<FlowField> fghboundaryIterator;
+    ParallelBoundaryIterator<FlowField> fghparallelbndItr;
 
     RHSStencil RHS;
     FieldIterator<FlowField> globalRHSFieldIterator;
@@ -48,6 +49,7 @@ class Simulation {
     VelocityStencil newvelocities;
     FieldIterator<FlowField> NewVelocitiesUpdateIterator;
     GlobalBoundaryIterator<FlowField> velocityboundaryIterator;
+    ParallelBoundaryIterator<FlowField> velocityparallelbndItr;
 
     // TODO WORKSHEET 2: add instance of PetscSolver here
     PetscSolver petscsolver;
@@ -67,6 +69,7 @@ class Simulation {
               FGH( _parameters ),
               globalFGHFieldIterator( _flowField, _parameters, FGH, 1, 0 ),
               fghboundaryIterator( _flowField, _parameters, FGH, 1, 0 ),
+              fghparallelbndItr( _flowField, _parameters, FGH, 1, -1 ),
 
               RHS( _parameters ),
               globalRHSFieldIterator( _flowField, _parameters, RHS, 1, 0 ),
@@ -76,7 +79,8 @@ class Simulation {
               newvelocities( _parameters ),
               NewVelocitiesUpdateIterator( _flowField, _parameters, newvelocities, 1, 0 ),
               comm( _parameters, _flowField ),
-              velocityboundaryIterator( _flowField, _parameters, newvelocities, 1, 0 )
+              velocityboundaryIterator( _flowField, _parameters, newvelocities, 1, 0 ),
+              velocityparallelbndItr(_flowField, _parameters, newvelocities, 1, 0)
 
     {
         MPI_Comm_rank( PETSC_COMM_WORLD, &rank );
@@ -98,7 +102,7 @@ class Simulation {
 
         // TODO WORKSHEET 2: compute fgh
         globalFGHFieldIterator.iterate();
-
+        fghparallelbndItr.iterate();
         fghboundaryIterator.iterate();
 
         // TODO WORKSHEET 2: compute the right hand side
@@ -113,15 +117,16 @@ class Simulation {
 
         // TODO WORKSHEET 2: compute velocity update (time stepping)
         NewVelocitiesUpdateIterator.iterate();
-        // TODO WORKSHEET 3: communicate velocity values after velocity update is finished
-        comm.communicateVelocity();
 
+        velocityparallelbndItr.iterate();
         // TODO WORKSHEET 2: update velocity values on the boundary
         velocityboundaryIterator.iterate();
 
         // For checking the boundary velocity
-        // velocityboundaryIterator.testItr();
+         // velocityboundaryIterator.testItrY();
 
+         // TODO WORKSHEET 3: communicate velocity values after velocity update is finished
+         comm.communicateVelocity();
     }
 
     void initializeVelocity() {
@@ -140,14 +145,14 @@ class Simulation {
     }
 
     /** plots the flow field.  */
-/*    void plotVTK( int timeStep, int rank ) {
+    void plotVTK( int timeStep, int rank ) {
         // TODO WORKSHEET 1
         VTKStencil _vtk( _parameters );
         FieldIterator<FlowField> VtkIterator( _flowField, _parameters, _vtk, 1, 0 );
         _vtk.write( timeStep, rank );
         VtkIterator.iterate();
         _vtk.writeFinished();
-    }*/
+    }
 
  protected:
     /** sets the time step according to the maximum velocity values that have been determined before */

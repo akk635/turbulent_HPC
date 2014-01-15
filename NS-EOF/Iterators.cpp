@@ -132,13 +132,14 @@ void GlobalBoundaryIterator<FlowField>::iterate () {
                     _leftWallStencil.applyLeftWall   ( Iterator<FlowField>::_flowField, _lowOffset, j, k );
                 }
             }
-    	}else {
+    	}
+/*    	else {
             for (int j = 1 +_lowOffset; j < Iterator<FlowField>::_flowField.getCellsY()+_highOffset - 1; j++) {
                 for (int k =1 + _lowOffset; k < Iterator<FlowField>::_flowField.getCellsZ()+_highOffset - 1; k++) {
                     _leftWallStencil.applyLeftWall   ( Iterator<FlowField>::_flowField, _lowOffset, j, k );
                 }
             }
-    	}
+    	}*/
 
 
     	if( Iterator<FlowField>::_parameters.parallel.rightNb < 0){
@@ -147,13 +148,14 @@ void GlobalBoundaryIterator<FlowField>::iterate () {
                 	_rightWallStencil.applyRightWall ( Iterator<FlowField>::_flowField, Iterator<FlowField>::_flowField.getCellsX()+_highOffset-1, j, k );
                 }
             }
-    	}else {
+    	}
+/*    	else {
             for (int j = 1 +_lowOffset; j < Iterator<FlowField>::_flowField.getCellsY()+_highOffset - 1; j++) {
                 for (int k = 1 +_lowOffset; k < Iterator<FlowField>::_flowField.getCellsZ()+_highOffset - 1; k++) {
                     _rightWallStencil.applyRightWall (Iterator<FlowField>::_flowField, Iterator<FlowField>::_flowField.getCellsX()+_highOffset-1, j, k);
                 }
             }
-    	}
+    	}*/
 
     	if( Iterator<FlowField>::_parameters.parallel.bottomNb < 0){
             for (int i = _lowOffset; i < Iterator<FlowField>::_flowField.getCellsX()+_highOffset; i++) {
@@ -161,13 +163,14 @@ void GlobalBoundaryIterator<FlowField>::iterate () {
                     _bottomWallStencil.applyBottomWall (Iterator<FlowField>::_flowField, i, _lowOffset, k);
                 }
             }
-    	}else {
+    	}
+/*    	else {
             for (int i = 1 +_lowOffset; i < Iterator<FlowField>::_flowField.getCellsX()+_highOffset - 1; i++) {
                 for (int k = 1 +_lowOffset; k < Iterator<FlowField>::_flowField.getCellsZ()+_highOffset - 1; k++) {
                     _bottomWallStencil.applyBottomWall (Iterator<FlowField>::_flowField, i, _lowOffset, k);
                 }
             }
-    	}
+    	}*/
 
     	if( Iterator<FlowField>::_parameters.parallel.topNb < 0){
             for (int i = _lowOffset; i < Iterator<FlowField>::_flowField.getCellsX()+_highOffset ; i++) {
@@ -175,13 +178,14 @@ void GlobalBoundaryIterator<FlowField>::iterate () {
                     _topWallStencil.applyTopWall (Iterator<FlowField>::_flowField, i, Iterator<FlowField>::_flowField.getCellsY()+_highOffset-1, k);
                 }
             }
-    	}else {
+    	}
+/*    	else {
             for (int i = 1 +_lowOffset; i < Iterator<FlowField>::_flowField.getCellsX()+_highOffset - 1; i++) {
                 for (int k = 1 +_lowOffset; k < Iterator<FlowField>::_flowField.getCellsZ()+_highOffset - 1; k++) {
                     _topWallStencil.applyTopWall (Iterator<FlowField>::_flowField, i, Iterator<FlowField>::_flowField.getCellsY()+_highOffset-1, k);
                 }
             }
-    	}
+    	}*/
 
     	if ( Iterator<FlowField>::_parameters.parallel.frontNb < 0){
             for (int i = _lowOffset; i < Iterator<FlowField>::_flowField.getCellsX()+_highOffset; i++) {
@@ -189,13 +193,14 @@ void GlobalBoundaryIterator<FlowField>::iterate () {
                     _frontWallStencil.applyFrontWall (Iterator<FlowField>::_flowField, i, j, _lowOffset);
                 }
             }
-    	}else {
+    	}
+/*    	else {
             for (int i = 1 +_lowOffset; i < Iterator<FlowField>::_flowField.getCellsX()+_highOffset - 1; i++) {
                 for (int j = 1 +_lowOffset; j < Iterator<FlowField>::_flowField.getCellsY()+_highOffset - 1; j++) {
                     _frontWallStencil.applyFrontWall (Iterator<FlowField>::_flowField, i, j, _lowOffset);
                 }
             }
-    	}
+    	}*/
 
     	if( Iterator<FlowField>::_parameters.parallel.backNb < 0){
             for (int i = _lowOffset; i < Iterator<FlowField>::_flowField.getCellsX()+_highOffset; i++) {
@@ -203,39 +208,92 @@ void GlobalBoundaryIterator<FlowField>::iterate () {
                     _backWallStencil.applyBackWall (Iterator<FlowField>::_flowField, i, j, Iterator<FlowField>::_flowField.getCellsZ()+_highOffset-1);
                 }
             }
-    	}else {
+    	}
+/*    	else {
             for (int i = 1 +_lowOffset; i < Iterator<FlowField>::_flowField.getCellsX()+_highOffset - 1; i++) {
                 for (int j = 1 +_lowOffset; j < Iterator<FlowField>::_flowField.getCellsY()+_highOffset - 1; j++) {
                     _backWallStencil.applyBackWall (Iterator<FlowField>::_flowField, i, j, Iterator<FlowField>::_flowField.getCellsZ()+_highOffset-1);
                 }
             }
-    	}
+    	}*/
 
     }
 }
 
 template<class FlowField>
-void GlobalBoundaryIterator<FlowField>::testItr (){
+void GlobalBoundaryIterator<FlowField>::testItrX (){
 testVelocity.openfile();
- if(rank == 1){
+ if( rank == 1 ){
 		for (int j = 1+_lowOffset; j < Iterator<FlowField>::_flowField.getCellsY()+_highOffset - 1; j++) {
 			testVelocity.printItr(j);
 	        for (int k = 1+_lowOffset; k < Iterator<FlowField>::_flowField.getCellsZ()+_highOffset - 1; k++) {
-	        	testVelocity.applyTest( Iterator<FlowField>::_flowField, _lowOffset+1, j, k );
+	        	testVelocity.applyTestrl( Iterator<FlowField>::_flowField, _lowOffset+1, j, k );
 	        	testVelocity.applyTestlr(Iterator<FlowField>::_flowField, _lowOffset, j, k );
 	        	testVelocity.applyFGHbnd(Iterator<FlowField>::_flowField, _lowOffset, j, k);
 	        }
 	    }
  }
- else if (rank == 0 ){
+ else if ( rank == 0 ){
 		for (int j =  1+_lowOffset; j < Iterator<FlowField>::_flowField.getCellsY()+_highOffset - 1; j++) {
 			testVelocity.printItr(j);
 	        for (int k = 1+_lowOffset; k < Iterator<FlowField>::_flowField.getCellsZ()+_highOffset - 1; k++) {
-	        	testVelocity.applyTest  ( Iterator<FlowField>::_flowField, Iterator<FlowField>::_flowField.getCellsX()-1-_highOffset, j, k );
+	        	testVelocity.applyTestlr  ( Iterator<FlowField>::_flowField, Iterator<FlowField>::_flowField.getCellsX()-1-_highOffset, j, k );
 	        	testVelocity.applyTestlr(Iterator<FlowField>::_flowField, Iterator<FlowField>::_flowField.getCellsX()-2-_highOffset, j, k);
 	        	testVelocity.applyFGHbnd(Iterator<FlowField>::_flowField, Iterator<FlowField>::_flowField.getCellsX()-2-_highOffset, j, k);
 	        }
 	    }
+ }
+ testVelocity.overwrite();
+}
+
+template<class FlowField>
+void GlobalBoundaryIterator<FlowField>::testItrY (){
+testVelocity.openfile();
+ if( rank == 1 ){
+        for (int i = _lowOffset; i < Iterator<FlowField>::_flowField.getCellsX()+_highOffset - 1; i++) {
+            testVelocity.printItr(i);
+            for (int k = _lowOffset; k < Iterator<FlowField>::_flowField.getCellsZ()+_highOffset - 1; k++) {
+                testVelocity.applyTesttb( Iterator<FlowField>::_flowField, i, _lowOffset+1, k );
+                testVelocity.applyTestbt(Iterator<FlowField>::_flowField, i, _lowOffset, k );
+                testVelocity.applyFGHbnd(Iterator<FlowField>::_flowField, i, _lowOffset, k);
+            }
+        }
+ }
+ else if ( rank == 0 ){
+        for (int i =  _lowOffset; i < Iterator<FlowField>::_flowField.getCellsX()+_highOffset - 1; i++) {
+            testVelocity.printItr(i);
+            for (int k = _lowOffset; k < Iterator<FlowField>::_flowField.getCellsZ()+_highOffset - 1; k++) {
+                testVelocity.applyTesttb  ( Iterator<FlowField>::_flowField, i, Iterator<FlowField>::_flowField.getCellsY()-1-_highOffset,  k );
+                testVelocity.applyTestbt(Iterator<FlowField>::_flowField, i, Iterator<FlowField>::_flowField.getCellsY()-2-_highOffset, k);
+                testVelocity.applyFGHbnd(Iterator<FlowField>::_flowField, i, Iterator<FlowField>::_flowField.getCellsY()-2-_highOffset, k);
+            }
+        }
+ }
+ testVelocity.overwrite();
+}
+
+template<class FlowField>
+void GlobalBoundaryIterator<FlowField>::testItrZ (){
+testVelocity.openfile();
+ if( rank == 1 ){
+        for (int j = 1+_lowOffset; j < Iterator<FlowField>::_flowField.getCellsY()+_highOffset - 1; j++) {
+            testVelocity.printItr(j);
+            for (int k = 1+_lowOffset; k < Iterator<FlowField>::_flowField.getCellsZ()+_highOffset - 1; k++) {
+                testVelocity.applyTestrl( Iterator<FlowField>::_flowField, _lowOffset+1, j, k );
+                testVelocity.applyTestlr(Iterator<FlowField>::_flowField, _lowOffset, j, k );
+                testVelocity.applyFGHbnd(Iterator<FlowField>::_flowField, _lowOffset, j, k);
+            }
+        }
+ }
+ else if ( rank == 0 ){
+        for (int j =  1+_lowOffset; j < Iterator<FlowField>::_flowField.getCellsY()+_highOffset - 1; j++) {
+            testVelocity.printItr(j);
+            for (int k = 1+_lowOffset; k < Iterator<FlowField>::_flowField.getCellsZ()+_highOffset - 1; k++) {
+                testVelocity.applyTestlr  ( Iterator<FlowField>::_flowField, Iterator<FlowField>::_flowField.getCellsX()-1-_highOffset, j, k );
+                testVelocity.applyTestlr(Iterator<FlowField>::_flowField, Iterator<FlowField>::_flowField.getCellsX()-2-_highOffset, j, k);
+                testVelocity.applyFGHbnd(Iterator<FlowField>::_flowField, Iterator<FlowField>::_flowField.getCellsX()-2-_highOffset, j, k);
+            }
+        }
  }
  testVelocity.overwrite();
 }
@@ -321,39 +379,54 @@ void ParallelBoundaryIterator<FlowField>::iterate () {
 
     if (Iterator<FlowField>::_parameters.geometry.dim == 3){
 
+        if( Iterator<FlowField>::_parameters.parallel.leftNb >= 0) {
             for (int j = _lowOffset; j < Iterator<FlowField>::_flowField.getCellsY()+_highOffset; j++) {
                 for (int k = _lowOffset; k < Iterator<FlowField>::_flowField.getCellsZ()+_highOffset; k++) {
                     _leftWallStencil.applyLeftWall   ( Iterator<FlowField>::_flowField, _lowOffset, j, k );
                 }
             }
+        }
 
+        if( Iterator<FlowField>::_parameters.parallel.rightNb >= 0){
             for (int j = _lowOffset; j < Iterator<FlowField>::_flowField.getCellsY()+_highOffset; j++) {
                 for (int k = _lowOffset; k < Iterator<FlowField>::_flowField.getCellsZ()+_highOffset; k++) {
                     _rightWallStencil.applyRightWall (Iterator<FlowField>::_flowField, Iterator<FlowField>::_flowField.getCellsX()+_highOffset-1, j, k);
                 }
             }
 
+        }
+
+        if (Iterator<FlowField>::_parameters.parallel.bottomNb >= 0) {
             for (int i = _lowOffset; i < Iterator<FlowField>::_flowField.getCellsX()+_highOffset; i++) {
                 for (int k = _lowOffset; k < Iterator<FlowField>::_flowField.getCellsZ()+_highOffset; k++) {
                     _bottomWallStencil.applyBottomWall (Iterator<FlowField>::_flowField, i, _lowOffset, k);
                 }
             }
+        }
+
+        if( Iterator<FlowField>::_parameters.parallel.topNb >= 0 ){
             for (int i = _lowOffset; i < Iterator<FlowField>::_flowField.getCellsX()+_highOffset; i++) {
                 for (int k = _lowOffset; k < Iterator<FlowField>::_flowField.getCellsZ()+_highOffset; k++) {
                     _topWallStencil.applyTopWall (Iterator<FlowField>::_flowField, i, Iterator<FlowField>::_flowField.getCellsY()+_highOffset-1, k);
                 }
             }
+        }
 
+        if(Iterator<FlowField>::_parameters.parallel.frontNb >= 0){
             for (int i = _lowOffset; i < Iterator<FlowField>::_flowField.getCellsX()+_highOffset; i++) {
                 for (int j = _lowOffset; j < Iterator<FlowField>::_flowField.getCellsY()+_highOffset; j++) {
                     _frontWallStencil.applyFrontWall (Iterator<FlowField>::_flowField, i, j, _lowOffset);
                 }
             }
+        }
 
+        if(Iterator<FlowField>::_parameters.parallel.backNb >= 0){
             for (int i = _lowOffset; i < Iterator<FlowField>::_flowField.getCellsX()+_highOffset; i++) {
                 for (int j = _lowOffset; j < Iterator<FlowField>::_flowField.getCellsY()+_highOffset; j++) {
                     _backWallStencil.applyBackWall (Iterator<FlowField>::_flowField, i, j, Iterator<FlowField>::_flowField.getCellsZ()+_highOffset-1);
                 }
             }
+        }
+
     }
 }

@@ -121,7 +121,9 @@ class GlobalBoundaryIterator : protected Iterator<FlowField> {
          */
         void iterate ();
 
-        void testItr();
+        void testItrX();
+        void testItrY();
+        void testItrZ();
 };
 
 template<class FlowField>

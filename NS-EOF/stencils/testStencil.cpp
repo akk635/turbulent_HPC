@@ -14,7 +14,7 @@ testStencil::~testStencil(){
 }
 
 // Transfer from right proc to left
-void testStencil::applyTest( FlowField & flowField, int i, int j, int k ){
+void testStencil::applyTestrl( FlowField & flowField, int i, int j, int k ){
 if ( j >= 2 && k >=2 ){
 	fpVcomm << (flowField.getVelocity().getVector(i,j,k))[0] << "\n";
 	fpVcomm << (flowField.getVelocity().getVector(i,j,k))[1] << "\n";
@@ -44,10 +44,62 @@ else if( k == 1 && j >= 2 ){
 }
 }
 
+void testStencil::applyTesttb(FlowField & flowField, int i, int j, int k){
+    if( i >= 2 && k >=2 ){
+        fpVcomm << (flowField.getVelocity().getVector(i,j,k))[0] << "\n";
+        fpVcomm << (flowField.getVelocity().getVector(i,j,k))[1] << "\n";
+        fpVcomm << (flowField.getVelocity().getVector(i,j,k))[2] << "\n";
+        fpPcomm << flowField.getPressure().getScalar(i,j,k) << "\n";
+    }else if ((i == 1) & (k >= 2)) {
+        fpVcomm << (flowField.getVelocity().getVector(i,j,k))[0] << "\n";
+    }else if ((k == 1) & (i >= 2)) {
+        fpVcomm << (flowField.getVelocity().getVector(i,j,k))[2] << "\n";
+    }
+}
+
+void testStencil::applyTestbt(FlowField & flowField, int i, int j, int k){
+    if( i >= 2 && k >=2 ){
+        fpVcomm << (flowField.getVelocity().getVector(i,j,k))[0] << "\n";
+        fpVcomm << (flowField.getVelocity().getVector(i,j-1,k))[1] << "\n";
+        fpVcomm << (flowField.getVelocity().getVector(i,j,k))[2] << "\n";
+        fpPcomm << flowField.getPressure().getScalar(i,j,k) << "\n";
+    }else if ((i == 1) & (k >= 2)) {
+        fpVcomm << (flowField.getVelocity().getVector(i,j,k))[0] << "\n";
+    }else if ((k == 1) & (i >= 2)) {
+        fpVcomm << (flowField.getVelocity().getVector(i,j,k))[2] << "\n";
+    }
+}
+
+void testStencil::applyTestbf(FlowField & flowField, int i, int j, int k){
+    if( i >= 2 && j >=2 ){
+        fpVcomm << (flowField.getVelocity().getVector(i,j,k))[0] << "\n";
+        fpVcomm << (flowField.getVelocity().getVector(i,j,k))[1] << "\n";
+        fpVcomm << (flowField.getVelocity().getVector(i,j,k))[2] << "\n";
+        fpPcomm << flowField.getPressure().getScalar(i,j,k) << "\n";
+    }else if ((i == 1) & (j >= 2)) {
+        fpVcomm << (flowField.getVelocity().getVector(i,j,k))[0] << "\n";
+    }else if ((j == 1) & (i >= 2)) {
+        fpVcomm << (flowField.getVelocity().getVector(i,j,k))[1] << "\n";
+    }
+}
+
+void testStencil::applyTestfb(FlowField & flowField, int i, int j, int k){
+    if( i >= 2 && j >=2 ){
+        fpVcomm << (flowField.getVelocity().getVector(i,j,k))[0] << "\n";
+        fpVcomm << (flowField.getVelocity().getVector(i,j,k))[1] << "\n";
+        fpVcomm << (flowField.getVelocity().getVector(i,j,k-1))[2] << "\n";
+        fpPcomm << flowField.getPressure().getScalar(i,j,k) << "\n";
+    }else if ((i == 1) & (j >= 2)) {
+        fpVcomm << (flowField.getVelocity().getVector(i,j,k))[0] << "\n";
+    }else if ((j == 1) & (i >= 2)) {
+        fpVcomm << (flowField.getVelocity().getVector(i,j,k))[1] << "\n";
+    }
+}
+
 void testStencil::applyFGHbnd (FlowField & flowField, int i, int j, int k){
 
-	fpeqFGH << flowField.getFGH().getVector(i, j ,k)[0] << "\n";
-	fpeqVbnd << flowField.getVelocity().getVector(i,j,k)[0] << "\n";
+	fpeqFGH << flowField.getFGH().getVector(i, j ,k)[1] << "\n";
+	fpeqVbnd << flowField.getVelocity().getVector(i,j,k)[1] << "\n";
 
 }
 
