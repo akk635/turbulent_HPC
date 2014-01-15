@@ -11,22 +11,23 @@
 #include "Iterators.h"
 #include "Definitions.h"
 #include "stencils/InitTaylorGreenFlowFieldStencil.h"
-#include "stencils/InitNearestWallStencil.h"
-#include "stencils/InitBoundLayerThicknessStencil.h"
 // #include "stencils/VTKStencil.h"
 #include "stencils/MaxUStencil.h"
 #include "GlobalBoundaryFactory.h"
 #include "stencils/MaxUStencil.h"
-#include "stencils/MaxViscosityStencil.h"
 #include "stencils/FGHStencil.h"
 #include "stencils/RHSStencil.h"
 #include "stencils/VelocityStencil.h"
 #include "stencils/BFStepInitStencil.h"
 #include "stencils/VelocityBufferFillStencil.h"
 #include "solvers/PetscSolver.h"
-
 // TODO WORKSHEET 3: include PetscParallelManager
 #include "parallelManagers/MessagePassingConfiguration.h"
+//WORKSHEET 5
+#include "stencils/InitNearestWallStencil.h"
+#include "stencils/InitBoundLayerThicknessStencil.h"
+#include "stencils/MaxViscosityStencil.h"
+#include "stencils/TurbulentViscosityStencil.h"
 
 class Simulation {
  protected:
@@ -60,9 +61,15 @@ class Simulation {
     // TODO WORKSHEET 3: add instance of PetscParallelManager
     MessagePassingConfiguration comm;
     int rank;
-    
+
+    //WORKSHEET %
     MaxViscosityStencil MaxViscosity;
+    
     FieldIterator<FlowField> MaxViscosityFlowFieldIterator;
+
+    TurbulentViscosityStencil turbulentViscosity;
+    FieldIterator<FlowField> globalturbulentViscosityFieldIterator;
+
 
 
  public:
@@ -90,7 +97,10 @@ class Simulation {
               velocityparallelbndItr(_flowField, _parameters, newvelocities, 1, 0),
     
               MaxViscosity(parameters),
-              MaxViscosityFlowFieldIterator( _flowField, _parameters, MaxViscosity, 1, 0 )
+              MaxViscosityFlowFieldIterator( _flowField, _parameters, MaxViscosity, 1, 0 ),
+              turbulentViscosity( _parameters ),
+              globalturbulentViscosityFieldIterator( _flowField, _parameters, turbulentViscosity, 1, 0 )
+
 
     {
         MPI_Comm_rank( PETSC_COMM_WORLD, &rank );
@@ -107,8 +117,12 @@ class Simulation {
         // For covering the domain boundary
         MaxUBoundaryIterator.iterate();
         
+        //WORKSHEET 5
+        globalturbulentViscosityFieldIterator.iterate();
+        comm.communicateViscosity();
         MaxViscosity.reset();
     	MaxViscosityFlowFieldIterator.iterate();
+    	//END OF WORKSHEET 5 section
 
         // TODO WORKSHEET 2: set new time step
         setTimeStep();

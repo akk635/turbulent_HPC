@@ -1,6 +1,8 @@
 #include "../Stencil.h"
 #include "../Parameters.h"
 #include "../FlowField.h"
+#include "InitBoundLayerThicknessStencil.h"
+#include "InitNearestWallStencil.h"
 
 /** Field stencil to compute the right hand side of the pressure equation.
  */
