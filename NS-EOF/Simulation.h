@@ -106,6 +106,9 @@ class Simulation {
         MaxUFlowFieldIterator.iterate();
         // For covering the domain boundary
         MaxUBoundaryIterator.iterate();
+        
+        MaxViscosity.reset();
+    	MaxViscosityFlowFieldIterator.iterate();
 
         // TODO WORKSHEET 2: set new time step
         setTimeStep();
@@ -184,9 +187,8 @@ class Simulation {
 
         // TODO WORKSHEET 2: determine maximum time step according to CFL-condition and maximum velocity values;
         //                   set the respective timestep in _parameters.timestep.dt.
-        
-        MaxViscosity.reset();
-    	MaxViscosityFlowFieldIterator.iterate();
+
+
 
         if ( _parameters.timestep.tau > 0 ) {
             FLOAT a = 1, b = 1, c = 1, d = 1;
