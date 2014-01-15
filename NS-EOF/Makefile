@@ -30,7 +30,7 @@ parallelManagers/PetscParallelConfiguration.o \
 stencils/BFStepInitStencil.o stencils/NeumannBoundaryStencils.o stencils/BFInputStencils.o \
 visual.o stencils/VelocityBufferFillStencil.o  parallelManagers/MessagePassingConfiguration.o \
 stencils/VelocityBufferReadStencil.o stencils/PressureBufferReadStencil.o stencils/PressureBufferFillStencil.o \
-
+stencils/MaxVicosityStencil.o \
 
 all: ns
 
