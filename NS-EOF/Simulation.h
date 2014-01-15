@@ -11,10 +11,13 @@
 #include "Iterators.h"
 #include "Definitions.h"
 #include "stencils/InitTaylorGreenFlowFieldStencil.h"
+#include "stencils/InitNearestWallStencil.h"
+#include "stencils/InitBoundLayerThicknessStencil.h"
 // #include "stencils/VTKStencil.h"
 #include "stencils/MaxUStencil.h"
 #include "GlobalBoundaryFactory.h"
 #include "stencils/MaxUStencil.h"
+#include "stencils/MaxViscosityStencil.h"
 #include "stencils/FGHStencil.h"
 #include "stencils/RHSStencil.h"
 #include "stencils/VelocityStencil.h"
@@ -57,6 +60,10 @@ class Simulation {
     // TODO WORKSHEET 3: add instance of PetscParallelManager
     MessagePassingConfiguration comm;
     int rank;
+    
+    MaxViscosityStencil MaxViscosity;
+    FieldIterator<FlowField> MaxViscosityFlowFieldIterator;
+
 
  public:
     Simulation( Parameters &parameters, FlowField &flowField )
@@ -80,7 +87,10 @@ class Simulation {
               NewVelocitiesUpdateIterator( _flowField, _parameters, newvelocities, 1, 0 ),
               comm( _parameters, _flowField ),
               velocityboundaryIterator( _flowField, _parameters, newvelocities, 1, 0 ),
-              velocityparallelbndItr(_flowField, _parameters, newvelocities, 1, 0)
+              velocityparallelbndItr(_flowField, _parameters, newvelocities, 1, 0),
+    
+              MaxViscosity(parameters),
+              MaxViscosityFlowFieldIterator( _flowField, _parameters, MaxViscosity, 1, 0 )
 
     {
         MPI_Comm_rank( PETSC_COMM_WORLD, &rank );
@@ -144,6 +154,20 @@ class Simulation {
 
     }
 
+    void initializeNearestWall() {
+        InitNearestWallStencil nearestWallStencil( _parameters );
+        FieldIterator<FlowField> InitNearestWallIterator( _flowField, _parameters,
+                                                         nearestWallStencil, 0, 0 );
+        InitNearestWallIterator.iterate();
+    }
+    
+    void initializeBoundLayerThickness() {
+        InitBoundLayerThicknessStencil boundLayerThicknessStencil( _parameters );
+        FieldIterator<FlowField> InitBoundLayerThicknessIterator( _flowField, _parameters,
+                                                                 boundLayerThicknessStencil, 0, 0 );
+        InitBoundLayerThicknessIterator.iterate();
+    }
+
     /** plots the flow field.  */
 /*    void plotVTK( int timeStep, int rank ) {
         // TODO WORKSHEET 1
@@ -160,18 +184,18 @@ class Simulation {
 
         // TODO WORKSHEET 2: determine maximum time step according to CFL-condition and maximum velocity values;
         //                   set the respective timestep in _parameters.timestep.dt.
+        
+        MaxViscosity.reset();
+    	MaxViscosityFlowFieldIterator.iterate();
+
         if ( _parameters.timestep.tau > 0 ) {
             FLOAT a = 1, b = 1, c = 1, d = 1;
-            a =
-                    _parameters.flow.Re
-                            / ( 2.0
-                                    * ( 1.0 / ( _parameters.geometry.dx * _parameters.geometry.dx )
-                                            + 1.0
-                                                    / ( _parameters.geometry.dy
-                                                            * _parameters.geometry.dy )
-                                            + 1.0
-                                                    / ( _parameters.geometry.dz
-                                                            * _parameters.geometry.dz ) ) );
+            a = (1/ (MaxViscosity.getMaxValues() + 1.0 / _parameters.flow.Re) )
+            / ( 2.0 * ( 1.0 / ( _parameters.geometry.dx * _parameters.geometry.dx ) +
+                       1.0 / ( _parameters.geometry.dy * _parameters.geometry.dy ) +
+                       1.0 / ( _parameters.geometry.dz * _parameters.geometry.dz )
+                       )
+               );
 
             if ( ( MaxU.getMaxValues() )[0] > 0 ) {
                 b = _parameters.geometry.dx / ( MaxU.getMaxValues() )[0];

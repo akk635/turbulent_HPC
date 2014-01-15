@@ -21,8 +21,7 @@ class VTKStencil : public FieldStencil<FlowField> {
 		const int *firstCorner;
 		const int *localSize;
     	std::string vtkFile;
-    	std::stringstream ssP;
-
+    	std::stringstream ssP, ssV;
 
     public:
         /** Constructor
@@ -73,10 +72,12 @@ class VTKStencil : public FieldStencil<FlowField> {
         		fpV << velocity[0] << " " << velocity[1] <<
         				" " << velocity[2] << "\n" ;
         		ssP << flowField.getPressure().getScalar(i, j, k) << "\n";
+        		ssV << flowField.getViscosity().getScalar(i, j, k) << "\n";
         	}
         	else {
         		fpV << (FLOAT) 0.0 << " " << (FLOAT) 0.0 << " " << (FLOAT) 0.0 << "\n" ;
         		ssP << (FLOAT) 0.0 << "\n";
+        		ssV << (FLOAT) 0.0 << "\n";
         	}
 
         }
@@ -90,6 +91,7 @@ class VTKStencil : public FieldStencil<FlowField> {
           // TODO WORKSHEET 1
         	// the apply method itself writes the files into apply
         	std::stringstream ss;
+
         	ss<<'.'<<rank<<'.'<<timeStep;
         	vtkFile += ( ss.str()+".vtk" );
 
@@ -106,6 +108,9 @@ class VTKStencil : public FieldStencil<FlowField> {
         	//ssP << "POINT_DATA " <<  ((localSize[0]+1) * (localSize[1]+1) * (localSize[2]+1)) << "\n" ;
         	ssP << "SCALARS pressure double 1 \n";
         	ssP << "LOOKUP_TABLE default \n";
+
+        	ssV << "SCALARS viscosity double 1 \n";
+        	ssV << "LOOKUP_TABLE default \n";
 
         }
 

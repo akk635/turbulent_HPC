@@ -20,6 +20,13 @@ class SimulationParameters{
         std::string scenario;   //! If channel or cavity, for example
 };
 
+class TurbulentParameters{
+    public:
+        FLOAT kappa;  //! Final time for the simulation
+        std::string turbulent_scenario;   //! If channel or cavity, for example
+};
+
+
 class EnvironmentalParameters{
     public:
         // Gravity components
@@ -134,6 +141,7 @@ class BFStepParameters{
 class Parameters {
     public:
         SimulationParameters    simulation;
+        TurbulentParameters		turbulent;
         TimestepParameters      timestep;
         EnvironmentalParameters environment;
         FlowParameters          flow;

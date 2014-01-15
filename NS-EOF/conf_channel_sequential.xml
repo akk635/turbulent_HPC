@@ -4,6 +4,9 @@
     <simulation finalTime="100.0" >
         <scenario>channel</scenario>
     </simulation>
+    <turbulent kappa="0.41" >
+    	<scenario>turbulent</scenario>
+    </turbulent>
     <backwardFacingStep xRatio="0.276" yRatio="0.231" />
     <timestep dt="1" tau="0.5" />
     <solver gamma="0.5" />

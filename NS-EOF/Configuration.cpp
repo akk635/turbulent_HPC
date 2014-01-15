@@ -286,6 +286,25 @@ void Configuration::loadParameters(Parameters & parameters, const MPI_Comm & com
         }
 
         //--------------------------------------------------
+        // Simulation parameters
+        //--------------------------------------------------
+
+                node = confFile.FirstChildElement()->FirstChildElement("turbulent");
+
+                if (node == NULL){
+                    handleError(1, "Error loading turbulent parameters");
+                }
+
+                readFloatMandatory(parameters.turbulent.kappa, node, "kappa");
+
+                subNode = node->FirstChildElement("scenario");
+                if (subNode != NULL){
+                    readStringMandatory(parameters.turbulent.turbulent_scenario, subNode);
+                } else {
+                    handleError (1, "Missing scenario in turbulent parameters");
+                }
+
+        //--------------------------------------------------
         // VTK parameters
         //--------------------------------------------------
 
@@ -463,5 +482,8 @@ void Configuration::loadParameters(Parameters & parameters, const MPI_Comm & com
     MPI_Bcast(parameters.walls.vectorTop,    3, MY_MPI_FLOAT, 0, communicator);
     MPI_Bcast(parameters.walls.vectorFront,  3, MY_MPI_FLOAT, 0, communicator);
     MPI_Bcast(parameters.walls.vectorBack,   3, MY_MPI_FLOAT, 0, communicator);
+
+    MPI_Bcast(&(parameters.turbulent.kappa), 1, MY_MPI_FLOAT, 0, communicator);
+    broadcastString (parameters.turbulent.turbulent_scenario, communicator);
 
 }

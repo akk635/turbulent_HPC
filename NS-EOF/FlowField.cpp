@@ -8,7 +8,9 @@ FlowField::FlowField ( int Nx, int Ny ) :
     // positions with the same iterator for both pressures and velocities.
     _pressure ( ScalarField ( Nx + 3, Ny + 3 ) ),
     _velocity ( VectorField ( Nx + 3, Ny + 3 ) ), _flags ( IntScalarField ( Nx + 3, Ny + 3 ) ),
-    _FGH ( VectorField ( Nx + 3, Ny + 3 ) ), _RHS ( ScalarField (Nx + 3, Ny + 3) ) {
+    _FGH ( VectorField ( Nx + 3, Ny + 3 ) ), _RHS ( ScalarField (Nx + 3, Ny + 3) ),
+    _viscosity ( ScalarField ( Nx + 3, Ny + 3 ) ), _delta ( ScalarField ( Nx + 3, Ny + 3 ) ),
+    _distanceToNearWall ( ScalarField ( Nx + 3, Ny + 3 ) ){
 
     assertion ( Nx > 0 );
     assertion ( Ny > 0 );
@@ -22,7 +24,10 @@ FlowField::FlowField ( int Nx, int Ny, int Nz ) :
     _velocity  ( VectorField ( Nx + 3, Ny + 3, Nz + 3 ) ),
     _flags  ( IntScalarField ( Nx + 3, Ny + 3, Nz +3 ) ),
     _FGH ( VectorField ( Nx + 3, Ny + 3, Nz + 3 ) ),
-    _RHS ( ScalarField ( Nx + 3, Ny + 3, Nz + 3 ) ) {
+    _RHS ( ScalarField ( Nx + 3, Ny + 3, Nz + 3 ) ),
+    _viscosity ( ScalarField ( Nx + 3, Ny + 3, Nz + 3 ) ),
+    _delta ( ScalarField ( Nx + 3, Ny + 3, Nz + 3 ) ),
+    _distanceToNearWall ( ScalarField ( Nx + 3, Ny + 3, Nz + 3 ) ){
 
 
     // Check that the provided data makes sense
@@ -41,15 +46,21 @@ FlowField::FlowField (const Parameters & parameters):
     _cellsZ(_size_z+3),
     // Probably far from the best way to write this
     _pressure(parameters.geometry.dim==2?ScalarField(_size_x + 3, _size_y + 3):
-                      ScalarField(_size_x + 3, _size_y + 3, _size_z + 3)),
+    					ScalarField(_size_x + 3, _size_y + 3, _size_z + 3)),
     _velocity(parameters.geometry.dim==2?VectorField(_size_x + 3, _size_y + 3):
-                      VectorField(_size_x + 3, _size_y + 3, _size_z + 3)),
+    					VectorField(_size_x + 3, _size_y + 3, _size_z + 3)),
     _flags(parameters.geometry.dim==2?IntScalarField(_size_x + 3, _size_y + 3):
-                   IntScalarField(_size_x + 3, _size_y + 3, _size_z + 3)),
+    					IntScalarField(_size_x + 3, _size_y + 3, _size_z + 3)),
     _FGH(parameters.geometry.dim==2?VectorField(_size_x + 3, _size_y + 3):
-                 VectorField(_size_x + 3, _size_y + 3, _size_z + 3)),
+    					VectorField(_size_x + 3, _size_y + 3, _size_z + 3)),
     _RHS(parameters.geometry.dim==2?ScalarField(_size_x + 3, _size_y + 3):
-                 ScalarField(_size_x + 3, _size_y + 3, _size_z + 3))
+    					ScalarField(_size_x + 3, _size_y + 3, _size_z + 3)),
+    _viscosity(parameters.geometry.dim==2?ScalarField(_size_x + 3, _size_y + 3):
+    					ScalarField(_size_x + 3, _size_y + 3, _size_z + 3)),
+    _delta(parameters.geometry.dim==2?ScalarField(_size_x + 3, _size_y + 3):
+    					ScalarField(_size_x + 3, _size_y + 3, _size_z + 3)),
+    _distanceToNearWall(parameters.geometry.dim==2?ScalarField(_size_x + 3, _size_y + 3):
+    					ScalarField(_size_x + 3, _size_y + 3, _size_z + 3))
 {}
 
 
@@ -103,6 +114,18 @@ VectorField & FlowField::getFGH () {
 
 ScalarField & FlowField::getRHS () {
     return _RHS;
+}
+
+ScalarField & FlowField::getViscosity () {
+    return _viscosity;
+}
+
+ScalarField & FlowField::getDelta (){
+    return _delta;
+}
+
+ScalarField & FlowField::getDistanceToNearWall (){
+    return _distanceToNearWall;
 }
 
 void FlowField::getPressureAndVelocity(FLOAT &pressure, FLOAT* const velocity, int i, int j){

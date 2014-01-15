@@ -357,7 +357,7 @@ void MessagePassingConfiguration::communicateViscosity(){
 	}
 
 	fpp.close();*/
-	pressurereadIterator.iterate();
+	viscosityreadIterator.iterate();
 
 }
 void MessagePassingConfiguration::communicateParameters(){

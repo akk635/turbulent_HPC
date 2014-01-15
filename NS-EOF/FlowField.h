@@ -28,6 +28,10 @@ class FlowField {
 
         ScalarField _RHS;      //! Right hand side for the Poisson equation
 
+        ScalarField _viscosity; //! Scalar field representing the turbulent viscosity
+        ScalarField _distanceToNearWall; //! Scalar field representing the distance to nearest wall
+        ScalarField _delta; //! Scalar field representing the boundary layer thickness
+
     public:
 
         /** Constructor for the 2D flow field
@@ -106,6 +110,13 @@ class FlowField {
          * @return Scalar field with the right hand side
          */
         ScalarField & getRHS ();
+
+
+        ScalarField & getViscosity ();
+
+        ScalarField & getDelta ();
+
+        ScalarField & getDistanceToNearWall ();
 
         void getPressureAndVelocity(FLOAT &pressure, FLOAT* const velocity, int i, int j);
         void getPressureAndVelocity(FLOAT &pressure, FLOAT* const velocity, int i, int j, int k);
