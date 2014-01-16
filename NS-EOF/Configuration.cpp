@@ -171,7 +171,7 @@ void Configuration::loadParameters(Parameters & parameters, const MPI_Comm & com
         readFloatOptional (parameters.geometry.dy, node, "dy");
         readFloatOptional (parameters.geometry.dz, node, "dz");
 
-        std::cout << "dx " << parameters.geometry.dx << std::endl;
+        //std::cout << "dx " << parameters.geometry.dx << std::endl;
 
         FLOAT lengthX = 0,
               lengthY = 0,

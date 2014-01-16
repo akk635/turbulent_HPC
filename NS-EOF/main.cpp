@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
 	FlowField *flowField = NULL;
 	Simulation *simulation = NULL;
 
-	std::cout << "Processor " << parameters.parallel.rank << " with index ";
+	std::cout << " Processor " << parameters.parallel.rank << " with index ";
 	std::cout << parameters.parallel.indices[0] << ",";
 	std::cout << parameters.parallel.indices[1] << ",";
 	std::cout << parameters.parallel.indices[2];
@@ -75,35 +75,48 @@ int main(int argc, char *argv[]) {
 
 	SimpleTimer timer;
 	timer.start();
-
+	if (rank==0){
+		std::cout << "parameters.vtk.interval = "
+				<< parameters.vtk.interval << std::endl;
+	}
 	parameters.vtk.vtkCounter = 0;
 	parameters.simulation.currentTime = 0;
+	simulation->plotVTK(parameters.vtk.vtkCounter, rank);
+	if (rank==0){
+		std::cout << "parameters.vtk.vtkCounter = "
+				<< parameters.vtk.vtkCounter << std::endl;
+		std::cout << "parameters.simulation.currentTime = "
+				<< parameters.simulation.currentTime << std::endl;
+	}
+
 	while (parameters.simulation.currentTime <= parameters.simulation.finalTime) {
 		simulation->solveTimestep();
 		parameters.simulation.currentTime += parameters.timestep.dt;
 		if (parameters.simulation.currentTime
 				> (parameters.vtk.vtkCounter + 1) * parameters.vtk.interval
-						- 0.001) {
+				- 0.001) {
 			(parameters.vtk.vtkCounter)++;
 			simulation->plotVTK(parameters.vtk.vtkCounter, rank);
-			std::cout << "parameters.vtk.vtkCounter = "
-					<< parameters.vtk.vtkCounter << std::endl;
-			std::cout << "parameters.simulation.currentTime = "
-					<< parameters.simulation.currentTime << std::endl;
+			if (rank==0){
+				std::cout << "parameters.vtk.vtkCounter = "
+						<< parameters.vtk.vtkCounter << std::endl;
+				std::cout << "parameters.simulation.currentTime = "
+						<< parameters.simulation.currentTime << std::endl;
+			}
 		}
 	}
 
 	MPI_Barrier(PETSC_COMM_WORLD);
 	if (rank == 0) {
-        FLOAT timeElapsed = timer.getTimeAndRestart();
-        std::ofstream fpres;
-        std::string result = "result.csv";
-        fpres.open(result.c_str(), std::ios::app);
-        fpres.seekp(0, std::ios_base::end);
-        if( nproc == 1)
-        fpres <<"Procs , " << "TimeElapsed" << std::endl;
-        fpres << nproc << ',' << timeElapsed << "\n";
-        fpres.close();
+		FLOAT timeElapsed = timer.getTimeAndRestart();
+		std::ofstream fpres;
+		std::string result = "result.csv";
+		fpres.open(result.c_str(), std::ios::app);
+		fpres.seekp(0, std::ios_base::end);
+		if( nproc == 1)
+			fpres <<"Procs , " << "TimeElapsed" << std::endl;
+		fpres << nproc << ',' << timeElapsed << "\n";
+		fpres.close();
 	}
 
 	delete simulation;
