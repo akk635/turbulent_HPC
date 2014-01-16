@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <configuration>
     <flow Re="10000" />
-    <simulation finalTime="100.0" >
+    <simulation finalTime="10.0" >
         <scenario>channel</scenario>
     </simulation>
     <turbulent kappa="0.41" >
@@ -33,6 +33,6 @@
         </back>
     </walls>
     <vtk interval="1">channel_result</vtk>
-    <stdOut interval="0.1" />
-    <parallel numProcessorsX="1" numProcessorsY="1" numProcessorsZ="1" />
+    <stdOut interval="0.25" />
+    <parallel numProcessorsX="2" numProcessorsY="1" numProcessorsZ="1" />
 </configuration>

@@ -152,7 +152,7 @@ class Simulation {
          // TODO WORKSHEET 3: communicate velocity values after velocity update is finished
          comm.communicateVelocity();
          // For checking the boundary velocity
-          velocityboundaryIterator.testItrX();
+          //velocityboundaryIterator.testItrX();
     }
 
     void initializeVelocity() {
@@ -237,15 +237,18 @@ class Simulation {
         }
 
         // TODO WORKSHEET 3: determine global minimum of time step
-        // MPI_Allreduce (&sendbuf,&recvbuf,count,datatype,op,comm)
-        MPI_Allreduce( MPI_IN_PLACE, &( _parameters.timestep.dt ), 1, MY_MPI_FLOAT, MPI_MIN,
-                       PETSC_COMM_WORLD );
+
 
         //check that output are exactly at the time they are printing
         /*        if (_parameters.simulation.currentTime + _parameters.timestep.dt > (_parameters.vtk.vtkCounter + 1) * _parameters.vtk.interval-0.001){
          _parameters.timestep.dt = (_parameters.vtk.vtkCounter + 1) * _parameters.vtk.interval - _parameters.simulation.currentTime;
 
          }*/
+
+        // MPI_Allreduce (&sendbuf,&recvbuf,count,datatype,op,comm)
+        MPI_Allreduce( MPI_IN_PLACE, &( _parameters.timestep.dt ), 1, MY_MPI_FLOAT, MPI_MIN,
+                               PETSC_COMM_WORLD );
+
     }
 
 };

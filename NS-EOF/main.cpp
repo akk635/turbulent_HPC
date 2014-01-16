@@ -66,15 +66,6 @@ int main(int argc, char *argv[]) {
 	}
 	simulation->initializeNearestWall();
 	simulation->initializeBoundLayerThickness();
-	// Initialization state
-	// simulation->plotVTK( 0, rank );
-	// For testing purposes
-
-/*	 for ( int i = 0; i <= 5; i++ ) {
-	 simulation->solveTimestep();
-	 simulation->plotVTK( i + 1, rank );
-	 }*/
-
 
 	// TODO WORKSHEET 2: loop over time and
 	//                   - solve one time step
@@ -90,16 +81,16 @@ int main(int argc, char *argv[]) {
 	while (parameters.simulation.currentTime <= parameters.simulation.finalTime) {
 		simulation->solveTimestep();
 		parameters.simulation.currentTime += parameters.timestep.dt;
-//		if (parameters.simulation.currentTime
-//				> (parameters.vtk.vtkCounter + 1) * parameters.vtk.interval
-//						- 0.001) {
+		if (parameters.simulation.currentTime
+				> (parameters.vtk.vtkCounter + 1) * parameters.vtk.interval
+						- 0.001) {
 			(parameters.vtk.vtkCounter)++;
 			simulation->plotVTK(parameters.vtk.vtkCounter, rank);
 			std::cout << "parameters.vtk.vtkCounter = "
 					<< parameters.vtk.vtkCounter << std::endl;
 			std::cout << "parameters.simulation.currentTime = "
 					<< parameters.simulation.currentTime << std::endl;
-//		}
+		}
 	}
 
 	MPI_Barrier(PETSC_COMM_WORLD);

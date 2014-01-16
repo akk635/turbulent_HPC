@@ -14,6 +14,8 @@
 #include "../stencils/VelocityBufferReadStencil.h"
 #include "../stencils/PressureBufferFillStencil.h"
 #include "../stencils/PressureBufferReadStencil.h"
+#include "../stencils/ViscosityBufferFillStencil.h"
+#include "../stencils/ViscosityBufferReadStencil.h"
 #include "../Iterators.h"
 #include "../FlowField.h"
 
@@ -34,8 +36,8 @@ private:
     ParallelBoundaryIterator<FlowField> pressurefillIterator;
     ParallelBoundaryIterator<FlowField> pressurereadIterator;
 
-    PressureBufferFillStencil fillVisStencil;
-    PressureBufferReadStencil readVisStencil;
+    ViscosityBufferFillStencil fillVisStencil;
+    ViscosityBufferReadStencil readVisStencil;
     ParallelBoundaryIterator<FlowField> viscosityfillIterator;
     ParallelBoundaryIterator<FlowField> viscosityreadIterator;
 
