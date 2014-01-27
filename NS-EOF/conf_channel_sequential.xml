@@ -34,5 +34,5 @@
     </walls>
     <vtk interval="1">channel_result</vtk>
     <stdOut interval="1.0" />
-    <parallel numProcessorsX="2" numProcessorsY="1" numProcessorsZ="1" />
+    <parallel numProcessorsX="3" numProcessorsY="3" numProcessorsZ="3" />
 </configuration>

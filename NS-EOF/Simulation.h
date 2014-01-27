@@ -118,10 +118,12 @@ class Simulation {
         MaxUBoundaryIterator.iterate();
         
         //WORKSHEET 5
+        if (_parameters.turbulent.turbulent_scenario != "laminar"){
         globalturbulentViscosityFieldIterator.iterate();
         comm.communicateViscosity();
         MaxViscosity.reset();
     	MaxViscosityFlowFieldIterator.iterate();
+        }
     	//END OF WORKSHEET 5 section
 
         // TODO WORKSHEET 2: set new time step
