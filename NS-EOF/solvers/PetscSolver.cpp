@@ -99,7 +99,9 @@ PetscSolver::PetscSolver(FlowField & flowField, Parameters & parameters):
         bz = DMDA_BOUNDARY_PERIODIC;
     }
 
+    // Init with the GMRES
     KSPCreate(PETSC_COMM_WORLD,&_ksp);
+
     PetscErrorCode (*computeMatrix)(KSP, Mat, Mat, MatStructure*, void*) = NULL;
     if (_parameters.geometry.dim == 2){
         computeMatrix = computeMatrix2D;
@@ -220,6 +222,12 @@ PetscSolver::PetscSolver(FlowField & flowField, Parameters & parameters):
     KSPSetDM(_ksp, _da);
     KSPSetComputeOperators(_ksp, computeMatrix, &_ctx);
     KSPSetFromOptions(_ksp);
+    KSPSetUp(_ksp);
+/*
+    PC prec;
+    KSPGetPC(_ksp,&prec);
+    PCSetType(prec,PCSOR);
+*/
     KSPSetInitialGuessNonzero(_ksp,PETSC_TRUE);
 }
 

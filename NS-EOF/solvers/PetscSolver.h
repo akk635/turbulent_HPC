@@ -16,7 +16,7 @@ const unsigned char FRONT_WALL_BIT  = 1<<4;
 const unsigned char BACK_WALL_BIT   = 1<<5;
 
 
-/** A class to encapsulate information the Petsc builder functions
+/** A class to encapsulate information to the Petsc builder functions
  *  Petsc used so called context objects to give information to its routines.
  *  We need them to pass the flow field and the parameters in a single argument.
  */
