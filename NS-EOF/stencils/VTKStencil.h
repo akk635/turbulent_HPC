@@ -27,8 +27,8 @@ class VTKStencil : public FieldStencil<FlowField> {
         /** Constructor
          *
          */
-
-    	FLOAT * const velocity = new FLOAT[3];
+    	FLOAT tempVelocity[3];
+    	FLOAT * const velocity = tempVelocity;
         VTKStencil ( const Parameters & parameters ): FieldStencil<FlowField>(parameters){
           // TODO WORKSHEET 1
         	_dim = parameters.geometry.dim;
@@ -44,7 +44,6 @@ class VTKStencil : public FieldStencil<FlowField> {
         	firstCorner = NULL;
         	localSize = NULL;
         	fpV.close();
-        	free(velocity);
         }
         /** 2D operation for one position
          *

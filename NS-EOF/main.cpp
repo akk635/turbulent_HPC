@@ -20,7 +20,7 @@ int main(int argc, char *argv[]) {
 	std::cout << "Rank: " << rank << ", Nproc: " << nproc << std::endl;
 	//----------------------------------------------------
 
-	if (argc != 2) {
+	if (argc < 2) {
 		handleError(1,
 				"A configuration file is required! Call the program by ./main configfile.xml");
 	}
@@ -88,8 +88,15 @@ int main(int argc, char *argv[]) {
 		std::cout << "parameters.simulation.currentTime = "
 				<< parameters.simulation.currentTime << std::endl;
 	}
+	for (int i = 0; i < 10; i++ ){
+	    simulation->solveTimestep();
+	    (parameters.vtk.vtkCounter)++;
+	if (i < 10)
+	    simulation->plotVTK(parameters.vtk.vtkCounter, rank);
+	}
 
-	while (parameters.simulation.currentTime <= parameters.simulation.finalTime) {
+
+/*	while (parameters.simulation.currentTime <= parameters.simulation.finalTime) {
 		simulation->solveTimestep();
 		parameters.simulation.currentTime += parameters.timestep.dt;
 		if (parameters.simulation.currentTime
@@ -104,7 +111,7 @@ int main(int argc, char *argv[]) {
 						<< parameters.simulation.currentTime << std::endl;
 			}
 		}
-	}
+	}*/
 
 	MPI_Barrier(PETSC_COMM_WORLD);
 	if (rank == 0) {

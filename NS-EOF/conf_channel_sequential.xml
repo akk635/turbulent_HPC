@@ -5,7 +5,7 @@
         <scenario>channel</scenario>
     </simulation>
     <turbulent kappa="0.41" >
-    	<scenario>turbulent</scenario>
+    	<scenario>laminar</scenario>
     </turbulent>
     <backwardFacingStep xRatio="0" yRatio="0" />
     <timestep dt="0.1" tau="0.5" />

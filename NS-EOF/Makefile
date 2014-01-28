@@ -34,7 +34,7 @@ stencils/ViscosityBufferReadStencil.o stencils/ViscosityBufferFillStencil.o \
 
 all: ns
 
-ns:  $(OBJ) $(NSOBJ) $(NSMAIN) 
+ns:  $(OBJ) $(NSOBJ) $(NSMAIN)
 	$(CC) -o ns  $(OBJ) $(NSOBJ) $(NSMAIN) $(PETSC_KSP_LIB)  -lstdc++ $(CFLAGS)
 
 
