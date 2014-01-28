@@ -95,13 +95,11 @@ int main(int argc, char *argv[]) {
 	    simulation->plotVTK(parameters.vtk.vtkCounter, rank);
 	}
 
-
-/*	while (parameters.simulation.currentTime <= parameters.simulation.finalTime) {
+/*
+	while (parameters.simulation.currentTime <= parameters.simulation.finalTime) {
 		simulation->solveTimestep();
 		parameters.simulation.currentTime += parameters.timestep.dt;
-		if (parameters.simulation.currentTime
-				> (parameters.vtk.vtkCounter + 1) * parameters.vtk.interval
-				- 0.001) {
+	if (parameters.simulation.currentTime	> (parameters.vtk.vtkCounter + 1) * parameters.vtk.interval- 0.001) {
 			(parameters.vtk.vtkCounter)++;
 			simulation->plotVTK(parameters.vtk.vtkCounter, rank);
 			if (rank==0){
@@ -112,6 +110,7 @@ int main(int argc, char *argv[]) {
 			}
 		}
 	}*/
+
 
 	MPI_Barrier(PETSC_COMM_WORLD);
 	if (rank == 0) {

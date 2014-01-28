@@ -30,22 +30,24 @@ public:
 	// For initialising the 3d case
 	void apply ( FlowField & flowField, int i, int j, int k ) {
 
-		FLOAT distance = j * _parameters.geometry.dy;
-		if ( ( _parameters.geometry.sizeY - j ) * _parameters.geometry.dy < distance ){
-			distance = ( _parameters.geometry.sizeY - j ) * _parameters.geometry.dy;
+		FLOAT distance = ( _parameters.geometry.sizeY - (_parameters.parallel.firstCorner[1] + (j-2+0.5)) ) * _parameters.geometry.dy;
+		FLOAT temp;
+		if ( (temp=(_parameters.parallel.firstCorner[1] + (j-2+0.5)) * _parameters.geometry.dy) < distance ){
+			distance = temp;
 		}
-		if ( k * _parameters.geometry.dz < distance ){
-			distance = k * _parameters.geometry.dz;
+		if ( (temp=(_parameters.parallel.firstCorner[2] + (k-2+0.5)) * _parameters.geometry.dz) < distance ){
+			distance = temp;
 		}
-		if ( ( _parameters.geometry.sizeZ - k ) * _parameters.geometry.dz < distance ){
-			distance = ( _parameters.geometry.sizeZ - k ) * _parameters.geometry.dz;
+		if ( (temp=( _parameters.geometry.sizeZ - (_parameters.parallel.firstCorner[2] + (k-2+0.5)) ) * _parameters.geometry.dz) < distance ){
+			distance = temp;
 		}
+
 		if (_parameters.simulation.scenario != "channel"){
-			if ( ( _parameters.geometry.sizeX - i ) * _parameters.geometry.dx < distance ){
-				distance = ( _parameters.geometry.sizeX - i ) * _parameters.geometry.dx;
+			if ( (temp=( _parameters.geometry.sizeX - (_parameters.parallel.firstCorner[0] + (i-2+0.5)) ) * _parameters.geometry.dx) < distance ){
+				distance = temp;
 			}
-			if ( i * _parameters.geometry.dx < distance ){
-				distance = i * _parameters.geometry.dx;
+			if ( (temp=(_parameters.parallel.firstCorner[0] + (i-2+0.5)) * _parameters.geometry.dx) < distance ){
+				distance = temp;
 			}
 		}
 
