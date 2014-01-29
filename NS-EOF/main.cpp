@@ -92,10 +92,11 @@ int main( int argc, char *argv[] ) {
      if (i < 10)
      simulation->plotVTK(parameters.vtk.vtkCounter, rank);
      }*/
+    int* x_pos = (int *) argv[2];
+    std::cout << "x_pos" << ( *x_pos ) << std::endl;
+    *x_pos = 20;
 
     timer.start();
-
-    std::cout << argv[3] << std::endl;
 
     while ( parameters.simulation.currentTime <= parameters.simulation.finalTime ) {
         simulation->solveTimestep();
@@ -124,6 +125,36 @@ int main( int argc, char *argv[] ) {
     fpres << argv[3] << ',' << argv[5] << ',' << argv[7] << "\n";
     fpres << timeElapsed << "\n";
     fpres.close();
+
+    FLOAT velocity_magn = 0;
+    std::ofstream fvalidation;
+    std::string validation = "validation";
+    std::stringstream ss;
+    ss << rank;
+    validation+=ss.str();
+    validation+=".csv";
+    fvalidation.open( validation.c_str(), std::ios::app );
+    fvalidation << "y position , " << "Velocities" << std::endl;
+    fvalidation.seekp( 0, std::ios_base::end );
+    for ( int j = 0; j < parameters.parallel.localSize[1]; j++ ) {
+        velocity_magn = sqrt(
+                ( flowField->getVelocity().getVector( *x_pos, j,
+                                                      ( parameters.geometry.sizeZ / 2 ) + 2 )[0]
+                        * flowField->getVelocity().getVector(
+                                *x_pos, j, ( parameters.geometry.sizeZ / 2 ) + 2 )[0] )
+                        + ( flowField->getVelocity().getVector(
+                                *x_pos, j, ( parameters.geometry.sizeZ / 2 ) + 2 )[1]
+                                * flowField->getVelocity().getVector(
+                                        *x_pos, j, ( parameters.geometry.sizeZ / 2 ) + 2 )[1] )
+                        + ( flowField->getVelocity().getVector(
+                                *x_pos, j, ( parameters.geometry.sizeZ / 2 ) + 2 )[2]
+                                * flowField->getVelocity().getVector(
+                                        *x_pos, j, ( parameters.geometry.sizeZ / 2 ) + 2 )[2] ) );
+
+        fvalidation << ( j + parameters.parallel.firstCorner[1] + 0.5 ) * parameters.geometry.dy
+                    << ',' << velocity_magn << std::endl;
+    }
+    fvalidation.close();
 
     /*	if (rank == 0) {
      FLOAT timeElapsed = timer.getTimeAndRestart();

@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <configuration>
-    <flow Re="10000" />
+    <flow Re="7578" />
     <simulation finalTime="20.0" >
         <scenario>channel</scenario>
     </simulation>
     <turbulent kappa="0.41" >
     	<scenario>laminar</scenario>
     </turbulent>
-    <backwardFacingStep xRatio="0" yRatio="0" />
+    <backwardFacingStep xRatio="0.167" yRatio="0.5" />
     <timestep dt="0.1" tau="0.5" />
     <solver gamma="0.5" />
-    <geometry dx="0.1" dy="0.1" dz="0.1" sizeX="33" sizeY="9" sizeZ="21" />
+    <geometry dx="0.2" dy="0.1" dz="0.1" sizeX="60" sizeY="20" sizeZ="20" />
     <environment gx="0" gy="0" gz="0" />
     <walls>
         <left>
@@ -34,5 +34,5 @@
     </walls>
     <vtk interval="1">channel_result</vtk>
     <stdOut interval="1.0" />
-    <parallel numProcessorsX="3" numProcessorsY="3" numProcessorsZ="3" />
+    <parallel numProcessorsX="1" numProcessorsY="1" numProcessorsZ="1" />
 </configuration>
