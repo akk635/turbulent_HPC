@@ -45,6 +45,7 @@ class Simulation {
     // Named global valid only in the computation over entire domain
     FieldIterator<FlowField> globalFGHFieldIterator;
     GlobalBoundaryIterator<FlowField> fghboundaryIterator;
+    // Just for the internal boundaries
     ParallelBoundaryIterator<FlowField> fghparallelbndItr;
 
     RHSStencil RHS;
@@ -64,13 +65,11 @@ class Simulation {
 
     //WORKSHEET %
     MaxViscosityStencil MaxViscosity;
-    
+
     FieldIterator<FlowField> MaxViscosityFlowFieldIterator;
 
     TurbulentViscosityStencil turbulentViscosity;
     FieldIterator<FlowField> globalturbulentViscosityFieldIterator;
-
-
 
  public:
     Simulation( Parameters &parameters, FlowField &flowField )
@@ -94,13 +93,13 @@ class Simulation {
               NewVelocitiesUpdateIterator( _flowField, _parameters, newvelocities, 1, 0 ),
               comm( _parameters, _flowField ),
               velocityboundaryIterator( _flowField, _parameters, newvelocities, 1, 0 ),
-              velocityparallelbndItr(_flowField, _parameters, newvelocities, 1, 0),
-    
-              MaxViscosity(parameters),
+              velocityparallelbndItr( _flowField, _parameters, newvelocities, 1, 0 ),
+
+              MaxViscosity( parameters ),
               MaxViscosityFlowFieldIterator( _flowField, _parameters, MaxViscosity, 1, 0 ),
               turbulentViscosity( _parameters ),
-              globalturbulentViscosityFieldIterator( _flowField, _parameters, turbulentViscosity, 1, 0 )
-
+              globalturbulentViscosityFieldIterator( _flowField, _parameters, turbulentViscosity, 1,
+                                                     0 )
 
     {
         MPI_Comm_rank( PETSC_COMM_WORLD, &rank );
@@ -116,15 +115,15 @@ class Simulation {
         MaxUFlowFieldIterator.iterate();
         // For covering the domain boundary
         MaxUBoundaryIterator.iterate();
-        
+
         //WORKSHEET 5
-        if (_parameters.turbulent.turbulent_scenario != "laminar"){
-        globalturbulentViscosityFieldIterator.iterate();
-        comm.communicateViscosity();
-        MaxViscosity.reset();
-    	MaxViscosityFlowFieldIterator.iterate();
+        if ( _parameters.turbulent.turbulent_scenario != "laminar" ) {
+            globalturbulentViscosityFieldIterator.iterate();
+            comm.communicateViscosity();
+            MaxViscosity.reset();
+            MaxViscosityFlowFieldIterator.iterate();
         }
-    	//END OF WORKSHEET 5 section
+        //END OF WORKSHEET 5 section
 
         // TODO WORKSHEET 2: set new time step
         setTimeStep();
@@ -151,10 +150,10 @@ class Simulation {
         // TODO WORKSHEET 2: update velocity values on the boundary
         velocityboundaryIterator.iterate();
 
-         // TODO WORKSHEET 3: communicate velocity values after velocity update is finished
-         comm.communicateVelocity();
-         // For checking the boundary velocity
-          //velocityboundaryIterator.testItrX();
+        // TODO WORKSHEET 3: communicate velocity values after velocity update is finished
+        comm.communicateVelocity();
+        // For checking the boundary velocity
+        //velocityboundaryIterator.testItrX();
     }
 
     void initializeVelocity() {
@@ -175,14 +174,15 @@ class Simulation {
     void initializeNearestWall() {
         InitNearestWallStencil nearestWallStencil( _parameters );
         FieldIterator<FlowField> InitNearestWallIterator( _flowField, _parameters,
-                                                         nearestWallStencil, 0, 0 );
+                                                          nearestWallStencil, 1, 0 );
         InitNearestWallIterator.iterate();
     }
-    
+
     void initializeBoundLayerThickness() {
         InitBoundLayerThicknessStencil boundLayerThicknessStencil( _parameters );
         FieldIterator<FlowField> InitBoundLayerThicknessIterator( _flowField, _parameters,
-                                                                 boundLayerThicknessStencil, 0, 0 );
+                                                                  boundLayerThicknessStencil, 0,
+                                                                  0 );
         InitBoundLayerThicknessIterator.iterate();
     }
 
@@ -203,16 +203,18 @@ class Simulation {
         // TODO WORKSHEET 2: determine maximum time step according to CFL-condition and maximum velocity values;
         //                   set the respective timestep in _parameters.timestep.dt.
 
-
-
         if ( _parameters.timestep.tau > 0 ) {
             FLOAT a = 1, b = 1, c = 1, d = 1;
-            a = (1/ (MaxViscosity.getMaxValues() + 1.0 / _parameters.flow.Re) )
-            / ( 2.0 * ( 1.0 / ( _parameters.geometry.dx * _parameters.geometry.dx ) +
-                       1.0 / ( _parameters.geometry.dy * _parameters.geometry.dy ) +
-                       1.0 / ( _parameters.geometry.dz * _parameters.geometry.dz )
-                       )
-               );
+            a =
+                    ( 1 / ( MaxViscosity.getMaxValues() + 1.0 / _parameters.flow.Re ) )
+                            / ( 2.0
+                                    * ( 1.0 / ( _parameters.geometry.dx * _parameters.geometry.dx )
+                                            + 1.0
+                                                    / ( _parameters.geometry.dy
+                                                            * _parameters.geometry.dy )
+                                            + 1.0
+                                                    / ( _parameters.geometry.dz
+                                                            * _parameters.geometry.dz ) ) );
 
             if ( ( MaxU.getMaxValues() )[0] > 0 ) {
                 b = _parameters.geometry.dx / ( MaxU.getMaxValues() )[0];
@@ -240,7 +242,6 @@ class Simulation {
 
         // TODO WORKSHEET 3: determine global minimum of time step
 
-
         //check that output are exactly at the time they are printing
         /*        if (_parameters.simulation.currentTime + _parameters.timestep.dt > (_parameters.vtk.vtkCounter + 1) * _parameters.vtk.interval-0.001){
          _parameters.timestep.dt = (_parameters.vtk.vtkCounter + 1) * _parameters.vtk.interval - _parameters.simulation.currentTime;
@@ -249,7 +250,7 @@ class Simulation {
 
         // MPI_Allreduce (&sendbuf,&recvbuf,count,datatype,op,comm)
         MPI_Allreduce( MPI_IN_PLACE, &( _parameters.timestep.dt ), 1, MY_MPI_FLOAT, MPI_MIN,
-                               PETSC_COMM_WORLD );
+                       PETSC_COMM_WORLD );
 
     }
 
