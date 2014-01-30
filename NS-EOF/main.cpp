@@ -87,16 +87,16 @@ int main( int argc, char *argv[] ) {
                   << std::endl;
     }
 
-/*    for ( int i = 0; i < 5; i++ ) {
-        simulation->solveTimestep();
-	std::cout << parameters.timestep.dt <<std::endl;
-        ( parameters.vtk.vtkCounter )++;
-        if ( i < 10 )
-            simulation->plotVTK( parameters.vtk.vtkCounter, rank );
-    }
+    /*    for ( int i = 0; i < 5; i++ ) {
+     simulation->solveTimestep();
+     std::cout << parameters.timestep.dt <<std::endl;
+     ( parameters.vtk.vtkCounter )++;
+     if ( i < 10 )
+     simulation->plotVTK( parameters.vtk.vtkCounter, rank );
+     }
 
-    PetscFinalize();
-    return 0;*/
+     PetscFinalize();
+     return 0;*/
 
     // argv[2] gives u the length in mm/100 scale
     int x_pos = atoi( argv[2] );
@@ -133,7 +133,11 @@ int main( int argc, char *argv[] ) {
 
     // Explicit pos in global domain
     x_pos = x_pos / parameters.geometry.dx;
-    if ( x_pos < parameters.parallel.firstCorner[0] ) {
+    int z_pos = parameters.geometry.sizeZ / 2;
+    if ( x_pos >= parameters.parallel.firstCorner[0]
+            && x_pos <= ( parameters.parallel.firstCorner[0] + parameters.parallel.localSize[0] )
+            && z_pos >= parameters.parallel.firstCorner[2]
+            && z_pos <= ( parameters.parallel.firstCorner[2] + parameters.parallel.localSize[2] ) ) {
         // For making the position local
         x_pos -= parameters.parallel.firstCorner[0];
         FLOAT velocity_magn = 0;
