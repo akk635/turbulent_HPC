@@ -23,7 +23,6 @@ class VTKStencil : public FieldStencil<FlowField> {
 		const int *localSize;
     	std::string vtkFile;
     	std::stringstream ssP, ssV;
-        const int obstacle;
 
     public:
         /** Constructor
@@ -70,7 +69,7 @@ class VTKStencil : public FieldStencil<FlowField> {
          */
         void apply ( FlowField & flowField, int i, int j, int k ){
           // TODO WORKSHEET 1
-            obstacle = flowField.getFlags().getValue( i, j, k );
+            const int obstacle = flowField.getFlags().getValue( i, j, k );
         	// Writing the vtk file from the local values
         	if( (obstacle & OBSTACLE_SELF) == 0 ){
 
