@@ -278,20 +278,20 @@ testVelocity.openfile();
  if( rank == 1 ){
         for (int j = 1+_lowOffset; j < Iterator<FlowField>::_flowField.getCellsY()+_highOffset - 1; j++) {
             testVelocity.printItr(j);
-            for (int k = 1+_lowOffset; k < Iterator<FlowField>::_flowField.getCellsZ()+_highOffset - 1; k++) {
-                testVelocity.applyTestrl( Iterator<FlowField>::_flowField, _lowOffset+1, j, k );
-                testVelocity.applyTestlr(Iterator<FlowField>::_flowField, _lowOffset, j, k );
-                testVelocity.applyFGHbnd(Iterator<FlowField>::_flowField, _lowOffset, j, k);
+            for (int i = 1+_lowOffset; i < Iterator<FlowField>::_flowField.getCellsX()+_highOffset - 1; i++) {
+                testVelocity.applyTestbf( Iterator<FlowField>::_flowField, i, j, _lowOffset+1 );
+                testVelocity.applyTestfb(Iterator<FlowField>::_flowField, i, j, _lowOffset );
+                testVelocity.applyFGHbnd(Iterator<FlowField>::_flowField, i, j, _lowOffset);
             }
         }
  }
  else if ( rank == 0 ){
         for (int j =  1+_lowOffset; j < Iterator<FlowField>::_flowField.getCellsY()+_highOffset - 1; j++) {
             testVelocity.printItr(j);
-            for (int k = 1+_lowOffset; k < Iterator<FlowField>::_flowField.getCellsZ()+_highOffset - 1; k++) {
-                testVelocity.applyTestlr  ( Iterator<FlowField>::_flowField, Iterator<FlowField>::_flowField.getCellsX()-1-_highOffset, j, k );
-                testVelocity.applyTestlr(Iterator<FlowField>::_flowField, Iterator<FlowField>::_flowField.getCellsX()-2-_highOffset, j, k);
-                testVelocity.applyFGHbnd(Iterator<FlowField>::_flowField, Iterator<FlowField>::_flowField.getCellsX()-2-_highOffset, j, k);
+            for (int i = 1+_lowOffset; i < Iterator<FlowField>::_flowField.getCellsX()+_highOffset - 1; i++) {
+                testVelocity.applyTestbf ( Iterator<FlowField>::_flowField, i, j, Iterator<FlowField>::_flowField.getCellsZ()-1-_highOffset );
+                testVelocity.applyTestfb(Iterator<FlowField>::_flowField, i, j, Iterator<FlowField>::_flowField.getCellsZ()-2-_highOffset);
+                testVelocity.applyFGHbnd(Iterator<FlowField>::_flowField, i, j, Iterator<FlowField>::_flowField.getCellsZ()-2-_highOffset);
             }
         }
  }

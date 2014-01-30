@@ -21,8 +21,9 @@ int main( int argc, char *argv[] ) {
     //----------------------------------------------------
 
     if ( argc < 3 ) {
-        handleError( 1,
-                     "A configuration file is required! Call the program by ./main configfile.xml validatelength" );
+        handleError(
+                1,
+                "A configuration file is required! Call the program by ./main configfile.xml validatelength" );
     }
 
     // read configuration and store information in parameters object
@@ -86,17 +87,21 @@ int main( int argc, char *argv[] ) {
                   << std::endl;
     }
 
-    /*	for (int i = 0; i < 10; i++ ){
-     simulation->solveTimestep();
-     (parameters.vtk.vtkCounter)++;
-     if (i < 10)
-     simulation->plotVTK(parameters.vtk.vtkCounter, rank);
-     }*/
+/*    for ( int i = 0; i < 5; i++ ) {
+        simulation->solveTimestep();
+	std::cout << parameters.timestep.dt <<std::endl;
+        ( parameters.vtk.vtkCounter )++;
+        if ( i < 10 )
+            simulation->plotVTK( parameters.vtk.vtkCounter, rank );
+    }
+
+    PetscFinalize();
+    return 0;*/
 
     // argv[2] gives u the length in mm/100 scale
-    int x_pos = atoi(argv[2]);
+    int x_pos = atoi( argv[2] );
 
-    std::cout<<x_pos<<std::endl;
+    std::cout << x_pos << std::endl;
 
     while ( parameters.simulation.currentTime <= parameters.simulation.finalTime ) {
         simulation->solveTimestep();
@@ -117,18 +122,18 @@ int main( int argc, char *argv[] ) {
 
     MPI_Barrier( PETSC_COMM_WORLD );
 
-/*    FLOAT timeElapsed = timer.getTimeAndRestart();
-    std::ofstream fpres;
-    std::string result = "result_solver.csv";
-    fpres.open( result.c_str(), std::ios::app );
-    fpres.seekp( 0, std::ios_base::end );
-    fpres << argv[3] << ',' << argv[5] << ',' << argv[7] << "\n";
-    fpres << timeElapsed << "\n";
-    fpres.close();*/
+    /*    FLOAT timeElapsed = timer.getTimeAndRestart();
+     std::ofstream fpres;
+     std::string result = "result_solver.csv";
+     fpres.open( result.c_str(), std::ios::app );
+     fpres.seekp( 0, std::ios_base::end );
+     fpres << argv[3] << ',' << argv[5] << ',' << argv[7] << "\n";
+     fpres << timeElapsed << "\n";
+     fpres.close();*/
 
     // Explicit pos in global domain
-    x_pos = x_pos/parameters.geometry.dx;
-    if(x_pos < parameters.parallel.firstCorner[0]){
+    x_pos = x_pos / parameters.geometry.dx;
+    if ( x_pos < parameters.parallel.firstCorner[0] ) {
         // For making the position local
         x_pos -= parameters.parallel.firstCorner[0];
         FLOAT velocity_magn = 0;
@@ -136,15 +141,15 @@ int main( int argc, char *argv[] ) {
         std::string validation = "validation";
         std::stringstream ss;
         ss << rank;
-        validation+=ss.str();
-        validation+=".csv";
+        validation += ss.str();
+        validation += ".csv";
         fvalidation.open( validation.c_str(), std::ios::app );
         fvalidation << "y position , " << "Velocities" << std::endl;
         fvalidation.seekp( 0, std::ios_base::end );
         for ( int j = 0; j < parameters.parallel.localSize[1]; j++ ) {
-            velocity_magn = sqrt(
-                    ( flowField->getVelocity().getVector( x_pos, j,
-                                                          ( parameters.geometry.sizeZ / 2 ) + 2 )[0]
+            velocity_magn =
+                    sqrt( ( flowField->getVelocity().getVector(
+                            x_pos, j, ( parameters.geometry.sizeZ / 2 ) + 2 )[0]
                             * flowField->getVelocity().getVector(
                                     x_pos, j, ( parameters.geometry.sizeZ / 2 ) + 2 )[0] )
                             + ( flowField->getVelocity().getVector(
@@ -161,7 +166,6 @@ int main( int argc, char *argv[] ) {
         }
         fvalidation.close();
     }
-
 
     /*	if (rank == 0) {
      FLOAT timeElapsed = timer.getTimeAndRestart();

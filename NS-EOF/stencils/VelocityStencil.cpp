@@ -123,16 +123,33 @@ void VelocityStencil:: applyLeftWall (FlowField & flowField, int i,int j, int k)
         } else {
             flowField.getVelocity().getVector(i, j, k)[0] = 0.0;
         }
-    }else{
+    }else {    // It this is an obstacle cell
         if ((obstacle & OBSTACLE_LEFT) == 0) { // If the left neighbour is a fluid cell
             velocity.getVector(i, j, k)[1] = -velocity.getVector(i-1, j, k)[1];
             velocity.getVector(i, j, k)[2] = -velocity.getVector(i-1, j, k)[2];
         }
-
         if ((obstacle & OBSTACLE_RIGHT) == 0) {
             velocity.getVector(i, j, k)[0] = 0.0;
             velocity.getVector(i, j, k)[1] = -velocity.getVector(i+1, j, k)[1];
             velocity.getVector(i, j, k)[2] = -velocity.getVector(i+1, j, k)[2];
+        }
+        if ((obstacle & OBSTACLE_BOTTOM) == 0) {
+            velocity.getVector(i, j, k)[0] = -velocity.getVector(i, j-1, k)[0];
+            velocity.getVector(i, j, k)[2] = -velocity.getVector(i, j-1, k)[2];
+        }
+        if ((obstacle & OBSTACLE_TOP) == 0) {
+            velocity.getVector(i, j, k)[0] = -velocity.getVector(i, j+1, k)[0];
+            velocity.getVector(i, j, k)[1] = 0.0;
+            velocity.getVector(i, j, k)[2] = -velocity.getVector(i, j+1, k)[2];
+        }
+        if ((obstacle & OBSTACLE_FRONT) == 0) {
+            velocity.getVector(i, j, k)[0] = -velocity.getVector(i, j, k-1)[0];
+            velocity.getVector(i, j, k)[1] = -velocity.getVector(i, j, k-1)[1];
+        }
+        if ((obstacle & OBSTACLE_BACK) == 0) {
+            velocity.getVector(i, j, k)[0] = -velocity.getVector(i, j, k+1)[0];
+            velocity.getVector(i, j, k)[1] = -velocity.getVector(i, j, k+1)[1];
+            velocity.getVector(i, j, k)[2] = 0.0;
         }
     }
 }
@@ -171,7 +188,16 @@ void VelocityStencil:: applyBottomWall (FlowField & flowField, int i,int j, int 
         } else {
             flowField.getVelocity().getVector(i, j, k)[1] = 0.0;
         }
-    }else{
+    }else {    // It this is an obstacle cell
+        if ((obstacle & OBSTACLE_LEFT) == 0) { // If the left neighbour is a fluid cell
+            velocity.getVector(i, j, k)[1] = -velocity.getVector(i-1, j, k)[1];
+            velocity.getVector(i, j, k)[2] = -velocity.getVector(i-1, j, k)[2];
+        }
+        if ((obstacle & OBSTACLE_RIGHT) == 0) {
+            velocity.getVector(i, j, k)[0] = 0.0;
+            velocity.getVector(i, j, k)[1] = -velocity.getVector(i+1, j, k)[1];
+            velocity.getVector(i, j, k)[2] = -velocity.getVector(i+1, j, k)[2];
+        }
         if ((obstacle & OBSTACLE_BOTTOM) == 0) {
             velocity.getVector(i, j, k)[0] = -velocity.getVector(i, j-1, k)[0];
             velocity.getVector(i, j, k)[2] = -velocity.getVector(i, j-1, k)[2];
@@ -180,6 +206,15 @@ void VelocityStencil:: applyBottomWall (FlowField & flowField, int i,int j, int 
             velocity.getVector(i, j, k)[0] = -velocity.getVector(i, j+1, k)[0];
             velocity.getVector(i, j, k)[1] = 0.0;
             velocity.getVector(i, j, k)[2] = -velocity.getVector(i, j+1, k)[2];
+        }
+        if ((obstacle & OBSTACLE_FRONT) == 0) {
+            velocity.getVector(i, j, k)[0] = -velocity.getVector(i, j, k-1)[0];
+            velocity.getVector(i, j, k)[1] = -velocity.getVector(i, j, k-1)[1];
+        }
+        if ((obstacle & OBSTACLE_BACK) == 0) {
+            velocity.getVector(i, j, k)[0] = -velocity.getVector(i, j, k+1)[0];
+            velocity.getVector(i, j, k)[1] = -velocity.getVector(i, j, k+1)[1];
+            velocity.getVector(i, j, k)[2] = 0.0;
         }
     }
 }
@@ -212,7 +247,25 @@ void VelocityStencil:: applyFrontWall (FlowField & flowField, int i,int j, int k
         } else {
             flowField.getVelocity().getVector(i, j, k)[2] = 0.0;
         }
-    }else{
+    }else {    // It this is an obstacle cell
+        if ((obstacle & OBSTACLE_LEFT) == 0) { // If the left neighbour is a fluid cell
+            velocity.getVector(i, j, k)[1] = -velocity.getVector(i-1, j, k)[1];
+            velocity.getVector(i, j, k)[2] = -velocity.getVector(i-1, j, k)[2];
+        }
+        if ((obstacle & OBSTACLE_RIGHT) == 0) {
+            velocity.getVector(i, j, k)[0] = 0.0;
+            velocity.getVector(i, j, k)[1] = -velocity.getVector(i+1, j, k)[1];
+            velocity.getVector(i, j, k)[2] = -velocity.getVector(i+1, j, k)[2];
+        }
+        if ((obstacle & OBSTACLE_BOTTOM) == 0) {
+            velocity.getVector(i, j, k)[0] = -velocity.getVector(i, j-1, k)[0];
+            velocity.getVector(i, j, k)[2] = -velocity.getVector(i, j-1, k)[2];
+        }
+        if ((obstacle & OBSTACLE_TOP) == 0) {
+            velocity.getVector(i, j, k)[0] = -velocity.getVector(i, j+1, k)[0];
+            velocity.getVector(i, j, k)[1] = 0.0;
+            velocity.getVector(i, j, k)[2] = -velocity.getVector(i, j+1, k)[2];
+        }
         if ((obstacle & OBSTACLE_FRONT) == 0) {
             velocity.getVector(i, j, k)[0] = -velocity.getVector(i, j, k-1)[0];
             velocity.getVector(i, j, k)[1] = -velocity.getVector(i, j, k-1)[1];

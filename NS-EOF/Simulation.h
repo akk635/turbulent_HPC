@@ -154,7 +154,7 @@ class Simulation {
         // TODO WORKSHEET 3: communicate velocity values after velocity update is finished
         comm.communicateVelocity();
         // For checking the boundary velocity
-        //velocityboundaryIterator.testItrX();
+        // velocityboundaryIterator.testItrZ();
     }
 
     void initializeVelocity() {
@@ -217,6 +217,7 @@ class Simulation {
                                                     / ( _parameters.geometry.dz
                                                             * _parameters.geometry.dz ) ) );
 
+            std::cout << "Inside " << std::endl;
             if ( ( MaxU.getMaxValues() )[0] > 0 ) {
                 b = _parameters.geometry.dx / ( MaxU.getMaxValues() )[0];
             }
@@ -227,16 +228,21 @@ class Simulation {
                 d = _parameters.geometry.dz / ( MaxU.getMaxValues() )[2];
             }
 
+            _parameters.timestep.dt = 0.1;
             if ( _parameters.timestep.dt > a ) {
+                std::cout<<"from A"<<std::endl;
                 _parameters.timestep.dt = _parameters.timestep.tau * a;
             }
             if ( _parameters.timestep.dt > b ) {
+                std::cout<<"from B"<<std::endl;
                 _parameters.timestep.dt = _parameters.timestep.tau * b;
             }
             if ( _parameters.timestep.dt > c ) {
+                std::cout<<"from C"<<std::endl;
                 _parameters.timestep.dt = _parameters.timestep.tau * c;
             }
             if ( _parameters.timestep.dt > d ) {
+                std::cout<<"from D"<<std::endl;
                 _parameters.timestep.dt = _parameters.timestep.tau * d;
             }
         }
