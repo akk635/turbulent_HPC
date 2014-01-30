@@ -38,28 +38,32 @@ void FGHStencil::apply(FlowField & flowField, int i, int j, int k) {
 		if ((obstacle & OBSTACLE_RIGHT) == 0) { // If the right cell is fluid
 			values[0] = computeF3D(_localVelocity, _localViscosity, FieldStencil<FlowField>::_parameters,
 					FieldStencil<FlowField>::_parameters.timestep.dt);
-		} else {
+		}
+/*		else {
 			values[0] = flowField.getVelocity().getVector(i, j, k)[0];
 			flowField.getPressure().getScalar(i + 1, j, k) =
 					flowField.getPressure().getScalar(i, j, k);
-		}
+		}*/
 		if ((obstacle & OBSTACLE_TOP) == 0) {
 			values[1] = computeG3D(_localVelocity, _localViscosity, FieldStencil<FlowField>::_parameters,
 					FieldStencil<FlowField>::_parameters.timestep.dt);
-		} else {
+		}
+/*		else {
 			values[1] = flowField.getVelocity().getVector(i, j, k)[1];
 			flowField.getPressure().getScalar(i, j + 1, k) =
 					flowField.getPressure().getScalar(i, j, k);
-		}
+		}*/
 		if ((obstacle & OBSTACLE_BACK) == 0) {
 			values[2] = computeH3D(_localVelocity, _localViscosity, FieldStencil<FlowField>::_parameters,
 					FieldStencil<FlowField>::_parameters.timestep.dt);
-		} else {
+		}
+/*		else {
 			values[2] = flowField.getVelocity().getVector(i, j, k)[2];
 			flowField.getPressure().getScalar(i, j, k + 1) =
 					flowField.getPressure().getScalar(i, j, k);
-		}
-	} else {
+		}*/
+	}
+/*	else {
 		if ((obstacle & OBSTACLE_RIGHT) == 0) {
 			values[0] = flowField.getVelocity().getVector(i, j, k)[0];
 			flowField.getPressure().getScalar(i, j, k) =
@@ -75,7 +79,7 @@ void FGHStencil::apply(FlowField & flowField, int i, int j, int k) {
 			flowField.getPressure().getScalar(i, j, k) =
 					flowField.getPressure().getScalar(i, j, k + 1);
 		}
-	}
+	}*/
 }
 
 void FGHStencil::applyLeftWall(FlowField & flowField, int i,
@@ -98,11 +102,12 @@ void FGHStencil::applyLeftWall(FlowField & flowField, int i,
 		if ((obstacle & OBSTACLE_RIGHT) == 0) { // If the right cell is fluid
 			values[0] = computeF3D(_localVelocity, _localViscosity, FieldStencil<FlowField>::_parameters,
 					FieldStencil<FlowField>::_parameters.timestep.dt);
-		} else {
+		}
+/*		else {
 			values[0] = flowField.getVelocity().getVector(i, j, k)[0];
 			flowField.getPressure().getScalar(i + 1, j, k) =
 					flowField.getPressure().getScalar(i, j, k);
-		}
+		}*/
 /*		if ((obstacle & OBSTACLE_TOP) == 0) {
 			values[1] = computeG3D(_localVelocity, FieldStencil<FlowField>::_parameters,
 					FieldStencil<FlowField>::_parameters.timestep.dt);
@@ -119,13 +124,14 @@ void FGHStencil::applyLeftWall(FlowField & flowField, int i,
 			flowField.getPressure().getScalar(i, j, k + 1) =
 					flowField.getPressure().getScalar(i, j, k);
 		}*/
-	} else {
+	}
+/*	else {
 		if ((obstacle & OBSTACLE_RIGHT) == 0) {
 			values[0] = flowField.getVelocity().getVector(i, j, k)[0];
 			flowField.getPressure().getScalar(i, j, k) =
 					flowField.getPressure().getScalar(i + 1, j, k);
 		}
-/*		if ((obstacle & OBSTACLE_TOP) == 0) {
+		if ((obstacle & OBSTACLE_TOP) == 0) {
 			values[1] = flowField.getVelocity().getVector(i, j, k)[1];
 			flowField.getPressure().getScalar(i, j, k) =
 					flowField.getPressure().getScalar(i, j + 1, k);
@@ -134,8 +140,8 @@ void FGHStencil::applyLeftWall(FlowField & flowField, int i,
 			values[1] = flowField.getVelocity().getVector(i, j, k)[1];
 			flowField.getPressure().getScalar(i, j, k) =
 					flowField.getPressure().getScalar(i, j, k + 1);
-		}*/
-	}
+		}
+	}*/
 
 
 
@@ -176,11 +182,12 @@ void FGHStencil::applyBottomWall ( FlowField & flowField, int i, int j, int k ){
 		if ((obstacle & OBSTACLE_TOP) == 0) {
 			values[1] = computeG3D(_localVelocity, _localViscosity, FieldStencil<FlowField>::_parameters,
 					FieldStencil<FlowField>::_parameters.timestep.dt);
-		} else {
+		}
+/*		else {
 			values[1] = flowField.getVelocity().getVector(i, j, k)[1];
 			flowField.getPressure().getScalar(i, j + 1, k) =
 					flowField.getPressure().getScalar(i, j, k);
-		}
+		}*/
 /*		if ((obstacle & OBSTACLE_BACK) == 0) {
 			values[2] = computeH3D(_localVelocity, FieldStencil<FlowField>::_parameters,
 					FieldStencil<FlowField>::_parameters.timestep.dt);
@@ -189,23 +196,24 @@ void FGHStencil::applyBottomWall ( FlowField & flowField, int i, int j, int k ){
 			flowField.getPressure().getScalar(i, j, k + 1) =
 					flowField.getPressure().getScalar(i, j, k);
 		}*/
-	} else {
-/*		if ((obstacle & OBSTACLE_RIGHT) == 0) {
+	}
+/*	else {
+		if ((obstacle & OBSTACLE_RIGHT) == 0) {
 			values[0] = flowField.getVelocity().getVector(i, j, k)[0];
 			flowField.getPressure().getScalar(i, j, k) =
 					flowField.getPressure().getScalar(i + 1, j, k);
-		}*/
+		}
 		if ((obstacle & OBSTACLE_TOP) == 0) {
 			values[1] = flowField.getVelocity().getVector(i, j, k)[1];
 			flowField.getPressure().getScalar(i, j, k) =
 					flowField.getPressure().getScalar(i, j + 1, k);
 		}
-/*		if ((obstacle & OBSTACLE_BACK) == 0) {
+		if ((obstacle & OBSTACLE_BACK) == 0) {
 			values[1] = flowField.getVelocity().getVector(i, j, k)[1];
 			flowField.getPressure().getScalar(i, j, k) =
 					flowField.getPressure().getScalar(i, j, k + 1);
-		}*/
-	}
+		}
+	}*/
 
 }
 
@@ -251,13 +259,15 @@ void FGHStencil::applyFrontWall  ( FlowField & flowField, int i, int j, int k ){
 		if ((obstacle & OBSTACLE_BACK) == 0) {
 			values[2] = computeH3D(_localVelocity, _localViscosity, FieldStencil<FlowField>::_parameters,
 					FieldStencil<FlowField>::_parameters.timestep.dt);
-		} else {
+		}
+/*		else {
 			values[2] = flowField.getVelocity().getVector(i, j, k)[2];
 			flowField.getPressure().getScalar(i, j, k + 1) =
 					flowField.getPressure().getScalar(i, j, k);
-		}
-	} else {
-/*		if ((obstacle & OBSTACLE_RIGHT) == 0) {
+		}*/
+	}
+/*	else {
+		if ((obstacle & OBSTACLE_RIGHT) == 0) {
 			values[0] = flowField.getVelocity().getVector(i, j, k)[0];
 			flowField.getPressure().getScalar(i, j, k) =
 					flowField.getPressure().getScalar(i + 1, j, k);
@@ -266,13 +276,13 @@ void FGHStencil::applyFrontWall  ( FlowField & flowField, int i, int j, int k ){
 			values[1] = flowField.getVelocity().getVector(i, j, k)[1];
 			flowField.getPressure().getScalar(i, j, k) =
 					flowField.getPressure().getScalar(i, j + 1, k);
-		}*/
+		}
 		if ((obstacle & OBSTACLE_BACK) == 0) {
 			values[1] = flowField.getVelocity().getVector(i, j, k)[1];
 			flowField.getPressure().getScalar(i, j, k) =
 					flowField.getPressure().getScalar(i, j, k + 1);
 		}
-	}
+	}*/
 
 }
 

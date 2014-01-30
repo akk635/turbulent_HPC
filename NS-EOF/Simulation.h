@@ -116,6 +116,7 @@ class Simulation {
         // For covering the domain boundary
         MaxUBoundaryIterator.iterate();
 
+        MaxViscosity.reset();
         //WORKSHEET 5
         if ( _parameters.turbulent.turbulent_scenario != "laminar" ) {
             globalturbulentViscosityFieldIterator.iterate();
