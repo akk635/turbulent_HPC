@@ -119,7 +119,7 @@ class FlowField {
         ScalarField & getDistanceToNearWall ();
 
         void getPressureAndVelocity(FLOAT &pressure, FLOAT* const velocity, int i, int j);
-        void getPressureAndVelocity(FLOAT &pressure, FLOAT* const velocity, int i, int j, int k);
+        void getPressureAndVelocity(FLOAT &pressure, FLOAT* velocity, int i, int j, int k);
 };
 
 #endif

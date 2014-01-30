@@ -28,9 +28,7 @@ class VTKStencil : public FieldStencil<FlowField> {
         /** Constructor
          *
          */
-
-        FLOAT tempVelocity[3];
-        FLOAT * const velocity = tempVelocity;
+        FLOAT velocity[3];
     	//FLOAT * glyphvelocity = new FLOAT[3];
 
         VTKStencil ( const Parameters & parameters ): FieldStencil<FlowField>(parameters){

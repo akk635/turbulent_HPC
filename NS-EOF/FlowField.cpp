@@ -140,7 +140,7 @@ void FlowField::getPressureAndVelocity(FLOAT &pressure, FLOAT* const velocity, i
 ;
 }
 
-void FlowField::getPressureAndVelocity(FLOAT &pressure, FLOAT* const velocity, int i, int j, int k){
+void FlowField::getPressureAndVelocity(FLOAT &pressure, FLOAT*  velocity, int i, int j, int k){
     FLOAT * v_here = getVelocity().getVector(i, j, k);
     FLOAT * v_left = getVelocity().getVector(i-1, j, k);
     FLOAT * v_down = getVelocity().getVector(i, j-1, k);
