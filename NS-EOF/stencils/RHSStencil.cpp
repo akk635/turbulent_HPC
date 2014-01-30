@@ -13,7 +13,10 @@ void RHSStencil::apply ( FlowField & flowField, int i, int j ) {
 
 
 void RHSStencil::apply ( FlowField & flowField, int i, int j, int k ) {
-	if (flowField.getFlags().getValue(i,j,k) == 0){
+
+    const int obstacle = flowField.getFlags().getValue( i, j, k );
+
+    if ( ( obstacle & OBSTACLE_SELF ) == 0 ) {
 		flowField.getRHS().getScalar (i, j, k) = 1.0 / _parameters.timestep.dt *
 				( (flowField.getFGH().getVector(i, j, k)[0] - flowField.getFGH().getVector(i-1, j, k)[0])
 					/ _parameters.geometry.dx

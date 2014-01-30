@@ -23,6 +23,7 @@ class VTKStencil : public FieldStencil<FlowField> {
 		const int *localSize;
     	std::string vtkFile;
     	std::stringstream ssP, ssV;
+        const int obstacle;
 
     public:
         /** Constructor
@@ -69,19 +70,20 @@ class VTKStencil : public FieldStencil<FlowField> {
          */
         void apply ( FlowField & flowField, int i, int j, int k ){
           // TODO WORKSHEET 1
+            obstacle = flowField.getFlags().getValue( i, j, k );
         	// Writing the vtk file from the local values
-        	if( flowField.getFlags().getValue(i,j,k) == 0 ){
+        	if( (obstacle & OBSTACLE_SELF) == 0 ){
 
         		flowField.getPressureAndVelocity( flowField.getPressure().getScalar(i, j, k), velocity, i, j, k);
         		fpV << velocity[0] << " " << velocity[1] << " " << velocity[2] << "\n" ;
-        		ssP << flowField.getFlags().getValue(i,j,k) << "\n";
+        		ssP << flowField.getPressure().getScalar(i,j,k) << "\n";
         		ssV << flowField.getViscosity().getScalar(i, j, k) << "\n";
         		//glyphvelocity=flowField.getVelocity().getVector(i,j,k);
         		//fpGlyph << glyphvelocity[0] << " " << glyphvelocity[1] << " " << glyphvelocity[2] << "\n" ;
         	}
         	else {
         		fpV << (FLOAT) 0.0 << " " << (FLOAT) 0.0 << " " << (FLOAT) 0.0 << "\n" ;
-        		ssP << (FLOAT) flowField.getFlags().getValue(i,j,k) << "\n";
+        		ssP << (FLOAT) 0.0 << "\n";
         		ssV << (FLOAT) 0.0 << "\n";
         		//fpGlyph << (FLOAT) 0.0 << " " << (FLOAT) 0.0 << " " << (FLOAT) 0.0 << "\n" ;
         	}

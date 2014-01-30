@@ -140,6 +140,9 @@ int main( int argc, char *argv[] ) {
             && z_pos <= ( parameters.parallel.firstCorner[2] + parameters.parallel.localSize[2] ) ) {
         // For making the position local
         x_pos -= parameters.parallel.firstCorner[0];
+        z_pos -= parameters.parallel.firstCorner[2];
+        std::cout << x_pos << std::endl;
+        std::cout << z_pos << std::endl;
         FLOAT velocity_magn = 0;
         std::ofstream fvalidation;
         std::string validation = "validation";
@@ -153,17 +156,17 @@ int main( int argc, char *argv[] ) {
         for ( int j = 0; j < parameters.parallel.localSize[1]; j++ ) {
             velocity_magn =
                     sqrt( ( flowField->getVelocity().getVector(
-                            x_pos, j, ( parameters.geometry.sizeZ / 2 ) + 2 )[0]
+                            x_pos+2, j + 2, z_pos + 2 )[0]
                             * flowField->getVelocity().getVector(
-                                    x_pos, j, ( parameters.geometry.sizeZ / 2 ) + 2 )[0] )
+                                    x_pos + 2, j + 2, z_pos + 2 )[0] )
                             + ( flowField->getVelocity().getVector(
-                                    x_pos, j, ( parameters.geometry.sizeZ / 2 ) + 2 )[1]
+                                    x_pos + 2, j + 2, z_pos + 2 )[1]
                                     * flowField->getVelocity().getVector(
-                                            x_pos, j, ( parameters.geometry.sizeZ / 2 ) + 2 )[1] )
+                                            x_pos + 2, j + 2, z_pos + 2 )[1] )
                             + ( flowField->getVelocity().getVector(
-                                    x_pos, j, ( parameters.geometry.sizeZ / 2 ) + 2 )[2]
+                                    x_pos + 2, j + 2, z_pos + 2 )[2]
                                     * flowField->getVelocity().getVector(
-                                            x_pos, j, ( parameters.geometry.sizeZ / 2 ) + 2 )[2] ) );
+                                            x_pos + 2, j + 2, z_pos + 2 )[2] ) );
 
             fvalidation << ( j + parameters.parallel.firstCorner[1] + 0.5 ) * parameters.geometry.dy
                         << ',' << velocity_magn << std::endl;
